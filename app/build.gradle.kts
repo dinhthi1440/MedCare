@@ -51,12 +51,12 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
     //navigation
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.5.3")
-    implementation ("androidx.core:core-animation:1.0.0-beta01")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.8.9")
+    implementation ("androidx.core:core-animation:1.0.0")
 
     val koin_version = "3.3.0"
     val koin_core_version = "3.2.2"
@@ -64,5 +64,7 @@ dependencies {
     implementation ("io.insert-koin:koin-android:${koin_version}")
     implementation ("io.insert-koin:koin-androidx-navigation:${koin_version}")
     implementation ("io.insert-koin:koin-androidx-compose:${koin_version}")
+
+    implementation ("com.squareup.picasso:picasso:2.8")
 
 }

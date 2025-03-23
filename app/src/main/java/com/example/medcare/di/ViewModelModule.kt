@@ -1,0 +1,9 @@
+package com.example.medcare.di
+
+import com.example.medcare.views.login.AuthViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+val viewModelModule = module {
+    viewModel{AuthViewModel()}
+}
