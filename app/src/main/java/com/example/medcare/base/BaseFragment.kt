@@ -18,7 +18,7 @@ abstract class BaseFragment<VB: ViewBinding>(
     private var _binding: VB? = null
     protected val binding get() = _binding as VB
     protected abstract val viewModel: BaseViewModel
-    protected val sharedPreferences by lazy { get<SharedPreferences>() }
+    //protected val sharedPreferences by lazy { get<SharedPreferences>() }
     private val dialog by lazy{context?.let { Dialog(it) }}
     protected val decimalFormat = DecimalFormat("#,###.###")
     protected fun dialog(context1: Context): Dialog {

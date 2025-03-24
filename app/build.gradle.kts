@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.medcare"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.medcare"
@@ -45,9 +45,26 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("androidx.databinding:viewbinding:8.9.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+
+    //navigation
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.8.9")
+    implementation ("androidx.core:core-animation:1.0.0")
+
+    val koin_version = "3.3.0"
+    val koin_core_version = "3.2.2"
+    implementation ("io.insert-koin:koin-core:${koin_core_version}")
+    implementation ("io.insert-koin:koin-android:${koin_version}")
+    implementation ("io.insert-koin:koin-androidx-navigation:${koin_version}")
+    implementation ("io.insert-koin:koin-androidx-compose:${koin_version}")
+
+    implementation ("com.squareup.picasso:picasso:2.8")
+
 }
