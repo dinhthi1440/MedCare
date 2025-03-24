@@ -1,42 +1,46 @@
 package com.example.medcare.views.home
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.medcare.R
+import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.medcare.base.BaseFragment
+import com.example.medcare.databinding.FragmentHomeBinding
+import com.example.medcare.views.home.model.MenuItem
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
+    override val viewModel by viewModel<HomeViewModel>()
 
-class HomeFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun initData() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    }
+
+    override fun handleEvent() {
+
+    }
+
+    override fun bindData() {
+        val menuItems = MenuItem.getAllItems()
+
+        val recyclerView: RecyclerView = binding.recyclerView
+        recyclerView.layoutManager = GridLayoutManager(this.requireContext(), 2)
+        recyclerView.adapter = MenuAdapter(menuItems) {
+            navigateScreen(it)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    private fun navigateScreen(item: MenuItem){
+        when (item) {
+            MenuItem.MEDICINE -> Toast.makeText(this.requireContext(), "Mở danh sách thuốc", Toast.LENGTH_SHORT).show()
+            MenuItem.REMINDER -> Toast.makeText(this.requireContext(), "Mở nhắc nhở", Toast.LENGTH_SHORT).show()
+            MenuItem.HISTORY -> Toast.makeText(this.requireContext(), "Mở lịch sử", Toast.LENGTH_SHORT).show()
+            MenuItem.FAMILY -> Toast.makeText(this.requireContext(), "Mở kết nối người thân", Toast.LENGTH_SHORT).show()
+            MenuItem.CONSULT -> Toast.makeText(this.requireContext(), "Mở tư vấn sức khỏe", Toast.LENGTH_SHORT).show()
+            MenuItem.APPOINTMENT -> Toast.makeText(this.requireContext(), "Mở đặt lịch khám", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun destroy() {
+
     }
 }
