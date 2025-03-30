@@ -2,7 +2,6 @@ package com.example.medcare.base
 
 import android.app.Dialog
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,27 +11,32 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import java.text.DecimalFormat
 
-abstract class BaseFragment<VB: ViewBinding>(
+abstract class BaseFragment<VB : ViewBinding>(
     private val bindingInflater: (LayoutInflater) -> VB
-):Fragment() {
+) : Fragment() {
     private var _binding: VB? = null
     protected val binding get() = _binding as VB
     protected abstract val viewModel: BaseViewModel
+
     //protected val sharedPreferences by lazy { get<SharedPreferences>() }
-    private val dialog by lazy{context?.let { Dialog(it) }}
+    private val dialog by lazy { context?.let { Dialog(it) } }
     protected val decimalFormat = DecimalFormat("#,###.###")
     protected fun dialog(context1: Context): Dialog {
         return Dialog(context1)
     }
+
     protected fun showKeyboard(context1: Context) {
-        val inputMethodManager = context1?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            context1?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 
     protected fun hideKeyboard(view: View) {
-        val inputMethodManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initData()
@@ -66,4 +70,5 @@ abstract class BaseFragment<VB: ViewBinding>(
     abstract fun handleEvent()
     abstract fun bindData()
     abstract fun destroy()
+
 }

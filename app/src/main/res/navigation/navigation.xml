@@ -26,5 +26,22 @@
         android:id="@+id/homeFragment"
         android:name="com.example.medcare.views.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_myMedicineFragment"
+            app:destination="@id/myMedicineFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myMedicineFragment"
+        android:name="com.example.medcare.views.my_medicine.medicine_list.MyMedicineFragment"
+        android:label="fragment_my_medicine"
+        tools:layout="@layout/fragment_my_medicine" >
+        <action
+            android:id="@+id/action_myMedicineFragment_to_medicineDetailFragment"
+            app:destination="@id/medicineDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicineDetailFragment"
+        android:name="com.example.medcare.views.my_medicine.medicine_detail.MedicineDetailFragment"
+        android:label="MedicineDetailFragment" />
 </navigation>

@@ -1,8 +1,11 @@
 package com.example.medcare.views.home
 
 import android.widget.Toast
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentHomeBinding
 import com.example.medcare.views.home.model.MenuItem
@@ -31,7 +34,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun navigateScreen(item: MenuItem){
         when (item) {
-            MenuItem.MEDICINE -> Toast.makeText(this.requireContext(), "Mở danh sách thuốc", Toast.LENGTH_SHORT).show()
+            MenuItem.MEDICINE -> {
+                findNavController().navigate(R.id.action_homeFragment_to_myMedicineFragment)
+            }
             MenuItem.REMINDER -> Toast.makeText(this.requireContext(), "Mở nhắc nhở", Toast.LENGTH_SHORT).show()
             MenuItem.HISTORY -> Toast.makeText(this.requireContext(), "Mở lịch sử", Toast.LENGTH_SHORT).show()
             MenuItem.FAMILY -> Toast.makeText(this.requireContext(), "Mở kết nối người thân", Toast.LENGTH_SHORT).show()

@@ -3,4 +3,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="together_save_health">Cùng nhau giữ sức khoẻ nhé!</string>
+    <string name="my_medicine">Thuốc của tôi</string>
+    <string name="add_more_medicine">+ Thêm thuốc mới</string>
+    <string name="medicine_list">Danh sách thuốc</string>
+    <string name="sort">Sắp xếp</string>
+    <string name="paracetamol_500mg">Paracetamol 500mg</string>
+    <string name="quantity">🔢 Sl còn:</string>
+    <string name="expiration_date">⏳ HSD:</string>
+    <string name="delete">Xóa</string>
+    <string name="edit">Chỉnh sửa</string>
 </resources>
