@@ -12,4 +12,6 @@
     <string name="expiration_date">⏳ HSD:</string>
     <string name="delete">Xóa</string>
     <string name="edit">Chỉnh sửa</string>
+    <string name="add_medicine">Thêm thuốc</string>
+    <string name="change_image">Thay đổi ảnh</string>
 </resources>

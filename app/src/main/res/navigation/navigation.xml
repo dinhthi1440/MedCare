@@ -39,9 +39,18 @@
         <action
             android:id="@+id/action_myMedicineFragment_to_medicineDetailFragment"
             app:destination="@id/medicineDetailFragment" />
+        <action
+            android:id="@+id/action_myMedicineFragment_to_addMedicineFragment"
+            app:destination="@id/addMedicineFragment" />
     </fragment>
     <fragment
         android:id="@+id/medicineDetailFragment"
         android:name="com.example.medcare.views.my_medicine.medicine_detail.MedicineDetailFragment"
-        android:label="MedicineDetailFragment" />
+        android:label="MedicineDetailFragment"
+        tools:layout="@layout/fragment_medicine_detail"/>
+    <fragment
+        android:id="@+id/addMedicineFragment"
+        android:name="com.example.medcare.views.my_medicine.add_medicine.AddMedicineFragment"
+        android:label="fragment_add_medicine"
+        tools:layout="@layout/fragment_add_medicine" />
 </navigation>

@@ -1,7 +1,7 @@
 package com.example.medcare.views.my_medicine.medicine_detail
 
+import androidx.navigation.fragment.findNavController
 import com.example.medcare.base.BaseFragment
-import com.example.medcare.base.BaseViewModel
 import com.example.medcare.databinding.FragmentMedicineDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -17,7 +17,15 @@ class MedicineDetailFragment :
     }
 
     override fun handleEvent() {
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.btnDelete.setOnClickListener {
 
+        }
+        binding.btnEdit.setOnClickListener {
+
+        }
     }
 
     override fun bindData() {

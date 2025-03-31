@@ -6,4 +6,5 @@
     <color name="ccBlueBtnPrimary">#AEE5FA</color>
     <color name="ccBlueText">#003B73</color>
     <color name="shadow_color">#40000000</color>
+    <color name="ccGrayBlackText">#6D6D6D</color>
 </resources>

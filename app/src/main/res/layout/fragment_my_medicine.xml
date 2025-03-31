@@ -41,6 +41,7 @@
             android:layout_marginBottom="8dp"
             android:text="@string/my_medicine"
             android:textAlignment="center"
+            android:fontFamily="@font/inter"
             android:textColor="@color/ccBlueText"
             android:textFontWeight="600"
             android:textSize="20sp"
@@ -78,7 +79,7 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/appCompatButton"
+                android:id="@+id/acb_add_medicine"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="16dp"
@@ -103,7 +104,7 @@
                 android:textColor="@color/ccBlueText"
                 android:textSize="18sp"
                 android:textFontWeight="500"
-                app:layout_constraintTop_toBottomOf="@id/appCompatButton"
+                app:layout_constraintTop_toBottomOf="@id/acb_add_medicine"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:targetApi="p" />
 

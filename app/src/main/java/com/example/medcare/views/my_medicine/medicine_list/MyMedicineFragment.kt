@@ -22,6 +22,9 @@ class MyMedicineFragment :
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+        binding.acbAddMedicine.setOnClickListener {
+            findNavController().navigate(R.id.action_myMedicineFragment_to_addMedicineFragment)
+        }
     }
 
     override fun bindData() {

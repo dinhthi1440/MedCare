@@ -66,5 +66,7 @@ dependencies {
     implementation ("io.insert-koin:koin-androidx-compose:${koin_version}")
 
     implementation ("com.squareup.picasso:picasso:2.8")
+    implementation ("com.airbnb.android:lottie:6.1.0")
+
 
 }
