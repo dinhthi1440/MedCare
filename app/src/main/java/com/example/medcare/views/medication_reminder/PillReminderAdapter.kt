@@ -29,10 +29,10 @@ class PillReminderAdapter(
         override fun bindView(item: PillReminder, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
             binding.apply {
-                txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: ${item.frequency}"
+                txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: ${item.frequency.label}"
                 txtReminderLabel.text = item.label
-                txtReminderMedicines.text = "\uD83D\uDC8A Thuốc: ${item.medicines}"
-                txtReminderTime.text = "⏰ Thời gian: ${item.times}"
+                //txtReminderMedicines.text = "\uD83D\uDC8A Thuốc: ${item.medicines.first()}"
+                txtReminderTime.text = "⏰ Thời gian: ${item.times.first().time}"
                 swtOn.isChecked = item.isOn
                 root.setOnClickListener {
                     onClick(item)

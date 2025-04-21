@@ -2,8 +2,10 @@ package com.example.medcare.data.database.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.medcare.data.database.local.dao.MedicineDAO
 import com.example.medcare.data.database.local.dao.PillReminderDAO
+import com.example.medcare.models.Converters
 import com.example.medcare.models.Medicine
 import com.example.medcare.views.medication_reminder.model.PillReminder
 
@@ -11,6 +13,7 @@ import com.example.medcare.views.medication_reminder.model.PillReminder
     entities = [Medicine::class, PillReminder::class],
     version = DataBaseLocal.VERSION
 )
+@TypeConverters(Converters::class)
 abstract class DataBaseLocal : RoomDatabase() {
 
     abstract val medicineDao: MedicineDAO

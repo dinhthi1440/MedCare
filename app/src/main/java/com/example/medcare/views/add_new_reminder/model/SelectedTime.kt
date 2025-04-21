@@ -5,7 +5,7 @@ import com.example.medcare.views.medication_reminder.model.PillReminder
 import java.io.Serializable
 
 data class SelectedTime(
-    val id: String,
+    val id: Int,
     val time: String,
     val amPm: String
 ): Serializable {

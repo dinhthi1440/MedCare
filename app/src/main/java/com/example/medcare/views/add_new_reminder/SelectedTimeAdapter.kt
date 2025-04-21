@@ -13,7 +13,7 @@ import com.example.medcare.views.add_new_reminder.model.SelectedTime
 import com.example.medcare.views.medication_reminder.model.PillReminder
 
 class SelectedTimeAdapter(
-    private val onDelete: (String) -> Unit,
+    private val onDelete: (Int) -> Unit,
 ) : BaseAdapter<SelectedTime, BaseViewHolder<SelectedTime>>(SelectedTime.differUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,

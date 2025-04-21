@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.example.medcare.extension.openDlLoading
 import java.text.DecimalFormat
 
 abstract class BaseFragment<VB : ViewBinding>(
@@ -55,7 +56,7 @@ abstract class BaseFragment<VB : ViewBinding>(
         super.onViewCreated(view, savedInstanceState)
         viewModel.isLoading.observe(viewLifecycleOwner) {
             if (it) {
-                //dialog?.openDlLoading(false)
+                dialog?.openDlLoading(false)
             } else {
                 dialog?.dismiss()
             }

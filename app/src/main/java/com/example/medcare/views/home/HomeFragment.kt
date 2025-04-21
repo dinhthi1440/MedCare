@@ -38,7 +38,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 findNavController().navigate(R.id.action_homeFragment_to_myMedicineFragment)
             }
             MenuItem.REMINDER -> {
-                findNavController().navigate(R.id.action_homeFragment_to_addNewReminderFragment)
+                findNavController().navigate(R.id.action_homeFragment_to_medicationReminderFragment)
             }
             MenuItem.HISTORY -> Toast.makeText(this.requireContext(), "Mở lịch sử", Toast.LENGTH_SHORT).show()
             MenuItem.FAMILY -> Toast.makeText(this.requireContext(), "Mở kết nối người thân", Toast.LENGTH_SHORT).show()

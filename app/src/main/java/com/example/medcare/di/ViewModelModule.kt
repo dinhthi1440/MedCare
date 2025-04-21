@@ -17,7 +17,7 @@ val viewModelModule = module {
     viewModel { MyMedicineViewModel(get()) }
     viewModel { MedicineDetailViewModel() }
     viewModel { AddMedicineViewModel(get()) }
-    viewModel { MedicationReminderViewModel() }
+    viewModel { MedicationReminderViewModel(get()) }
     viewModel { NewReminderViewModel(get()) }
     viewModel { SelectMedicineViewModel(get()) }
 }

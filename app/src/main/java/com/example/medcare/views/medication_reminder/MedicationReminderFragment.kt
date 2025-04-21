@@ -1,7 +1,9 @@
 package com.example.medcare.views.medication_reminder
 
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentMedicationReminderBinding
 import com.example.medcare.views.medication_reminder.model.PillReminder
@@ -22,7 +24,12 @@ class MedicationReminderFragment :
     }
 
     override fun handleEvent() {
-
+        binding.layoutAddNew.setOnClickListener{
+            findNavController().navigate(R.id.action_medicationReminderFragment_to_addNewReminderFragment)
+        }
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun bindData() {

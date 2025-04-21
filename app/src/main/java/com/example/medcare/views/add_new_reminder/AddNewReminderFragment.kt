@@ -10,6 +10,7 @@ import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentAddNewReminderBinding
 import com.example.medcare.extension.AlarmHelper
+import com.example.medcare.extension.RandomUtil
 import com.example.medcare.models.Medicine
 import com.example.medcare.views.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.add_new_reminder.model.SelectedTime
@@ -24,8 +25,8 @@ class AddNewReminderFragment :
     private val selectedMedicineAdapter by lazy { MedicineAdapter(false, ::onClickMedicine) }
     private lateinit var alarmHelper: AlarmHelper
     private var selectedTimes = mutableListOf(
-        SelectedTime(id = "1", time = "8:00", amPm = "AM"),
-        SelectedTime(id = "2", time = "12:30", amPm = "PM"),
+        SelectedTime(id = 1, time = "8:00", amPm = "AM"),
+        SelectedTime(id = 2, time = "12:30", amPm = "PM"),
     )
     override fun initData() {
         viewModel.getData()
@@ -37,7 +38,9 @@ class AddNewReminderFragment :
             binding.txtFrequency.text = it
         }
         binding.apply {
-
+            btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
             btnAddTime.setOnClickListener {
                 val pickerH = numPickerH.value
                 val pickerM = numPickerM.value
@@ -56,7 +59,7 @@ class AddNewReminderFragment :
                     Toast.makeText(context, "Thời gian này đã được chọn!", Toast.LENGTH_SHORT).show()
                 } else {
                     val newTimeSelected = SelectedTime(
-                        id = UUID.randomUUID().toString(),
+                        id = RandomUtil.randomIDInt(),
                         time = time,
                         amPm = amPm
                     )
@@ -83,22 +86,7 @@ class AddNewReminderFragment :
                 )
             }
             btnConfirm.setOnClickListener {
-                val firstTime = selectedTimes.firstOrNull()
-                if (firstTime != null) {
-                    val (hourStr, minuteStr) = firstTime.time.split(":")
-                    var hour = hourStr.toInt()
-                    val minute = minuteStr.toInt()
-                    if (firstTime.amPm == "PM" && hour != 12) {
-                        hour += 12
-                    } else if (firstTime.amPm == "AM" && hour == 12) {
-                        hour = 0
-                    }
-                    context?.let { it1 -> alarmHelper.registerAlarm(it1, hour, minute) }
-                    Toast.makeText(context, "Đã hẹn giờ thành công ${selectedTimes.first().time}", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Chưa có giờ nào được chọn!", Toast.LENGTH_SHORT).show()
-                }
-
+                insertReminder()
             }
         }
 
@@ -112,8 +100,17 @@ class AddNewReminderFragment :
         val content = binding.tietContent.text.toString()
         val note = binding.tietNote.text.toString()
         val disease = binding.tietDisease.text.toString()
-        viewModel.insertReminder(content, note, disease)
-
+        if (content.isEmpty() || note.isEmpty() || disease.isEmpty() || selectedTimes.isEmpty() ||
+            viewModel.listInitialSelected.value.isNullOrEmpty()
+            ) {
+            Toast.makeText(
+                requireContext(),
+                "Vui lòng điền đầy đủ thông tin",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        viewModel.insertReminder(times = selectedTimes, content, note, disease)
     }
 
     override fun bindData() {
@@ -132,13 +129,22 @@ class AddNewReminderFragment :
                 viewModel.setListSelectedMedicine(it.toMutableList())
             }
         }
+        viewModel.getInsertStatus.observe(viewLifecycleOwner){
+            if(it){
+                findNavController().popBackStack()
+                context?.let { it1 -> alarmHelper.registerAlarm(it1, viewModel.pillReminder) }
+                Toast.makeText(context, "Đã hẹn giờ thành công", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Có lỗi trong khi thêm", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun destroy() {
 
     }
 
-    private fun onRemoveTimeSelected(id: String) {
+    private fun onRemoveTimeSelected(id: Int) {
         selectedTimes.removeAll { it.id == id }
         selectedTimeAdapter.submitList(selectedTimes)
         binding.rcvListTime.adapter = selectedTimeAdapter

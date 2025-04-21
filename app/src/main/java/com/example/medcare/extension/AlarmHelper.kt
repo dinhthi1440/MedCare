@@ -8,7 +8,11 @@ import android.media.MediaPlayer
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
+import android.util.Log
+import com.example.medcare.views.add_new_reminder.add_frequency.DateCustom
+import com.example.medcare.views.add_new_reminder.model.SelectedTime
 import com.example.medcare.views.main.AlarmReceiver
+import com.example.medcare.views.medication_reminder.model.PillReminder
 import java.util.Calendar
 
 class AlarmHelper(private val context: Context) {
@@ -41,22 +45,112 @@ class AlarmHelper(private val context: Context) {
         vibrator?.cancel()
     }
     @SuppressLint("ScheduleExactAlarm")
-    fun registerAlarm(context: Context, hour: Int, minute: Int) {
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+    fun registerAlarm(context: Context, reminder: PillReminder) {
+        val today = Calendar.getInstance()
 
-            if (before(Calendar.getInstance())) {
-                add(Calendar.DAY_OF_MONTH, 1) // Nếu thời gian đã qua, đặt cho ngày mai
+        reminder.times.forEach { timeSelected ->
+            val (hourStr, minuteStr) = timeSelected.time.split(":")
+            var hour = hourStr.toInt()
+            val minute = minuteStr.toInt()
+
+            if (timeSelected.amPm.equals("PM", ignoreCase = true) && hour != 12) {
+                hour += 12
+            } else if (timeSelected.amPm.equals("AM", ignoreCase = true) && hour == 12) {
+                hour = 0
+            }
+
+            val baseCalendar = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+            val frequency = reminder.frequency
+            val label = frequency.label
+            val selectedDays = frequency.listDateSelected
+
+            when (label) {
+                "Hôm nay" -> {
+                    if (baseCalendar.after(today)) {
+                        scheduleAlarm(context, reminder, timeSelected, baseCalendar)
+                    }
+                }
+
+                "Mỗi ngày" -> {
+                    if (baseCalendar.before(today)) {
+                        baseCalendar.add(Calendar.DAY_OF_MONTH, 1)
+                    }
+                    scheduleAlarm(context, reminder, timeSelected, baseCalendar)
+                }
+
+                "Cách ngày" -> {
+                    // Đặt alarm cho hôm nay hoặc ngày kế tiếp cách 2 ngày
+                    val startCalendar = if (baseCalendar.before(today)) {
+                        baseCalendar.add(Calendar.DAY_OF_MONTH, 2)
+                        baseCalendar
+                    } else {
+                        baseCalendar
+                    }
+                    scheduleAlarm(context, reminder, timeSelected, startCalendar)
+                }
+
+                "Tuỳ chỉnh" -> {
+                    if (!selectedDays.isNullOrEmpty()) {
+                        // Tìm ngày trong tuần gần nhất phù hợp
+                        for (i in 0..6) {
+                            val checkCalendar = baseCalendar.clone() as Calendar
+                            checkCalendar.add(Calendar.DAY_OF_YEAR, i)
+
+                            val dayOfWeek = checkCalendar.get(Calendar.DAY_OF_WEEK)
+                            val dateCustom = dayOfWeekToDateCustom(dayOfWeek)
+
+                            if (selectedDays.contains(dateCustom)) {
+                                if (checkCalendar.after(today)) {
+                                    scheduleAlarm(context, reminder, timeSelected, checkCalendar)
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+
+                else -> {
+                    // Mặc định nếu không khớp gì
+                    if (baseCalendar.before(today)) {
+                        baseCalendar.add(Calendar.DAY_OF_MONTH, 1)
+                    }
+                    scheduleAlarm(context, reminder, timeSelected, baseCalendar)
+                }
             }
         }
+    }
 
-        val intent = Intent(context, AlarmReceiver::class.java)
+    private fun dayOfWeekToDateCustom(dayOfWeek: Int): DateCustom = when (dayOfWeek) {
+        Calendar.MONDAY -> DateCustom.Monday
+        Calendar.TUESDAY -> DateCustom.Tuesday
+        Calendar.WEDNESDAY -> DateCustom.Wednesday
+        Calendar.THURSDAY -> DateCustom.Thursday
+        Calendar.FRIDAY -> DateCustom.Friday
+        Calendar.SATURDAY -> DateCustom.Saturday
+        Calendar.SUNDAY -> DateCustom.Sunday
+        else -> DateCustom.Monday
+    }
+    @SuppressLint("ScheduleExactAlarm")
+    private fun scheduleAlarm(
+        context: Context,
+        reminder: PillReminder,
+        timeSelected: SelectedTime,
+        calendar: Calendar
+    ) {
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra("alarm_id", timeSelected.id)
+            putExtra("alarm_message", "${reminder.label}: Đến giờ uống thuốc!")
+        }
+
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            timeSelected.id,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -67,6 +161,8 @@ class AlarmHelper(private val context: Context) {
             calendar.timeInMillis,
             pendingIntent
         )
+
+        Log.d("Alarm", "✅ Alarm set at ${calendar.time} for ${reminder.label}")
     }
 
     fun removeAlarm(context: Context, requestCode: Int) {
