@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -54,19 +55,22 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
     //navigation
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.8.9")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.8.9")
-    implementation ("androidx.core:core-animation:1.0.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
+    implementation("androidx.core:core-animation:1.0.0")
 
     val koin_version = "3.3.0"
     val koin_core_version = "3.2.2"
-    implementation ("io.insert-koin:koin-core:${koin_core_version}")
-    implementation ("io.insert-koin:koin-android:${koin_version}")
-    implementation ("io.insert-koin:koin-androidx-navigation:${koin_version}")
-    implementation ("io.insert-koin:koin-androidx-compose:${koin_version}")
+    implementation("io.insert-koin:koin-core:${koin_core_version}")
+    implementation("io.insert-koin:koin-android:${koin_version}")
+    implementation("io.insert-koin:koin-androidx-navigation:${koin_version}")
+    implementation("io.insert-koin:koin-androidx-compose:${koin_version}")
 
-    implementation ("com.squareup.picasso:picasso:2.8")
-    implementation ("com.airbnb.android:lottie:6.1.0")
+    implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.airbnb.android:lottie:6.1.0")
 
-
+    val room_version = "2.5.0"
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-rxjava3:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
 }

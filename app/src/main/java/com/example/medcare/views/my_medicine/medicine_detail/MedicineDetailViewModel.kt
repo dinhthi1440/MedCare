@@ -3,7 +3,7 @@ package com.example.medcare.views.my_medicine.medicine_detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.medcare.base.BaseViewModel
-import com.example.medcare.views.my_medicine.medicine_list.model.Medicine
+import com.example.medcare.models.Medicine
 
 class MedicineDetailViewModel: BaseViewModel() {
     private val _getMedicine = MutableLiveData<Medicine>()

@@ -5,6 +5,13 @@
     <color name="ccBlue">#007BFF</color>
     <color name="ccBlueBtnPrimary">#AEE5FA</color>
     <color name="ccBlueText">#003B73</color>
+    <color name="ccBlueTextSelected">#1C4EBF</color>
+    <color name="ccRedText">#EF0000</color>
+    <color name="ccRedCrimsonText">#EB6649</color>
     <color name="shadow_color">#40000000</color>
     <color name="ccGrayBlackText">#6D6D6D</color>
+    <color name="ccGrayBlackBtn">#DADADA</color>
+    <color name="ccGrayBlack7676Text">#767676</color>
+    <color name="yourSelectedColor">#E0E8FC</color>
+    <color name="yourUnselectedColor">#F2F2F2</color>
 </resources>

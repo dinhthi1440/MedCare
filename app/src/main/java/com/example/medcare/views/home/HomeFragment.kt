@@ -37,11 +37,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             MenuItem.MEDICINE -> {
                 findNavController().navigate(R.id.action_homeFragment_to_myMedicineFragment)
             }
-            MenuItem.REMINDER -> Toast.makeText(this.requireContext(), "Mở nhắc nhở", Toast.LENGTH_SHORT).show()
+            MenuItem.REMINDER -> {
+                findNavController().navigate(R.id.action_homeFragment_to_addNewReminderFragment)
+            }
             MenuItem.HISTORY -> Toast.makeText(this.requireContext(), "Mở lịch sử", Toast.LENGTH_SHORT).show()
             MenuItem.FAMILY -> Toast.makeText(this.requireContext(), "Mở kết nối người thân", Toast.LENGTH_SHORT).show()
             MenuItem.CONSULT -> Toast.makeText(this.requireContext(), "Mở tư vấn sức khỏe", Toast.LENGTH_SHORT).show()
-            MenuItem.APPOINTMENT -> Toast.makeText(this.requireContext(), "Mở đặt lịch khám", Toast.LENGTH_SHORT).show()
+            MenuItem.APPOINTMENT -> {
+                findNavController().navigate(R.id.action_homeFragment_to_reminderFragment)
+            }
         }
     }
 

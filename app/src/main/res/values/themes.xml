@@ -6,5 +6,12 @@
         <item name="colorControlNormal">@color/ccBlue</item>
 
     </style>
+
     <style name="Theme.MedCare" parent="Base.Theme.MedCare" />
+
+    <style name="NumberPickerText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColorPrimary">@color/ccBlueText</item>
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
 </resources>
