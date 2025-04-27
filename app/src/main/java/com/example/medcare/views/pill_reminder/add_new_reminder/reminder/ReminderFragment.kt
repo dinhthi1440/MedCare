@@ -1,4 +1,4 @@
-package com.example.medcare.views.add_new_reminder.reminder
+package com.example.medcare.views.pill_reminder.add_new_reminder.reminder
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

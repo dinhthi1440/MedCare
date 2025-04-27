@@ -1,15 +1,13 @@
-package com.example.medcare.views.add_new_reminder.add_frequency
+package com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentAddFrequencyBinding
 import com.example.medcare.extension.selectCustomDate
-import com.example.medcare.views.add_new_reminder.NewReminderViewModel
+import com.example.medcare.views.pill_reminder.add_new_reminder.NewReminderViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddFrequencyFragment() : BaseFragment<FragmentAddFrequencyBinding>(FragmentAddFrequencyBinding::inflate) {
@@ -36,7 +34,9 @@ class AddFrequencyFragment() : BaseFragment<FragmentAddFrequencyBinding>(Fragmen
 
     override fun bindData() {
         viewModel.selectFrequency(frequencyModel)
-        listInitialSelected = frequencyModel.listDateSelected?.toMutableList() ?: mutableListOf(DateCustom.Monday)
+        listInitialSelected = frequencyModel.listDateSelected?.toMutableList() ?: mutableListOf(
+            DateCustom.Monday
+        )
         dayItems = listOf(
             FrequencyModel(1, "Hôm nay", false),
             FrequencyModel(2, "Mỗi ngày", false),

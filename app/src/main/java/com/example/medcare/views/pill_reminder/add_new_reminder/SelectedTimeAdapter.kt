@@ -1,16 +1,12 @@
-package com.example.medcare.views.add_new_reminder
+package com.example.medcare.views.pill_reminder.add_new_reminder
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
-import com.example.medcare.databinding.ItemReminderBinding
 import com.example.medcare.databinding.ItemSelectedTimeBinding
-import com.example.medcare.views.add_new_reminder.model.SelectedTime
-import com.example.medcare.views.medication_reminder.model.PillReminder
+import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 
 class SelectedTimeAdapter(
     private val onDelete: (Int) -> Unit,

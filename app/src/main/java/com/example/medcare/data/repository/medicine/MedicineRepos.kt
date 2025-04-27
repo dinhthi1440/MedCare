@@ -17,4 +17,5 @@ class MedicineRepos(private val local: IMedicineDataSource.Local): BaseRepositor
     override suspend fun deleteMedicine(idMedicine: String): DataResult<Int> {
         return getResult { local.deleteMedicine(idMedicine) }
     }
+
 }

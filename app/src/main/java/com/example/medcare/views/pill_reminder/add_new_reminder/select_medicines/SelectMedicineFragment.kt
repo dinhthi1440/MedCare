@@ -1,15 +1,11 @@
-package com.example.medcare.views.add_new_reminder.select_medicines
+package com.example.medcare.views.pill_reminder.add_new_reminder.select_medicines
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentSelectMedicineBinding
 import com.example.medcare.models.Medicine
-import com.example.medcare.views.add_new_reminder.add_frequency.DateCustom
-import com.example.medcare.views.add_new_reminder.add_frequency.FrequencyAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SelectMedicineFragment :

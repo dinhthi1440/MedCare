@@ -1,8 +1,7 @@
 package com.example.medcare.data.datasource.medicine
 
-import androidx.room.Query
-import com.example.medcare.data.database.local.DataBaseLocal
 import com.example.medcare.models.Medicine
+import com.example.medcare.views.pill_reminder.model.PillReminder
 
 interface IMedicineDataSource {
     interface Local {

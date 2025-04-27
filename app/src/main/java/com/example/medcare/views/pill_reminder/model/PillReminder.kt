@@ -1,12 +1,12 @@
-package com.example.medcare.views.medication_reminder.model
+package com.example.medcare.views.pill_reminder.model
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.medcare.data.database.local.DataBaseLocal
 import com.example.medcare.models.Medicine
-import com.example.medcare.views.add_new_reminder.add_frequency.FrequencyModel
-import com.example.medcare.views.add_new_reminder.model.SelectedTime
+import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
+import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import java.io.Serializable
 @Entity(tableName = DataBaseLocal.TABLE_PILL_REMINDER)
 data class PillReminder(
@@ -16,7 +16,7 @@ data class PillReminder(
     val times: List<SelectedTime>,
     val frequency: FrequencyModel,
     val medicines: List<Medicine>,
-    val isOn: Boolean,
+    var isOn: Boolean,
     val note: String,
     val disease: String
 ): Serializable {

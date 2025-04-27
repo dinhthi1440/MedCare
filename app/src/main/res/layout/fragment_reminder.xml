@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/img_bg_app"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".views.add_new_reminder.reminder.ReminderFragment">
+    tools:context=".views.pill_reminder.add_new_reminder.reminder.ReminderFragment">
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="120dp"

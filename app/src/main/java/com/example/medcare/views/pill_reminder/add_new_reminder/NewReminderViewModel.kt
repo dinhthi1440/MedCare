@@ -1,15 +1,14 @@
-package com.example.medcare.views.add_new_reminder
+package com.example.medcare.views.pill_reminder.add_new_reminder
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.pillreminder.IPillReminderRepos
+import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.models.Medicine
-import com.example.medcare.views.add_new_reminder.add_frequency.FrequencyModel
-import com.example.medcare.views.add_new_reminder.model.SelectedTime
-import com.example.medcare.views.medication_reminder.model.PillReminder
+import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
+import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
+import com.example.medcare.views.pill_reminder.model.PillReminder
 import java.util.UUID
 
 class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Local) : BaseViewModel() {
@@ -22,7 +21,8 @@ class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Lo
 
     private val _setInsertStatus = MutableLiveData<Boolean>()
     val getInsertStatus: LiveData<Boolean> get() = _setInsertStatus
-    lateinit var pillReminder: PillReminder
+    private val _setPillReminder = MutableLiveData<PillReminder>()
+    val getPillReminder: LiveData<PillReminder> get() = _setPillReminder
 
     fun getData(){
         if (frequencySelected.label == "Tuỳ chỉnh" && frequencySelected.listDateSelected != null) {
@@ -58,13 +58,38 @@ class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Lo
             request = {iPillReminderRepos.insertPillReminder(reminder)},
             onSuccess = {
                 _setInsertStatus.value = (it>=0)
-                pillReminder = reminder
+                _setPillReminder.value = reminder
             },
             onError = {
                 _setInsertStatus.value = false
             }
         )
+    }
 
+    fun getReminderById(reminderId: String) {
+        executeTask(
+            request = { iPillReminderRepos.getPillReminderById(reminderId) },
+            onSuccess = {
+                if (it != null) {
+                    _setPillReminder.value = it
+                }
+            },
+            onError = {
+
+            }
+        )
+    }
+
+    fun updateReminder(pillReminder: PillReminder){
+        executeTask(
+            request = {iPillReminderRepos.updatePillReminder(pillReminder)},
+            onSuccess = {
+
+            },
+            onError = {
+
+            }
+        )
     }
 
 

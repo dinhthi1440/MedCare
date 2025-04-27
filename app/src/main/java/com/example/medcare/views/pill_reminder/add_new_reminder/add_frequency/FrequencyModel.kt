@@ -1,4 +1,4 @@
-package com.example.medcare.views.add_new_reminder.add_frequency
+package com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency
 
 import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable

@@ -1,8 +1,8 @@
 package com.example.medcare.models
 
 import androidx.room.TypeConverter
-import com.example.medcare.views.add_new_reminder.add_frequency.FrequencyModel
-import com.example.medcare.views.add_new_reminder.model.SelectedTime
+import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
+import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

@@ -3,16 +3,13 @@ package com.example.medcare.extension
 import android.app.Dialog
 import android.graphics.Color.TRANSPARENT
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.medcare.R
 import com.example.medcare.databinding.DlAnimationLoadingBinding
 import com.example.medcare.databinding.DlSelectCustomDateBinding
-import com.example.medcare.views.add_new_reminder.add_frequency.DateCustom
-import com.example.medcare.views.add_new_reminder.add_frequency.DateCustomAdapter
-import com.example.medcare.views.add_new_reminder.add_frequency.FrequencyModel
+import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustom
+import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustomAdapter
 
 fun Dialog.openDlLoading(stopFlag: Boolean) {
     val binding = DlAnimationLoadingBinding.inflate(layoutInflater)

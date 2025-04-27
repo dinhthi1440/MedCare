@@ -1,4 +1,4 @@
-package com.example.medcare.views.add_new_reminder.select_medicines
+package com.example.medcare.views.pill_reminder.add_new_reminder.select_medicines
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

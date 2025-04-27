@@ -1,6 +1,7 @@
 package com.example.medcare.views.my_medicine.medicine_list
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ class MedicineAdapter(private val isSelectMedicine: Boolean, private val onClick
         @SuppressLint("SetTextI18n")
         override fun bindView(item: Medicine, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
+
             if (!isSelectMedicine) {
                 binding.apply {
                     txtExpirationDate.visibility = View.GONE

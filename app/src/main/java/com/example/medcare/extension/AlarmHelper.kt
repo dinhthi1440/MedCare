@@ -8,11 +8,10 @@ import android.media.MediaPlayer
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
-import android.util.Log
-import com.example.medcare.views.add_new_reminder.add_frequency.DateCustom
-import com.example.medcare.views.add_new_reminder.model.SelectedTime
+import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustom
+import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.views.main.AlarmReceiver
-import com.example.medcare.views.medication_reminder.model.PillReminder
+import com.example.medcare.views.pill_reminder.model.PillReminder
 import java.util.Calendar
 
 class AlarmHelper(private val context: Context) {
@@ -145,6 +144,7 @@ class AlarmHelper(private val context: Context) {
     ) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("alarm_id", timeSelected.id)
+            putExtra("reminder_id", reminder.id)
             putExtra("alarm_message", "${reminder.label}: Đến giờ uống thuốc!")
         }
 
@@ -162,7 +162,6 @@ class AlarmHelper(private val context: Context) {
             pendingIntent
         )
 
-        Log.d("Alarm", "✅ Alarm set at ${calendar.time} for ${reminder.label}")
     }
 
     fun removeAlarm(context: Context, requestCode: Int) {

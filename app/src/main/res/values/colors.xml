@@ -10,6 +10,7 @@
     <color name="ccRedCrimsonText">#EB6649</color>
     <color name="shadow_color">#40000000</color>
     <color name="ccGrayBlackText">#6D6D6D</color>
+    <color name="ccGrayBlackBg">#F1F1F1</color>
     <color name="ccGrayBlackBtn">#DADADA</color>
     <color name="ccGrayBlack7676Text">#767676</color>
     <color name="yourSelectedColor">#E0E8FC</color>

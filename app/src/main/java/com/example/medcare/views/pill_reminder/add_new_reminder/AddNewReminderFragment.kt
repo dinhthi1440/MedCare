@@ -1,4 +1,4 @@
-package com.example.medcare.views.add_new_reminder
+package com.example.medcare.views.pill_reminder.add_new_reminder
 
 import android.os.Bundle
 import android.util.Log
@@ -12,11 +12,10 @@ import com.example.medcare.databinding.FragmentAddNewReminderBinding
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.extension.RandomUtil
 import com.example.medcare.models.Medicine
-import com.example.medcare.views.add_new_reminder.add_frequency.FrequencyModel
-import com.example.medcare.views.add_new_reminder.model.SelectedTime
+import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
+import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.UUID
 
 class AddNewReminderFragment :
     BaseFragment<FragmentAddNewReminderBinding>(FragmentAddNewReminderBinding::inflate) {
@@ -28,15 +27,20 @@ class AddNewReminderFragment :
         SelectedTime(id = 1, time = "8:00", amPm = "AM"),
         SelectedTime(id = 2, time = "12:30", amPm = "PM"),
     )
+    private var reminderId = ""
     override fun initData() {
-        viewModel.getData()
+        reminderId = arguments?.getString("reminder_id") ?: ""
         alarmHelper = AlarmHelper(this.requireContext())
+        Log.e("TAG", "initData: là 1111 ${reminderId}", )
+        if (reminderId != ""){
+            viewModel.getReminderById(reminderId)
+        } else {
+            viewModel.getData()
+        }
     }
 
     override fun handleEvent() {
-        viewModel.getFrequencyStr.observe(viewLifecycleOwner){
-            binding.txtFrequency.text = it
-        }
+
         binding.apply {
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
@@ -97,20 +101,27 @@ class AddNewReminderFragment :
     }
 
     private fun insertReminder() {
-        val content = binding.tietContent.text.toString()
-        val note = binding.tietNote.text.toString()
-        val disease = binding.tietDisease.text.toString()
-        if (content.isEmpty() || note.isEmpty() || disease.isEmpty() || selectedTimes.isEmpty() ||
-            viewModel.listInitialSelected.value.isNullOrEmpty()
+        if (reminderId != "") {
+            val pillReminder = viewModel.getPillReminder.value
+
+            viewModel.updateReminder(pillReminder!!)
+        } else {
+            val content = binding.tietContent.text.toString()
+            val note = binding.tietNote.text.toString()
+            val disease = binding.tietDisease.text.toString()
+
+            if (content.isEmpty() || note.isEmpty() || disease.isEmpty() || selectedTimes.isEmpty() ||
+                viewModel.listInitialSelected.value.isNullOrEmpty()
             ) {
-            Toast.makeText(
-                requireContext(),
-                "Vui lòng điền đầy đủ thông tin",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
+                Toast.makeText(
+                    requireContext(),
+                    "Vui lòng điền đầy đủ thông tin",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
+            viewModel.insertReminder(times = selectedTimes, content, note, disease)
         }
-        viewModel.insertReminder(times = selectedTimes, content, note, disease)
     }
 
     override fun bindData() {
@@ -129,14 +140,30 @@ class AddNewReminderFragment :
                 viewModel.setListSelectedMedicine(it.toMutableList())
             }
         }
-        viewModel.getInsertStatus.observe(viewLifecycleOwner){
-            if(it){
-                findNavController().popBackStack()
-                context?.let { it1 -> alarmHelper.registerAlarm(it1, viewModel.pillReminder) }
-                Toast.makeText(context, "Đã hẹn giờ thành công", Toast.LENGTH_SHORT).show()
-            } else {
+        viewModel.getInsertStatus.observe(viewLifecycleOwner) {
+            if (!it) {
                 Toast.makeText(context, "Có lỗi trong khi thêm", Toast.LENGTH_SHORT).show()
             }
+        }
+        viewModel.getPillReminder.observe(viewLifecycleOwner) {
+
+        }
+        viewModel.getPillReminder.observe(viewLifecycleOwner) {reminder ->
+            if (reminderId != ""){
+                selectedTimes = reminder.times.toMutableList()
+                binding.tietContent.setText(reminder.label)
+                binding.tietNote.setText(reminder.note)
+                binding.tietDisease.setText(reminder.disease)
+                viewModel.selectFrequency(reminder.frequency)
+                viewModel.setListSelectedMedicine(reminder.medicines.toMutableList())
+            } else {
+                findNavController().popBackStack()
+                context?.let { it1 -> alarmHelper.registerAlarm(it1, reminder) }
+                Toast.makeText(context, "Đã hẹn giờ thành công", Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.getFrequencyStr.observe(viewLifecycleOwner){
+            binding.txtFrequency.text = it
         }
     }
 
