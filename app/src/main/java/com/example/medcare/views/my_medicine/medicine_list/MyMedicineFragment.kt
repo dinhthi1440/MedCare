@@ -30,7 +30,9 @@ class MyMedicineFragment :
     }
 
     override fun bindData() {
-        listenBackScreen()
+        listenBackScreen("boolean_result_key", "key_boolean") {
+            viewModel.getMedicineList()
+        }
         viewModel.getMedicines.observe(viewLifecycleOwner) { medicines ->
             if (medicines.isNotEmpty()){
                 binding.txtEmptyList.visibility = View.GONE
@@ -53,15 +55,6 @@ class MyMedicineFragment :
             putString("medicine_name", medicine.name)
         }
         findNavController().navigate(R.id.action_myMedicineFragment_to_medicineDetailFragment, bundle)
-    }
-
-    private fun listenBackScreen() {
-        parentFragmentManager.setFragmentResultListener("boolean_result_key", viewLifecycleOwner) { key, bundle ->
-            val reload = bundle.getBoolean("key_boolean", false)
-            if (reload) {
-                viewModel.getMedicineList()
-            }
-        }
     }
 
     override fun destroy() {

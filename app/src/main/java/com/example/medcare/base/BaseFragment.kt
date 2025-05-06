@@ -25,6 +25,18 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected fun dialog(context1: Context): Dialog {
         return Dialog(context1)
     }
+    protected fun listenBackScreen(
+        resultKey: String = "",
+        booleanKey: String = "",
+        onResult: () -> Unit
+    ) {
+        parentFragmentManager.setFragmentResultListener(resultKey, viewLifecycleOwner) { _, bundle ->
+            val reload = bundle.getBoolean(booleanKey, false)
+            if (reload) {
+                onResult()
+            }
+        }
+    }
 
     protected fun showKeyboard(context1: Context) {
         val inputMethodManager =

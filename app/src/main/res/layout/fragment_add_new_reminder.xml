@@ -113,11 +113,6 @@
                         android:divider="#ebebeb"
                         android:theme="@style/NumberPickerText" />
 
-                    <NumberPicker
-                        android:id="@+id/numPickerAm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/NumberPickerText" />
                 </LinearLayout>
 
                 <Button

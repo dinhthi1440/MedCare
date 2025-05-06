@@ -8,5 +8,7 @@ interface IMedicineDataSource {
         suspend fun insertMedicine(medicine: Medicine): Long
         suspend fun getAllMedicine(): List<Medicine>
         suspend fun deleteMedicine(idMedicine: String): Int
+        suspend fun getMedicineById(idMedicine: String): Medicine
+        suspend fun updateMedicine(medicine: Medicine): Int
     }
 }

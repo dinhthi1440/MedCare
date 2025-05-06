@@ -16,4 +16,12 @@ class MedicineDataSource(private val dataBaseLocal: DataBaseLocal): IMedicineDat
         return dataBaseLocal.medicineDao.deleteMedicine(idMedicine)
     }
 
+    override suspend fun getMedicineById(idMedicine: String): Medicine {
+        return dataBaseLocal.medicineDao.getMedicineById(idMedicine)
+    }
+
+    override suspend fun updateMedicine(medicine: Medicine): Int {
+        return dataBaseLocal.medicineDao.updateMedicine(medicine)
+    }
+
 }

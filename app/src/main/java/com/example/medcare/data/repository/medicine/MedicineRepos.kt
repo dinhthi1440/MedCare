@@ -18,4 +18,12 @@ class MedicineRepos(private val local: IMedicineDataSource.Local): BaseRepositor
         return getResult { local.deleteMedicine(idMedicine) }
     }
 
+    override suspend fun getMedicineById(idMedicine: String): DataResult<Medicine> {
+        return getResult { local.getMedicineById(idMedicine) }
+    }
+
+    override suspend fun updateMedicine(medicine: Medicine): DataResult<Int> {
+        return getResult { local.updateMedicine(medicine) }
+    }
+
 }

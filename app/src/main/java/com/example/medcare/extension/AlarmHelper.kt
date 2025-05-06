@@ -52,12 +52,6 @@ class AlarmHelper(private val context: Context) {
             var hour = hourStr.toInt()
             val minute = minuteStr.toInt()
 
-            if (timeSelected.amPm.equals("PM", ignoreCase = true) && hour != 12) {
-                hour += 12
-            } else if (timeSelected.amPm.equals("AM", ignoreCase = true) && hour == 12) {
-                hour = 0
-            }
-
             val baseCalendar = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, hour)
                 set(Calendar.MINUTE, minute)
@@ -115,7 +109,6 @@ class AlarmHelper(private val context: Context) {
                 }
 
                 else -> {
-                    // Mặc định nếu không khớp gì
                     if (baseCalendar.before(today)) {
                         baseCalendar.add(Calendar.DAY_OF_MONTH, 1)
                     }
@@ -168,7 +161,7 @@ class AlarmHelper(private val context: Context) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            0,
+            requestCode,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )

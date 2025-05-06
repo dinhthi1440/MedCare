@@ -182,13 +182,29 @@
                     android:textFontWeight="500"
                     android:textSize="16sp"
                     tools:targetApi="p" />
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tiet_quantity"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="50"
-                    android:maxLines="2" />
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiet_quantity"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:hint="Số lượng" />
+
+                    <Spinner
+                        android:id="@+id/spinner_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:entries="@array/medicine_units" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -215,14 +231,38 @@
                     android:textSize="16sp"
                     tools:targetApi="p" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tiet_dosage"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:maxLength="30"
-                    android:maxLines="1" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiet_dosage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:hint="Liều lượng"
+                        android:maxLength="30"
+                        android:maxLines="1" />
+
+                    <TextView
+                        android:id="@+id/tv_once"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text=" gói / lần"
+                        android:layout_marginLeft="8dp"
+                        android:textFontWeight="500"
+                        android:textSize="16sp"
+                        tools:targetApi="p"
+                        android:textColor="@color/ccBlueText"
+                        android:fontFamily="@font/inter" />
+                </LinearLayout>
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/linearLayout7"
@@ -236,7 +276,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
                 app:layout_constraintVertical_bias="0.0">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -247,14 +286,29 @@
                     android:textFontWeight="500"
                     android:textSize="16sp"
                     tools:targetApi="p" />
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tiet_expiration_date"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="50"
-                    android:maxLines="2" />
+                    android:orientation="horizontal"
+                    android:gravity="start|center_vertical">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tiet_expiration_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="date"
+                        android:maxLength="50"
+                        android:maxLines="2" />
+
+                    <ImageView
+                        android:id="@+id/img_calendar_icon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/ic_calendar" />
+                </LinearLayout>
             </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/linearLayout5"
@@ -303,6 +357,27 @@
         android:background="@drawable/bg_blue_btn"
         android:fontFamily="@font/inter"
         android:text="@string/add"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textFontWeight="500"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:targetApi="p" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_success"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_blue_btn"
+        android:fontFamily="@font/inter"
+        android:text="Hoàn thành"
+        android:visibility="gone"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textFontWeight="500"

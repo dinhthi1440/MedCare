@@ -35,6 +35,7 @@ class MedicationReminderFragment :
     }
 
     override fun bindData() {
+
         viewModel.getReminderList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) {
                 binding.txtEmptyList.visibility = View.VISIBLE
@@ -46,6 +47,9 @@ class MedicationReminderFragment :
                 reminderAdapter.submitList(it)
                 binding.rcvPillReminder.adapter = reminderAdapter
             }
+        }
+        listenBackScreen("boolean_result_key", "key_boolean") {
+            viewModel.getReminderList()
         }
     }
 

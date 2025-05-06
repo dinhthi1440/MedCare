@@ -4,10 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.pillreminder.IPillReminderRepos
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.views.pill_reminder.model.PillReminder
+import kotlinx.coroutines.launch
 
 class MedicationReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Local): BaseViewModel() {
     private val _setReminderList = MutableLiveData<MutableList<PillReminder>>()
@@ -29,24 +31,16 @@ class MedicationReminderViewModel(private val iPillReminderRepos: IPillReminderR
     }
 
     fun deleteReminder(pillReminder: PillReminder, context: Context) {
-        alarmHelper = AlarmHelper(context)
-
-        for (time in pillReminder.times) {
-            alarmHelper.removeAlarm(context, time.id)
-        }
-        executeTask(
-            request = { iPillReminderRepos.deletePillReminder(pillReminder.id) },
-            onSuccess = {
-                if (it >= 0) {
-                    val updatedList = getReminderList.value?.toMutableList() ?: mutableListOf()
-                    updatedList.remove(pillReminder)
-                    _setReminderList.value = updatedList
-                }
-            },
-            onError = {
-                Log.e("TAG", "deleteReminder: fail 1111111", )
+        viewModelScope.launch {
+            iPillReminderRepos.deletePillReminder(pillReminder.id)
+            alarmHelper = AlarmHelper(context)
+            for (time in pillReminder.times) {
+                alarmHelper.removeAlarm(context, time.id)
             }
-        )
+            val updatedList = getReminderList.value?.toMutableList() ?: mutableListOf()
+            updatedList.remove(pillReminder)
+            _setReminderList.value = updatedList
+        }
     }
 
     fun updateReminder(pillReminder: PillReminder){

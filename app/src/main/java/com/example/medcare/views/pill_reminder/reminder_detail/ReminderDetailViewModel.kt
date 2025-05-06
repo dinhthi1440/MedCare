@@ -4,10 +4,13 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.pillreminder.IPillReminderRepos
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.views.pill_reminder.model.PillReminder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos.Local) : BaseViewModel() {
 
@@ -19,12 +22,14 @@ class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos
     val getReminder: LiveData<PillReminder> get() = _setReminder
 
     fun deleteReminder(pillReminder: PillReminder, context: Context) {
-        alarmHelper = AlarmHelper(context)
-
-        for (time in pillReminder.times) {
-            alarmHelper.removeAlarm(context, time.id)
+        viewModelScope.launch {
+            iPillReminderRepos.deletePillReminder(pillReminder.id)
+            alarmHelper = AlarmHelper(context)
+            for (time in pillReminder.times) {
+                alarmHelper.removeAlarm(context, time.id)
+            }
+            _setDeleteStatus.value = true
         }
-        _setDeleteStatus.value = true
     }
 
     fun getReminderById(reminderId: String) {
@@ -40,6 +45,7 @@ class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos
             }
         )
     }
+
 
     fun updateReminder(pillReminder: PillReminder){
         executeTask(

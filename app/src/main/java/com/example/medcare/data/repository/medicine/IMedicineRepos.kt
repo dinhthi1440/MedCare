@@ -8,5 +8,7 @@ interface IMedicineRepos {
         suspend fun insertMedicine(medicine: Medicine): DataResult<Long>
         suspend fun getAllMedicine(): DataResult<List<Medicine>>
         suspend fun deleteMedicine(idMedicine: String): DataResult<Int>
+        suspend fun getMedicineById(idMedicine: String): DataResult<Medicine>
+        suspend fun updateMedicine(medicine: Medicine): DataResult<Int>
     }
 }

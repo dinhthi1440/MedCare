@@ -17,8 +17,8 @@ class ReminderFragment : Fragment() {
     private val medicineAdapter by lazy { MedicineAdapter(false, null) }
 
     private val medicines = mutableListOf(
-        Medicine("1", "Paracetamol 500mg", "paracetamol.png", "2025-12-31", 23, "viên"),
-        Medicine("2", "Amoxicillin 250mg", "amoxicillin.png", "2026-06-15", 10, "viên"),
+        Medicine("1", "Paracetamol 500mg", "paracetamol.png", "2025-12-31", 23, 22, 10, "viên"),
+        Medicine("2", "Amoxicillin 250mg", "amoxicillin.png", "2026-06-15", 10, 9, 3,"viên"),
     )
 
     override fun onCreateView(

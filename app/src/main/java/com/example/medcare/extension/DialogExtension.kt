@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.databinding.DlAnimationLoadingBinding
+import com.example.medcare.databinding.DlConfirmBinding
 import com.example.medcare.databinding.DlSelectCustomDateBinding
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustom
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustomAdapter
@@ -72,5 +73,37 @@ fun Dialog.selectCustomDate(
         dismiss()
     }
 
+    show()
+}
+
+fun Dialog.confirmEvent(
+    title: String,
+    content: String,
+    onConfirm: () -> Unit,
+) {
+    val binding = DlConfirmBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        tvTitle.text = title
+        tvContent.text = content
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnOk.setOnClickListener {
+            onConfirm()
+            dismiss()
+        }
+    }
     show()
 }

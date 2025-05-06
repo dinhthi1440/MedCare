@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.net.toUri
+import com.bumptech.glide.Glide
 import com.example.medcare.R
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
@@ -23,19 +25,21 @@ class MedicineAdapter(private val isSelectMedicine: Boolean, private val onClick
         @SuppressLint("SetTextI18n")
         override fun bindView(item: Medicine, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
-
+            Glide.with(binding.root.context)
+                .load(item.image)
+                .into(binding.imageView)
             if (!isSelectMedicine) {
                 binding.apply {
                     txtExpirationDate.visibility = View.GONE
                     txtQuantity.visibility = View.GONE
                     txtMedicineName.text = item.name
+
                     txtDosageInput.visibility = View.VISIBLE
                     txtDosageInput.text = "\uD83D\uDD22 Liều lượng: 3 viên"
                  }
             } else {
                 binding.apply {
                     txtMedicineName.text = item.name
-                    imageView.setImageURI(item.image.toUri())
                     txtExpirationDate.text = "⏳ HSD: ${item.expirationDate}"
                     txtQuantity.text = "\uD83D\uDD22 Sl còn: ${item.quantity} ${item.unit}"
                     root.setOnClickListener {

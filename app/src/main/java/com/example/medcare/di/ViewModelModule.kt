@@ -16,7 +16,7 @@ val viewModelModule = module {
     viewModel { AuthViewModel() }
     viewModel { HomeViewModel() }
     viewModel { MyMedicineViewModel(get()) }
-    viewModel { MedicineDetailViewModel() }
+    viewModel { MedicineDetailViewModel(get()) }
     viewModel { AddMedicineViewModel(get()) }
     viewModel { MedicationReminderViewModel(get()) }
     viewModel { NewReminderViewModel(get()) }

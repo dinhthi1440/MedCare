@@ -37,6 +37,13 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string-array name="medicine_units">
+        <item>viên</item>
+        <item>gói</item>
+        <item>ml</item>
+        <item>lít</item>
+        <item>ống</item>
+    </string-array>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

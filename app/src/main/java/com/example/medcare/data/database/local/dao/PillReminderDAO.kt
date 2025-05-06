@@ -17,10 +17,10 @@ interface PillReminderDAO {
 
     @Query("SELECT * FROM ${DataBaseLocal.TABLE_PILL_REMINDER}")
     fun getAllPillReminder(): List<PillReminder>
-    @Query("SELECT * FROM ${DataBaseLocal.TABLE_PILL_REMINDER} WHERE id =:reminderId")
+    @Query("SELECT * FROM ${DataBaseLocal.TABLE_PILL_REMINDER} WHERE id = :reminderId")
     fun getPillReminderById(reminderId: String): PillReminder?
 
-    @Query("DELETE FROM ${DataBaseLocal.TABLE_PILL_REMINDER} WHERE id =:idPillReminder")
+    @Query("DELETE FROM ${DataBaseLocal.TABLE_PILL_REMINDER} WHERE id = :idPillReminder")
     fun deletePillReminder(idPillReminder: String): Int
 
     @Update

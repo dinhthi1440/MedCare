@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.medcare.data.database.local.DataBaseLocal
 import com.example.medcare.models.Medicine
 
@@ -15,6 +16,12 @@ interface MedicineDAO {
     @Query("SELECT * FROM ${DataBaseLocal.TABLE_MEDICINE}")
     fun getAllMedicine(): List<Medicine>
 
-    @Query("DELETE FROM ${DataBaseLocal.TABLE_MEDICINE} WHERE id =:idMedicine")
+    @Query("DELETE FROM ${DataBaseLocal.TABLE_MEDICINE} WHERE id = :idMedicine")
     fun deleteMedicine(idMedicine: String): Int
+
+    @Query("SELECT * FROM ${DataBaseLocal.TABLE_MEDICINE} WHERE id = :idMedicine LIMIT 1")
+    fun getMedicineById(idMedicine: String): Medicine
+
+    @Update
+    fun updateMedicine(medicine: Medicine): Int
 }

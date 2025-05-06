@@ -76,4 +76,6 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
 
     implementation ("com.google.code.gson:gson:2.13.0")
+
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
 }

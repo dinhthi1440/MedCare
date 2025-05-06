@@ -16,6 +16,8 @@ data class Medicine(
     var image: String = "",
     var expirationDate: String = "",
     var quantity: Int = 0,
+    var realQuantity: Int = 0,
+    var dosage: Int = 0,
     var unit: String = "",
     var note: String = ""
 ) : Serializable, Parcelable {
@@ -38,6 +40,8 @@ data class Medicine(
                     image = parcel.readString() ?: "",
                     expirationDate = parcel.readString() ?: "",
                     quantity = parcel.readInt(),
+                    realQuantity = parcel.readInt(),
+                    dosage = parcel.readInt(),
                     unit = parcel.readString() ?: "",
                     note = parcel.readString() ?: ""
                 )
@@ -55,6 +59,8 @@ data class Medicine(
         parcel.writeString(image)
         parcel.writeString(expirationDate)
         parcel.writeInt(quantity)
+        parcel.writeInt(realQuantity)
+        parcel.writeInt(dosage)
         parcel.writeString(unit)
         parcel.writeString(note)
     }

@@ -11,7 +11,7 @@ class RandomUtil {
             return Random.nextInt(min, max + 1)
         }
         fun randomIDInt(): Int {
-            return Random.nextInt(0, 10000 + 1)
+            return Random.nextInt(0, 1000000 + 1)
         }
 
         // Random số Float trong khoảng

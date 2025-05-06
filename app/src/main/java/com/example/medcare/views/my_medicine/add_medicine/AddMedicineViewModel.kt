@@ -24,4 +24,17 @@ class AddMedicineViewModel(private val iMedicineRepos: IMedicineRepos.Local) : B
         )
     }
 
+    fun updateMedicine(medicine: Medicine) {
+        executeTask(
+            request = {iMedicineRepos.updateMedicine(medicine)},
+            onSuccess = {
+                _setInsertStatus.value = (it>=0)
+            },
+            onError = {
+                _setInsertStatus.value = false
+                Log.e("TAG", "updateMedicine: lỗi gì ? ${it}", )
+            }
+        )
+    }
+
 }
