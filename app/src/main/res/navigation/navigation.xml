@@ -30,6 +30,15 @@
         <action
             android:id="@+id/action_homeFragment_to_myMedicineFragment"
             app:destination="@id/myMedicineFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_medicationReminderFragment"
+            app:destination="@id/medicationReminderFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addNewReminderFragment"
+            app:destination="@id/addNewReminderFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_reminderFragment"
+            app:destination="@id/reminderFragment" />
     </fragment>
     <fragment
         android:id="@+id/myMedicineFragment"
@@ -47,10 +56,65 @@
         android:id="@+id/medicineDetailFragment"
         android:name="com.example.medcare.views.my_medicine.medicine_detail.MedicineDetailFragment"
         android:label="MedicineDetailFragment"
-        tools:layout="@layout/fragment_medicine_detail"/>
+        tools:layout="@layout/fragment_medicine_detail">
+        <action
+            android:id="@+id/action_medicineDetailFragment_to_addMedicineFragment"
+            app:destination="@id/addMedicineFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addMedicineFragment"
         android:name="com.example.medcare.views.my_medicine.add_medicine.AddMedicineFragment"
         android:label="fragment_add_medicine"
         tools:layout="@layout/fragment_add_medicine" />
+    <fragment
+        android:id="@+id/medicationReminderFragment"
+        android:name="com.example.medcare.views.pill_reminder.MedicationReminderFragment"
+        android:label="fragment_medication_reminder"
+        tools:layout="@layout/fragment_medication_reminder" >
+        <action
+            android:id="@+id/action_medicationReminderFragment_to_addNewReminderFragment"
+            app:destination="@id/addNewReminderFragment" />
+        <action
+            android:id="@+id/action_medicationReminderFragment_to_reminderDetailFragment"
+            app:destination="@id/reminderDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNewReminderFragment"
+        android:name="com.example.medcare.views.pill_reminder.add_new_reminder.AddNewReminderFragment"
+        android:label="fragment_add_new_reminder"
+        tools:layout="@layout/fragment_add_new_reminder" >
+        <action
+            android:id="@+id/action_addNewReminderFragment_to_addFrequencyFragment"
+            app:destination="@id/addFrequencyFragment" />
+        <action
+            android:id="@+id/action_addNewReminderFragment_to_selectMedicineFragment"
+            app:destination="@id/selectMedicineFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addFrequencyFragment"
+        android:name="com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.AddFrequencyFragment"
+        android:label="fragment_add_frequency"
+        tools:layout="@layout/fragment_add_frequency" />
+    <fragment
+        android:id="@+id/reminderFragment"
+        android:name="com.example.medcare.views.pill_reminder.add_new_reminder.reminder.ReminderFragment"
+        android:label="fragment_reminder"
+        tools:layout="@layout/fragment_reminder" />
+    <fragment
+        android:id="@+id/selectMedicineFragment"
+        android:name="com.example.medcare.views.pill_reminder.add_new_reminder.select_medicines.SelectMedicineFragment"
+        android:label="fragment_select_medicine"
+        tools:layout="@layout/fragment_select_medicine" />
+    <fragment
+        android:id="@+id/reminderDetailFragment"
+        android:name="com.example.medcare.views.pill_reminder.reminder_detail.ReminderDetailFragment"
+        android:label="fragment_reminder_detail"
+        tools:layout="@layout/fragment_reminder_detail" >
+        <action
+            android:id="@+id/action_reminderDetailFragment_to_medicineDetailFragment"
+            app:destination="@id/medicineDetailFragment" />
+        <action
+            android:id="@+id/action_reminderDetailFragment_to_addNewReminderFragment"
+            app:destination="@id/addNewReminderFragment" />
+    </fragment>
 </navigation>

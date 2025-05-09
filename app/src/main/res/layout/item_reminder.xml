@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txt_reminder_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter"
+            android:maxLines="1"
+            android:text="Uống thuốc giảm đau"
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="500"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/layout_delete_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/txt_reminder_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/inter"
+            android:text="⏰ Thời gian: 08:00, 14:00, 20:00"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="300"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/swt_on"
+            app:layout_constraintStart_toStartOf="@+id/txt_reminder_label"
+            app:layout_constraintTop_toBottomOf="@+id/txt_reminder_label"
+            app:layout_constraintVertical_bias="0.0"
+            tools:targetApi="p" />
+
+        <Switch
+            android:id="@+id/swt_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_reminder_frequency"
+            app:layout_constraintEnd_toEndOf="@+id/txt_reminder_label"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_reminder_time"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <TextView
+            android:id="@+id/txt_reminder_frequency"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/inter"
+            android:text="🔄 Tần suất: Mỗi ngày"
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="300"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/swt_on"
+            app:layout_constraintStart_toStartOf="@+id/txt_reminder_label"
+            app:layout_constraintTop_toBottomOf="@+id/txt_reminder_time"
+            app:layout_constraintVertical_bias="0.0"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/txt_reminder_medicines"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter"
+            android:maxLines="1"
+            android:text="💊 Thuốc: Paracetamol 500mg,..."
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="300"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_quantity_medicine"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/txt_reminder_label"
+            app:layout_constraintTop_toBottomOf="@+id/txt_reminder_frequency"
+            app:layout_constraintVertical_bias="0.0"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/txt_quantity_medicine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter"
+            android:maxLines="1"
+            android:text="(3 loại thuốc)"
+            android:textColor="@color/ccRedText"
+            android:textFontWeight="300"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_reminder_medicines"
+            app:layout_constraintEnd_toEndOf="@+id/txt_reminder_label"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_reminder_medicines"
+            tools:targetApi="p" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_delete_btn"
+            android:layout_width="50dp"
+            android:layout_height="0dp"
+            android:background="#F62222"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xoá"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:fontFamily="@font/inter"
+                android:textFontWeight="500"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:targetApi="p" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:background="@drawable/bg_dl_white"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/inter"
+            android:gravity="start"
+            android:text="Xác nhận"
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="600"
+            android:textSize="20sp"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:textAlignment="center"
+            android:text="Bạn có chắc chắn muốn xoá?"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="500"
+            android:textSize="16sp"
+            tools:targetApi="p"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_circle_blue"
+                android:backgroundTint="@color/ccGrayBlackBtn"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:text="Hủy"
+                android:textColor="@color/black"
+                android:textFontWeight="600"
+                android:textSize="16sp"
+                tools:targetApi="p" />
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_circle_blue"
+                android:backgroundTint="@color/ccBlue"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:text="Ok"
+                android:textColor="#FFFFFF"
+                android:textFontWeight="600"
+                android:textSize="16sp"
+                tools:targetApi="p" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

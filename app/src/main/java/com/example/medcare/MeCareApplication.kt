@@ -1,6 +1,9 @@
 package com.example.medcare
 
 import android.app.Application
+import com.example.medcare.di.dataSourceModule
+import com.example.medcare.di.databaseModule
+import com.example.medcare.di.repositoryModule
 import com.example.medcare.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -11,6 +14,9 @@ class MeCareApplication: Application() {
         startKoin {
             androidContext(this@MeCareApplication)
             modules(
+                dataSourceModule,
+                databaseModule,
+                repositoryModule,
                 viewModelModule
             )
         }

@@ -22,8 +22,8 @@ abstract class BaseViewModel: ViewModel() {
         onError: (Exception) -> Unit,
         loadingInvisible: Boolean = true
     ){
-        if (loadingInvisible) showLoading()
         viewModelScope.launch {
+            if (loadingInvisible) showLoading()
             when (val response = request(this)){
                 is DataResult.Success -> {
                     onSuccess(response.data)
