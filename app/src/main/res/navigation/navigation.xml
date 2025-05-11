@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_homeFragment_to_connectRelativesFragment"
             app:destination="@id/connectRelativesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contactDoctorFragment"
+            app:destination="@id/contactDoctorFragment" />
     </fragment>
     <fragment
         android:id="@+id/myMedicineFragment"
@@ -168,4 +171,30 @@
         android:name="com.example.medcare.views.connect_relatives.relative_reminder_detail.RelativeReminderDetailFragment"
         android:label="fragment_relative_reminder_detail"
         tools:layout="@layout/fragment_relative_reminder_detail" />
+    <fragment
+        android:id="@+id/contactDoctorFragment"
+        android:name="com.example.medcare.views.health_advice.contact_doctor.ContactDoctorFragment"
+        android:label="fragment_contact_doctor"
+        tools:layout="@layout/fragment_contact_doctor" >
+        <action
+            android:id="@+id/action_contactDoctorFragment_to_chatDoctorListFragment"
+            app:destination="@id/chatDoctorListFragment" />
+        <action
+            android:id="@+id/action_contactDoctorFragment_to_chatDoctorDetailFragment"
+            app:destination="@id/chatDoctorDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatDoctorListFragment"
+        android:name="com.example.medcare.views.health_advice.chat_doctor.ChatDoctorListFragment"
+        android:label="fragment_chat_doctor_list"
+        tools:layout="@layout/fragment_chat_doctor_list" >
+        <action
+            android:id="@+id/action_chatDoctorListFragment_to_chatDoctorDetailFragment"
+            app:destination="@id/chatDoctorDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatDoctorDetailFragment"
+        android:name="com.example.medcare.views.health_advice.chat_doctor_detail.ChatDoctorDetailFragment"
+        android:label="fragment_chat_doctor_detail"
+        tools:layout="@layout/fragment_chat_doctor_detail" />
 </navigation>

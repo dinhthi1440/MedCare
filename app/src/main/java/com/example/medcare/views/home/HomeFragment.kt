@@ -50,18 +50,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             MenuItem.FAMILY -> {
                 findNavController().navigate(R.id.action_homeFragment_to_connectRelativesFragment)
             }
-            MenuItem.CONSULT -> Toast.makeText(this.requireContext(), "Mở tư vấn sức khỏe", Toast.LENGTH_SHORT).show()
-            MenuItem.APPOINTMENT -> {
-                val intent = Intent(requireContext(), AlertActivity::class.java).apply {
-                    putExtra("alarm_id", "3500")
-                    putExtra("reminder_id", "8441b262-534a-4f1b-8e1c-0d8ee499d5eb")
-                    // putExtra("alarm_message", "Uống thuốc buổi sáng")
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                }
-                startActivity(intent)
-//                val result = Bundle().
-//                findNavController().navigate(R.id.action_homeFragment_to_reminderFragment)
+            MenuItem.CONSULT -> {
+                findNavController().navigate(R.id.action_homeFragment_to_contactDoctorFragment)
             }
+            MenuItem.APPOINTMENT -> Toast.makeText(this.requireContext(), "Chức năng này chưa được phát triển", Toast.LENGTH_SHORT).show()
         }
     }
 
