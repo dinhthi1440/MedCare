@@ -11,7 +11,7 @@ import android.provider.Settings
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustom
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.views.main.AlarmReceiver
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 import java.util.Calendar
 
 class AlarmHelper(private val context: Context) {

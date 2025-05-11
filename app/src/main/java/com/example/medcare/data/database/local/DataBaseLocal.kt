@@ -9,7 +9,7 @@ import com.example.medcare.data.database.local.dao.MedicineDAO
 import com.example.medcare.data.database.local.dao.PillReminderDAO
 import com.example.medcare.models.Converters
 import com.example.medcare.models.Medicine
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 
 @Database(
     entities = [Medicine::class, PillReminder::class],

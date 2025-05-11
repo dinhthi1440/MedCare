@@ -44,6 +44,16 @@
         <item>lít</item>
         <item>ống</item>
     </string-array>
+    <string-array name="relative_titles">
+        <item>Bạn bè</item>
+        <item>Anh trai</item>
+        <item>Em trai</item>
+        <item>Chị gái</item>
+        <item>Em gái</item>
+        <item>Cô</item>
+        <item>Chú</item>
+        <item>Khác</item>
+    </string-array>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

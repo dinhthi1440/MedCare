@@ -3,7 +3,7 @@ package com.example.medcare.data.repository.pillreminder
 import com.example.medcare.base.BaseRepository
 import com.example.medcare.base.DataResult
 import com.example.medcare.data.datasource.pillreminder.IPillReminderDataSource
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 
 class PillReminderRepos(private val local: IPillReminderDataSource.Local): BaseRepository(), IPillReminderRepos.Local  {
     override suspend fun insertPillReminder(pillReminder: PillReminder): DataResult<Long> {

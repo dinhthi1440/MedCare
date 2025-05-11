@@ -1,7 +1,7 @@
 package com.example.medcare.data.repository.pillreminder
 
 import com.example.medcare.base.DataResult
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 
 interface IPillReminderRepos {
     interface Local {

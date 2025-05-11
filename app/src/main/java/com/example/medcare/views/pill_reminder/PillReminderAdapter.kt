@@ -9,7 +9,7 @@ import android.view.ViewTreeObserver
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
 import com.example.medcare.databinding.ItemReminderBinding
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 
 class PillReminderAdapter(
     private val onClick: (PillReminder) -> Unit,

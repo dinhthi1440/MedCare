@@ -44,8 +44,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             MenuItem.REMINDER -> {
                 findNavController().navigate(R.id.action_homeFragment_to_medicationReminderFragment)
             }
-            MenuItem.HISTORY -> Toast.makeText(this.requireContext(), "Mở lịch sử", Toast.LENGTH_SHORT).show()
-            MenuItem.FAMILY -> Toast.makeText(this.requireContext(), "Mở kết nối người thân", Toast.LENGTH_SHORT).show()
+            MenuItem.HISTORY -> {
+                findNavController().navigate(R.id.action_homeFragment_to_reminderHistoryFragment)
+            }
+            MenuItem.FAMILY -> {
+                findNavController().navigate(R.id.action_homeFragment_to_connectRelativesFragment)
+            }
             MenuItem.CONSULT -> Toast.makeText(this.requireContext(), "Mở tư vấn sức khỏe", Toast.LENGTH_SHORT).show()
             MenuItem.APPOINTMENT -> {
                 val intent = Intent(requireContext(), AlertActivity::class.java).apply {

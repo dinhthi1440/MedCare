@@ -1,12 +1,17 @@
 package com.example.medcare.extension
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.Color.TRANSPARENT
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.medcare.databinding.DlAddRelativeBinding
 import com.example.medcare.databinding.DlAnimationLoadingBinding
+import com.example.medcare.databinding.DlChangeStatusHistoryBinding
 import com.example.medcare.databinding.DlConfirmBinding
 import com.example.medcare.databinding.DlSelectCustomDateBinding
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustom
@@ -102,6 +107,88 @@ fun Dialog.confirmEvent(
         }
         btnOk.setOnClickListener {
             onConfirm()
+            dismiss()
+        }
+    }
+    show()
+}
+
+fun Dialog.addNoteInRelativeAdd(
+    onConfirm: (relativeLabel: String) -> Unit,
+) {
+    val binding = DlAddRelativeBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    var unit = "Bạn bè"
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        spinnerUnit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @SuppressLint("SetTextI18n")
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val selectedUnit = parent.getItemAtPosition(position).toString()
+                if (selectedUnit == "Khác") {
+                    layoutTietAnother.visibility = View.VISIBLE
+                } else {
+                    layoutTietAnother.visibility = View.GONE
+                    unit = selectedUnit
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnOk.setOnClickListener {
+            if (unit == "Khác") {
+                unit = tietAnother.text.toString().trim()
+            }
+            onConfirm(unit)
+            dismiss()
+        }
+    }
+    show()
+}
+
+fun Dialog.changeStatusHistory(
+    onClick: (status: String) -> Unit,
+) {
+    val binding = DlChangeStatusHistoryBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnDrink.setOnClickListener {
+            onClick("Drank")
+            dismiss()
+        }
+        btnMissed.setOnClickListener {
+            onClick("Missed")
             dismiss()
         }
     }

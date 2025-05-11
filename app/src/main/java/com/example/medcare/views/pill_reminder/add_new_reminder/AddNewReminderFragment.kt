@@ -15,9 +15,8 @@ import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.UUID
 
 class AddNewReminderFragment :
     BaseFragment<FragmentAddNewReminderBinding>(FragmentAddNewReminderBinding::inflate) {

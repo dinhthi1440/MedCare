@@ -1,10 +1,9 @@
-package com.example.medcare.views.pill_reminder.model
+package com.example.medcare.models
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.medcare.data.database.local.DataBaseLocal
-import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import java.io.Serializable
