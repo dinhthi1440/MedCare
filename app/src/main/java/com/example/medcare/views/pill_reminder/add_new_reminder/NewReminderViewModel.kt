@@ -11,7 +11,7 @@ import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 import kotlinx.coroutines.launch
 import java.util.UUID
 

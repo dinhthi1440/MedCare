@@ -1,6 +1,6 @@
 package com.example.medcare.data.datasource.pillreminder
 
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 
 interface IPillReminderDataSource {
     interface Local {

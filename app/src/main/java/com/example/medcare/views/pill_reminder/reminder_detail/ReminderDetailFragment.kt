@@ -10,7 +10,6 @@ import com.example.medcare.databinding.FragmentReminderDetailBinding
 import com.example.medcare.extension.confirmEvent
 import com.example.medcare.models.Medicine
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
-import com.example.medcare.views.pill_reminder.model.PillReminder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ReminderDetailFragment : BaseFragment<FragmentReminderDetailBinding>(FragmentReminderDetailBinding::inflate) {

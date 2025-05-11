@@ -9,7 +9,7 @@ import com.example.medcare.data.database.local.DatabaseProvider
 import com.example.medcare.databinding.ActivityAlertBinding
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

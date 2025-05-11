@@ -1,7 +1,7 @@
 package com.example.medcare.data.datasource.pillreminder
 
 import com.example.medcare.data.database.local.DataBaseLocal
-import com.example.medcare.views.pill_reminder.model.PillReminder
+import com.example.medcare.models.PillReminder
 
 class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillReminderDataSource.Local  {
     override suspend fun insertPillReminder(pillReminder: PillReminder): Long {
