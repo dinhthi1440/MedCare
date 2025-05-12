@@ -40,7 +40,7 @@ class ContactDoctorFragment : BaseFragment<FragmentContactDoctorBinding>(Fragmen
     }
 
     private fun onClickDoctor(doctor: Doctor){
-
+        findNavController().navigate(R.id.action_contactDoctorFragment_to_chatDoctorDetailFragment)
     }
     override fun destroy() {
 

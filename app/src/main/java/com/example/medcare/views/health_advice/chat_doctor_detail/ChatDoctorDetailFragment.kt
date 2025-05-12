@@ -1,6 +1,12 @@
 package com.example.medcare.views.health_advice.chat_doctor_detail
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Rect
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.base.BaseFragment
@@ -19,9 +25,22 @@ class ChatDoctorDetailFragment : BaseFragment<FragmentChatDoctorDetailBinding>(F
         viewModel.getChatDetail()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun handleEvent() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.imgSend.setOnClickListener {
+            binding.edtComment.text.clear()
+        }
+
+        binding.rcvDoctorList.setOnTouchListener { v, _ ->
+            hideKeyboard(v)
+            false
+        }
+        view?.setOnTouchListener { v, _ ->
+            hideKeyboard(v)
+            false
         }
     }
 
@@ -34,7 +53,7 @@ class ChatDoctorDetailFragment : BaseFragment<FragmentChatDoctorDetailBinding>(F
                 binding.txtLabelDoctorChatEmpty.visibility = View.GONE
                 binding.rcvDoctorList.visibility = View.VISIBLE
                 binding.rcvDoctorList.layoutManager = LinearLayoutManager(binding.root.context)
-                chatMessageAdapter.submitList(it)
+                chatMessageAdapter.setList(it)
                 binding.rcvDoctorList.adapter = chatMessageAdapter
             }
         }

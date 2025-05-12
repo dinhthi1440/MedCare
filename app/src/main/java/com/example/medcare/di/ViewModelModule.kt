@@ -16,6 +16,9 @@ import com.example.medcare.views.my_medicine.medicine_detail.MedicineDetailViewM
 import com.example.medcare.views.my_medicine.medicine_list.MyMedicineViewModel
 import com.example.medcare.views.pill_reminder.reminder_detail.ReminderDetailViewModel
 import com.example.medcare.views.reminder_history.reminder_history_list.ReminderHistoryViewModel
+import com.example.medcare.views.setting.setting_list.SettingViewModel
+import com.example.medcare.views.user_manager.user_detail.UserDetailViewModel
+import com.example.medcare.views.user_manager.user_list.UserListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -36,4 +39,7 @@ val viewModelModule = module {
     viewModel { RelativeReminderDetailViewModel() }
     viewModel { ContactDoctorViewModel() }
     viewModel { ChatDoctorViewModel() }
+    viewModel { SettingViewModel() }
+    viewModel { UserDetailViewModel() }
+    viewModel { UserListViewModel() }
 }

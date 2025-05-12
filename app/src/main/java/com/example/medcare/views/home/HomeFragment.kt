@@ -2,6 +2,7 @@ package com.example.medcare.views.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -22,11 +23,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun handleEvent() {
-
+        binding.imgUser.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingListFragment)
+        }
     }
 
     override fun bindData() {
-        val menuItems = MenuItem.getAllItems()
+        val isAdmin = true
+        var menuItems = listOf<MenuItem>()
+        if (isAdmin) {
+            menuItems = MenuItem.getAdminItems()
+            binding.txtTitle.text = "Xin chào, bạn đang ở chế độ quản trị viên!"
+            binding.constraintLayout2.visibility = View.GONE
+            binding.txtUserMode.text = "Quản trị viên"
+        } else {
+            menuItems = MenuItem.getUserItems()
+            binding.txtUserMode.text = "Người dùng"
+        }
 
         val recyclerView: RecyclerView = binding.recyclerView
         recyclerView.layoutManager = GridLayoutManager(this.requireContext(), 2)
@@ -54,6 +67,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 findNavController().navigate(R.id.action_homeFragment_to_contactDoctorFragment)
             }
             MenuItem.APPOINTMENT -> Toast.makeText(this.requireContext(), "Chức năng này chưa được phát triển", Toast.LENGTH_SHORT).show()
+            MenuItem.USER_MANAGEMENT -> {
+                findNavController().navigate(R.id.action_homeFragment_to_userListManagerFragment)
+            }
+            MenuItem.FEEDBACK_MANAGEMENT -> {
+
+            }
         }
     }
 

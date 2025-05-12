@@ -48,6 +48,12 @@
         <action
             android:id="@+id/action_homeFragment_to_contactDoctorFragment"
             app:destination="@id/contactDoctorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingListFragment"
+            app:destination="@id/settingListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userListManagerFragment"
+            app:destination="@id/userListManagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/myMedicineFragment"
@@ -197,4 +203,23 @@
         android:name="com.example.medcare.views.health_advice.chat_doctor_detail.ChatDoctorDetailFragment"
         android:label="fragment_chat_doctor_detail"
         tools:layout="@layout/fragment_chat_doctor_detail" />
+    <fragment
+        android:id="@+id/settingListFragment"
+        android:name="com.example.medcare.views.setting.setting_list.SettingListFragment"
+        android:label="fragment_setting_list"
+        tools:layout="@layout/fragment_setting_list" />
+    <fragment
+        android:id="@+id/userListManagerFragment"
+        android:name="com.example.medcare.views.user_manager.user_list.UserListManagerFragment"
+        android:label="fragment_user_list_manager"
+        tools:layout="@layout/fragment_user_list_manager" >
+        <action
+            android:id="@+id/action_userListManagerFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetailFragment"
+        android:name="com.example.medcare.views.user_manager.user_detail.UserDetailFragment"
+        android:label="fragment_user_detail"
+        tools:layout="@layout/fragment_user_detail" />
 </navigation>
