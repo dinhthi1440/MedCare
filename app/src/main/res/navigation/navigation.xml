@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_homeFragment_to_userListManagerFragment"
             app:destination="@id/userListManagerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_feedbackListFragment"
+            app:destination="@id/feedbackListFragment" />
     </fragment>
     <fragment
         android:id="@+id/myMedicineFragment"
@@ -222,4 +225,18 @@
         android:name="com.example.medcare.views.user_manager.user_detail.UserDetailFragment"
         android:label="fragment_user_detail"
         tools:layout="@layout/fragment_user_detail" />
+    <fragment
+        android:id="@+id/feedbackListFragment"
+        android:name="com.example.medcare.views.feedback.feedback_list.FeedbackListFragment"
+        android:label="fragment_feedback_list"
+        tools:layout="@layout/fragment_feedback_list" >
+        <action
+            android:id="@+id/action_feedbackListFragment_to_feedbackDetailFragment"
+            app:destination="@id/feedbackDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedbackDetailFragment"
+        android:name="com.example.medcare.views.feedback.feedback_detail.FeedbackDetailFragment"
+        android:label="fragment_feedback_detail"
+        tools:layout="@layout/fragment_feedback_detail" />
 </navigation>

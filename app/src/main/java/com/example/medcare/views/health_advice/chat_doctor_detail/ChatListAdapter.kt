@@ -7,12 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medcare.R
-import com.example.medcare.base.BaseAdapter
-import com.example.medcare.base.BaseViewHolder
-import com.example.medcare.databinding.ItemChatMessageBinding
-import com.example.medcare.databinding.ItemDoctorBinding
 import com.example.medcare.models.ChatMessage
-import com.example.medcare.models.Doctor
 
 class ChatListAdapter(private val currentUserID: String)  : RecyclerView.Adapter<MessageHolder>() {
 

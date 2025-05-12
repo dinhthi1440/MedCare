@@ -9,8 +9,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.medcare.R
 import com.example.medcare.databinding.DlAddRelativeBinding
 import com.example.medcare.databinding.DlAnimationLoadingBinding
+import com.example.medcare.databinding.DlChangeRuleBinding
 import com.example.medcare.databinding.DlChangeStatusHistoryBinding
 import com.example.medcare.databinding.DlConfirmBinding
 import com.example.medcare.databinding.DlSelectCustomDateBinding
@@ -189,6 +191,44 @@ fun Dialog.changeStatusHistory(
         }
         btnMissed.setOnClickListener {
             onClick("Missed")
+            dismiss()
+        }
+    }
+    show()
+}
+
+fun Dialog.changeRule(
+    initRule: String,
+    onConfirm: (rule: String) -> Unit
+) {
+    val binding = DlChangeRuleBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        when (initRule) {
+            "user" -> rgRole.check(R.id.rbUser)
+            "doctor" -> rgRole.check(R.id.rbDoctor)
+        }
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnOk.setOnClickListener {
+            val selectedRole = when (rgRole.checkedRadioButtonId) {
+                R.id.rbUser -> "user"
+                R.id.rbDoctor -> "doctor"
+                else -> ""
+            }
+            onConfirm(selectedRole)
             dismiss()
         }
     }

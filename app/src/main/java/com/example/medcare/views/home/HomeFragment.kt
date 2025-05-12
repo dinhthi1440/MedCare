@@ -71,7 +71,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 findNavController().navigate(R.id.action_homeFragment_to_userListManagerFragment)
             }
             MenuItem.FEEDBACK_MANAGEMENT -> {
-
+                findNavController().navigate(R.id.action_homeFragment_to_feedbackListFragment)
             }
         }
     }

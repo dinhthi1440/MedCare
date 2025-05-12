@@ -3,6 +3,8 @@ package com.example.medcare.views.user_manager.user_list
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import com.example.medcare.R
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
 import com.example.medcare.databinding.ItemDoctorBinding
@@ -29,9 +31,20 @@ class UserListAdapter (
         override fun bindView(item: Account, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
             binding.apply {
-                txtRelativeName.text = item.fullName
-                root.setOnClickListener {
-                    onView(item)
+                txtFullName.text = item.fullName
+                txtAccountRule.text =
+                    when (item.rule) {
+                        "user" -> "Người dùng"
+                        "doctor" -> "Bác sĩ"
+                        else -> "Quản trị viên"
+                    }
+                txtEmail.text = item.email
+                if (item.status == "active") {
+                    txtStatusAccount.text = "Hoạt động"
+                    txtStatusAccount.setTextColor(ContextCompat.getColor(root.context, R.color.ccGreen))
+                } else {
+                    txtStatusAccount.text = "Đã khóa"
+                    txtStatusAccount.setTextColor(ContextCompat.getColor(root.context, R.color.ccRedText))
                 }
                 btnView.setOnClickListener {
                     onView(item)

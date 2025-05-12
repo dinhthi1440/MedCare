@@ -4,6 +4,7 @@ import com.example.medcare.views.connect_relatives.connect_relatives_list.Connec
 import com.example.medcare.views.connect_relatives.relative_reminder_detail.RelativeReminderDetailViewModel
 import com.example.medcare.views.connect_relatives.relative_reminder_history.RelativeHistoryViewModel
 import com.example.medcare.views.connect_relatives.relative_request_add.RelativeRequestViewModel
+import com.example.medcare.views.feedback.feedback_list.FeedbackViewModel
 import com.example.medcare.views.health_advice.chat_doctor.ChatDoctorViewModel
 import com.example.medcare.views.health_advice.contact_doctor.ContactDoctorViewModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.NewReminderViewModel
@@ -42,4 +43,5 @@ val viewModelModule = module {
     viewModel { SettingViewModel() }
     viewModel { UserDetailViewModel() }
     viewModel { UserListViewModel() }
+    viewModel { FeedbackViewModel() }
 }
