@@ -2,6 +2,7 @@ package com.example.medcare.base
 
 import android.app.Dialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.example.medcare.extension.openDlLoading
 import java.text.DecimalFormat
+import org.koin.android.ext.android.get
 
 abstract class BaseFragment<VB : ViewBinding>(
     private val bindingInflater: (LayoutInflater) -> VB
@@ -19,7 +21,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected val binding get() = _binding as VB
     protected abstract val viewModel: BaseViewModel
 
-    //protected val sharedPreferences by lazy { get<SharedPreferences>() }
+    protected val sharedPreferences by lazy { get<SharedPreferences>() }
     private val dialog by lazy { context?.let { Dialog(it) } }
     protected val decimalFormat = DecimalFormat("#,###.###")
     protected fun dialog(context1: Context): Dialog {

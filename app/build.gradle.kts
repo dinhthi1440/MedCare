@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -49,6 +50,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.3")
+    implementation("com.google.firebase:firebase-firestore-ktx:25.1.4")
+    implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha13")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -78,4 +81,8 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.13.0")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation("com.firebaseui:firebase-ui-auth:9.0.0")
 }

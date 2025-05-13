@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".views.login.LoginFragment">
+    tools:context=".views.auth.login.LoginFragment">
 
     <ImageView
         android:id="@+id/imgLogo"
@@ -49,7 +49,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
-            android:layout_width="300dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:orientation="vertical">
@@ -136,7 +136,7 @@
                     android:text="Chưa có tài khoản?" />
 
                 <TextView
-                    android:id="@+id/textv_signup"
+                    android:id="@+id/txt_signup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
