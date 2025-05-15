@@ -11,15 +11,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentHomeBinding
+import com.example.medcare.extension.getData
+import com.example.medcare.models.Account
+import com.example.medcare.utils.Constants
 import com.example.medcare.views.home.model.MenuItem
 import com.example.medcare.views.main.AlertActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
+
     override val viewModel by viewModel<HomeViewModel>()
-
+    private var account: Account? = null
     override fun initData() {
+        val json = sharedPreferences.getData(Constants.SHARED_USER)
+        account = gson.fromJson(json, Account::class.java)
+        if (account == null) {
 
+        }
     }
 
     override fun handleEvent() {
@@ -29,7 +37,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun bindData() {
-        val isAdmin = true
+        if (account != null) {
+            binding.txtUserName.text = account!!.fullName
+            binding.txtUserMode.text = account!!.rule
+        } else {
+
+        }
+        val isAdmin = account!!.rule == "doctor"
         var menuItems = listOf<MenuItem>()
         if (isAdmin) {
             menuItems = MenuItem.getAdminItems()

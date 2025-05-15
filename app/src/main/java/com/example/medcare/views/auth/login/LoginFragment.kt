@@ -63,21 +63,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             binding.textipEmail.setText(email)
             binding.textipPassword.setText(password)
         }
-        viewModel.getLoginStatus.observe(viewLifecycleOwner) {
-            if (it.statusCode == 200) {
-                val isCheckedRemember = binding.cbSaveLogin.isChecked
-                if (isCheckedRemember) {
-                    val emailInput = binding.textipEmail.text.toString().trim()
-                    val passwordInput = binding.textipPassword.text.toString().trim()
-                    sharedPreferences.saveData(emailInput, Constants.SHARED_EMAIL)
-                    sharedPreferences.saveData(passwordInput, Constants.SHARED_PASSWORD)
-                }
-                sharedPreferences.saveData(it.data.toString(), Constants.SHARED_USER_ID)
-                viewModel.getUserDataByID(it.data.toString())
-            } else {
-                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-            }
-        }
         viewModel.getUserStatus.observe(viewLifecycleOwner) {
             when (it.statusCode) {
                 200 -> {
@@ -91,13 +76,36 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     )
                 }
                 404 -> {
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "aaaa ${it.message} v ${it.statusCode}", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(
+                        R.id.action_loginFragment_to_onBoardingInforFragment,
+                        null,
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, true)
+                            .build()
+                    )
                 }
                 else -> {
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "oaa ${it.message} v ${it.statusCode}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+        viewModel.getLoginStatus.observe(viewLifecycleOwner) {
+            if (it.statusCode == 200) {
+                val isCheckedRemember = binding.cbSaveLogin.isChecked
+                if (isCheckedRemember) {
+                    val emailInput = binding.textipEmail.text.toString().trim()
+                    val passwordInput = binding.textipPassword.text.toString().trim()
+                    sharedPreferences.saveData(emailInput, Constants.SHARED_EMAIL)
+                    sharedPreferences.saveData(passwordInput, Constants.SHARED_PASSWORD)
+                }
+                sharedPreferences.saveData(it.data.toString(), Constants.SHARED_USER_ID)
+                viewModel.getUserDataByID(it.data.toString())
+            } else {
+                Toast.makeText(context, "login ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     override fun destroy() {

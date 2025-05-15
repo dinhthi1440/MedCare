@@ -18,6 +18,9 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository.Remote): BaseVi
     val getUserStatus: LiveData<Response<Any>> get() = _setUserStatus
     private val _setUserStatus = MutableLiveData<Response<Any>>()
 
+    val getCreateUserStatus: LiveData<Response<Any>> get() = _setCreateUserStatus
+    private val _setCreateUserStatus = MutableLiveData<Response<Any>>()
+
 
     fun registerAccount(email: String, password: String){
         executeTask(
@@ -42,6 +45,17 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository.Remote): BaseVi
             }
         )
     }
+    fun createUserData(account: Account){
+        executeTask(
+            request = {iAuthRepository.createUser(account)},
+            onSuccess = {
+                _setCreateUserStatus.value = it
+            },
+            onError = {
+                _setCreateUserStatus.value = Response(500, it.message.toString())
+            }
+        )
+    }
 
     fun getUserDataByID(uid: String) {
         executeTask(
@@ -52,20 +66,20 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository.Remote): BaseVi
                         val user = response.data as? Account
                         if (user != null) {
                             if (user.status == "locked") {
-                                _setLoginStatus.value = Response(
+                                _setUserStatus.value = Response(
                                     403,
                                     "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.",
                                     null
                                 )
                             } else {
-                                _setLoginStatus.value = Response(
+                                _setUserStatus.value = Response(
                                     200,
                                     "Đăng nhập thành công",
                                     user
                                 )
                             }
                         } else {
-                            _setLoginStatus.value = Response(
+                            _setUserStatus.value = Response(
                                 500,
                                 "Không thể phân tích dữ liệu người dùng",
                                 null
@@ -73,14 +87,14 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository.Remote): BaseVi
                         }
                     }
                     404 -> {
-                        _setLoginStatus.value = Response(
+                        _setUserStatus.value = Response(
                             404,
                             "Không tìm thấy người dùng với UID này",
                             null
                         )
                     }
                     else -> {
-                        _setLoginStatus.value = Response(
+                        _setUserStatus.value = Response(
                             response.statusCode,
                             response.message,
                             null
@@ -89,7 +103,7 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository.Remote): BaseVi
                 }
             },
             onError = {
-                _setLoginStatus.value = Response(
+                _setUserStatus.value = Response(
                     500,
                     it.message ?: "Đã xảy ra lỗi không xác định",
                     null

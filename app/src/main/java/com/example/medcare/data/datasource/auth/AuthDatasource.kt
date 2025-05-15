@@ -80,4 +80,19 @@ class AuthDatasource : IAuthDatasource.Remote {
                 }
         }
     }
+
+    override suspend fun createUser(account: Account): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            db.collection("users")
+                .document(account.id)
+                .set(account)
+                .addOnSuccessListener {
+                    continuation.resume(Response(200, "Tạo dữ liệu người dùng thành công", true))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Response(500, "Tạo dữ liệu thất bại: ${it.message}", false))
+                }
+        }
+    }
 }

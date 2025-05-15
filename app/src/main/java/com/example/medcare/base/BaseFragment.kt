@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.example.medcare.extension.openDlLoading
+import com.google.gson.Gson
 import java.text.DecimalFormat
 import org.koin.android.ext.android.get
 
@@ -20,6 +21,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     private var _binding: VB? = null
     protected val binding get() = _binding as VB
     protected abstract val viewModel: BaseViewModel
+    protected val gson = Gson()
 
     protected val sharedPreferences by lazy { get<SharedPreferences>() }
     private val dialog by lazy { context?.let { Dialog(it) } }

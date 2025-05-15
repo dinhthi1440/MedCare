@@ -64,6 +64,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textip_email"
+                    android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="Email" />
@@ -83,6 +84,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textip_password"
+                    android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword" />
@@ -120,6 +122,7 @@
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/ccBlue"
                     android:text="Ghi nhớ đăng nhập"
+                    android:checked="true"
                     android:textColor="@color/black" />
             </LinearLayout>
 
