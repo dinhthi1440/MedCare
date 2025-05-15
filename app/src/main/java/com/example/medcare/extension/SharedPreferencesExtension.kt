@@ -2,11 +2,12 @@ package com.example.medcare.extension
 
 import android.content.SharedPreferences
 import com.example.medcare.utils.Constants
+import androidx.core.content.edit
 
-fun SharedPreferences.saveUserID(userID: String){
-    this.edit().putString(Constants.SHARED_USER_ID, userID).apply()
+fun SharedPreferences.saveData(dataString: String, constKey: String){
+    this.edit { putString(constKey, dataString) }
 }
 
-fun SharedPreferences.getUserID(): String?{
-    return this.getString(Constants.SHARED_USER_ID, Constants.SHARED_DEFAULT)
+fun SharedPreferences.getData(constKey: String): String{
+    return this.getString(constKey, Constants.SHARED_DEFAULT) ?: ""
 }

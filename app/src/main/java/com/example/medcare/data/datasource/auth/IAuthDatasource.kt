@@ -6,5 +6,6 @@ interface IAuthDatasource {
     interface Remote {
         suspend fun registerAccount(email: String, password: String): Response<Any>
         suspend fun loginWithEmailPassword(email: String, password: String): Response<Any>
+        suspend fun getUserData(uid: String): Response<Any>
     }
 }

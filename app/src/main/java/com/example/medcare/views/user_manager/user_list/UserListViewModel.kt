@@ -14,7 +14,6 @@ class UserListViewModel : BaseViewModel() {
             userName = "nguyenvana",
             email = "vana@example.com",
             avatar = "https://example.com/avatar/a.jpg",
-            password = "hashed_pw_001",
             rule = "user",
             status = "active"
         ),
@@ -24,7 +23,6 @@ class UserListViewModel : BaseViewModel() {
             userName = "tranthib",
             email = "thib@example.com",
             avatar = "https://example.com/avatar/b.jpg",
-            password = "hashed_pw_002",
             rule = "user",
             status = "locked"
         ),
@@ -34,7 +32,6 @@ class UserListViewModel : BaseViewModel() {
             userName = "levanc_admin",
             email = "vanc@example.com",
             avatar = "https://example.com/avatar/c.jpg",
-            password = "hashed_pw_003",
             rule = "admin",
             status = "active"
         ),
@@ -44,7 +41,6 @@ class UserListViewModel : BaseViewModel() {
             userName = "phamthid",
             email = "thid@example.com",
             avatar = "https://example.com/avatar/d.jpg",
-            password = "hashed_pw_004",
             rule = "user",
             status = "active"
         ),
@@ -54,7 +50,6 @@ class UserListViewModel : BaseViewModel() {
             userName = "domanhee_admin",
             email = "manhe@example.com",
             avatar = "https://example.com/avatar/e.jpg",
-            password = "hashed_pw_005",
             rule = "admin",
             status = "active"
         )

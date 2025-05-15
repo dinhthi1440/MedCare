@@ -14,4 +14,8 @@ class AuthRepository(private val remote: IAuthDatasource.Remote) : BaseRepositor
     override suspend fun loginWithEmailPassword(email: String, password: String): DataResult<Response<Any>> {
         return getResult { remote.loginWithEmailPassword(email, password) }
     }
+
+    override suspend fun getUserData(uid: String): DataResult<Response<Any>> {
+        return getResult { remote.getUserData(uid) }
+    }
 }

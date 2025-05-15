@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/loginFragment"
+        android:id=" @+id/loginFragment"
         android:name="com.example.medcare.views.auth.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
@@ -210,7 +210,11 @@
         android:id="@+id/settingListFragment"
         android:name="com.example.medcare.views.setting.setting_list.SettingListFragment"
         android:label="fragment_setting_list"
-        tools:layout="@layout/fragment_setting_list" />
+        tools:layout="@layout/fragment_setting_list" >
+        <action
+            android:id="@+id/action_settingListFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userListManagerFragment"
         android:name="com.example.medcare.views.user_manager.user_list.UserListManagerFragment"

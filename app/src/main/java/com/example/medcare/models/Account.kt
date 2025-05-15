@@ -9,7 +9,6 @@ data class Account(
     val userName: String,
     val email: String,
     val avatar: String,
-    val password: String,
     val rule: String,
     val status: String
 ) : Serializable {

@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentSignUpBinding
 import com.example.medcare.views.auth.AuthViewModel
-import org.checkerframework.checker.regex.qual.Regex
+//import org.checkerframework.checker.regex.qual.Regex
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding::inflate) {
@@ -62,7 +62,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
 
     override fun bindData() {
         viewModel.getSignUpStatus.observe(viewLifecycleOwner) {
-            if (it.statusCode == 200){
+            if (it.statusCode == 201){
                 val result = Bundle().apply {
                     putString("email", email)
                     putString("password", password)

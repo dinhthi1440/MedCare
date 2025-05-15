@@ -19,7 +19,6 @@ class UserDetailFragment : BaseFragment<FragmentUserDetailBinding>(FragmentUserD
         userName = "nguyenvana",
         email = "vana@example.com",
         avatar = "https://example.com/avatar/a.jpg",
-        password = "hashed_pw_001",
         rule = "admin",
         status = "locked"
     )
