@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_onBoardingInforFragment"
+            app:destination="@id/onBoardingInforFragment" />=
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -243,4 +246,13 @@
         android:name="com.example.medcare.views.feedback.feedback_detail.FeedbackDetailFragment"
         android:label="fragment_feedback_detail"
         tools:layout="@layout/fragment_feedback_detail" />
+    <fragment
+        android:id="@+id/onBoardingInforFragment"
+        android:name="com.example.medcare.views.auth.onboarding_infor.OnBoardingInforFragment"
+        android:label="fragment_on_boarding_infor"
+        tools:layout="@layout/fragment_on_boarding_infor" >
+        <action
+            android:id="@+id/action_onBoardingInforFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
