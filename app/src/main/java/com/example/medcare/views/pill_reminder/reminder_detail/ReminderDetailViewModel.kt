@@ -10,7 +10,7 @@ import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.models.PillReminder
 import kotlinx.coroutines.launch
 
-class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos.Local) : BaseViewModel() {
+class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos) : BaseViewModel() {
 
     private lateinit var alarmHelper: AlarmHelper
     private val _setDeleteStatus = MutableLiveData<Boolean>()
@@ -19,35 +19,51 @@ class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos
     private val _setReminder = MutableLiveData<PillReminder>()
     val getReminder: LiveData<PillReminder> get() = _setReminder
 
-    fun deleteReminder(pillReminder: PillReminder, context: Context) {
+    fun deleteReminder(uid: String, pillReminder: PillReminder, context: Context) {
         viewModelScope.launch {
-            iPillReminderRepos.deletePillReminder(pillReminder.id)
-            alarmHelper = AlarmHelper(context)
-            for (time in pillReminder.times) {
-                alarmHelper.removeAlarm(context, time.id)
+            val response = iPillReminderRepos.deletePillReminderRemote(uid, pillReminder.id)
+            when (response.statusCode) {
+                200 -> {
+                    alarmHelper = AlarmHelper(context)
+                    for (time in pillReminder.times) {
+                        alarmHelper.removeAlarm(context, time.id)
+                    }
+                    _setDeleteStatus.value = true
+                }
+                404, 500 -> {
+                    _messageError.value = response.message
+                }
             }
-            _setDeleteStatus.value = true
         }
     }
 
-    fun getReminderById(reminderId: String) {
+    fun getReminderById(uid: String, reminderId: String) {
         executeTask(
-            request = { iPillReminderRepos.getPillReminderById(reminderId) },
+            request = { iPillReminderRepos.getPillReminderByIdRemote(uid, reminderId) },
             onSuccess = {
-                if (it != null) {
-                    _setReminder.value = it
+                when (it.statusCode) {
+                    200 -> {
+                        _setReminder.value = it.data as PillReminder
+                    }
+                    404, 500 -> {
+                        _messageError.value = it.message
+                    }
                 }
             },
             onError = {
-
+                _messageError.value = "Lỗi không xác định, vui lòng thử lại"
             }
         )
     }
 
 
-    fun updateReminder(pillReminder: PillReminder){
+    fun updateFieldsReminder(
+        uid: String,
+        reminderID: String,
+        reminderFields: HashMap<String, Any>
+    ) {
         executeTask(
-            request = {iPillReminderRepos.updatePillReminder(pillReminder)},
+            request = {iPillReminderRepos.updateReminderFieldsRemote(uid, reminderID, reminderFields)},
             onSuccess = {
 
             },

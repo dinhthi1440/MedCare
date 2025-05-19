@@ -3,6 +3,7 @@ package com.example.medcare.views.connect_relatives.connect_relatives_list
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
@@ -11,8 +12,9 @@ import com.example.medcare.databinding.ItemRequestAddRelativeBinding
 import com.example.medcare.models.Relative
 
 class AddRelativeAdapter(
+    private val isRequest: Boolean,
     private val onClick: (Relative) -> Unit,
-    private val onAddRelative: (String) -> Unit,
+    private val onAddRelative: (Relative) -> Unit,
 ) : BaseAdapter<Relative, BaseViewHolder<Relative>>(Relative.differUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,13 +31,18 @@ class AddRelativeAdapter(
         override fun bindView(item: Relative, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
             binding.apply {
-                txtRelativeName.text = item.name
-                txtDescription.text = "Tôi là ${item.relativeTitle} của bạn, hãy chấp nhận kết nối!"
-                root.setOnClickListener {
-                    onClick(item)
-                }
-                btnAddRelative.setOnClickListener {
-                    onAddRelative(item.id)
+                txtRelativeName.text = item.fullName
+                if (isRequest) {
+                    txtDescription.visibility = View.VISIBLE
+                    btnAddRelative.visibility = View.GONE
+                    txtDescription.text = "Tôi là ${item.relativeTitle} của bạn, hãy chấp nhận kết nối!"
+                    root.setOnClickListener {
+                        onClick(item)
+                    }
+                } else {
+                    btnAddRelative.setOnClickListener {
+                        onAddRelative(item)
+                    }
                 }
             }
 

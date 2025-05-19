@@ -1,6 +1,7 @@
 package com.example.medcare.views.pill_reminder.add_new_reminder.select_medicines
 
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.base.BaseFragment
@@ -18,12 +19,18 @@ class SelectMedicineFragment :
             ::onUnSelectMedicine
         )
     }
+    private var relativeID = ""
     private lateinit var listInitialSelected: MutableSet<Medicine>
 
     override fun initData() {
         val receivedList = arguments?.getParcelableArrayList<Medicine>("selected_medicine") ?: emptyList()
+        relativeID = arguments?.getString("relative_id") ?: ""
         listInitialSelected = receivedList.toMutableSet()
-        viewModel.getMedicineList()
+        if (relativeID == "") {
+            viewModel.getMedicineList(uid)
+        } else {
+            viewModel.getMedicineList(relativeID)
+        }
         viewModel.initData(listInitialSelected)
     }
 
@@ -42,10 +49,22 @@ class SelectMedicineFragment :
     }
 
     override fun bindData() {
-        viewModel.getMedicines.observe(viewLifecycleOwner) {
-            binding.rcvSelectMedicine.layoutManager = LinearLayoutManager(binding.root.context)
-            selectMedicineAdapter.submitList(it)
-            binding.rcvSelectMedicine.adapter = selectMedicineAdapter
+        viewModel.getMedicines.observe(viewLifecycleOwner) { it ->
+            when (it.statusCode) {
+                200 -> {
+                    val medicines = it.data as? List<Medicine>
+                    binding.txtEmptyList.visibility = View.GONE
+                    binding.rcvSelectMedicine.visibility = View.VISIBLE
+                    binding.rcvSelectMedicine.layoutManager = LinearLayoutManager(binding.root.context)
+                    selectMedicineAdapter.submitList(medicines)
+                    binding.rcvSelectMedicine.adapter = selectMedicineAdapter
+                }
+                204, 500 -> {
+                    binding.txtEmptyList.visibility = View.VISIBLE
+                    binding.txtEmptyList.text = it.message
+                    binding.rcvSelectMedicine.visibility = View.GONE
+                }
+            }
         }
     }
 

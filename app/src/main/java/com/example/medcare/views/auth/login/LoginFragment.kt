@@ -12,8 +12,10 @@ import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentLoginBinding
 import com.example.medcare.extension.getData
 import com.example.medcare.extension.saveData
+import com.example.medcare.models.Account
 import com.example.medcare.utils.Constants
 import com.example.medcare.views.auth.AuthViewModel
+import com.firebase.ui.auth.data.model.User
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate){
@@ -66,7 +68,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         viewModel.getUserStatus.observe(viewLifecycleOwner) {
             when (it.statusCode) {
                 200 -> {
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    val user = it.data as Account
+                    val json = gson.toJson(user)
+                    sharedPreferences.saveData(json, Constants.SHARED_USER)
                     findNavController().navigate(
                         R.id.action_loginFragment_to_homeFragment,
                         null,
@@ -76,7 +80,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     )
                 }
                 404 -> {
-                    Toast.makeText(context, "aaaa ${it.message} v ${it.statusCode}", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(
                         R.id.action_loginFragment_to_onBoardingInforFragment,
                         null,
@@ -84,9 +87,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                             .setPopUpTo(R.id.nav_graph, true)
                             .build()
                     )
-                }
-                else -> {
-                    Toast.makeText(context, "oaa ${it.message} v ${it.statusCode}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

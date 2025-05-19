@@ -34,7 +34,7 @@ val viewModelModule = module {
     viewModel { SelectMedicineViewModel(get()) }
     viewModel { ReminderDetailViewModel(get()) }
     viewModel { ReminderHistoryViewModel() }
-    viewModel { ConnectRelativesViewModel() }
+    viewModel { ConnectRelativesViewModel(get()) }
     viewModel { RelativeHistoryViewModel() }
     viewModel { RelativeRequestViewModel() }
     viewModel { RelativeReminderDetailViewModel() }

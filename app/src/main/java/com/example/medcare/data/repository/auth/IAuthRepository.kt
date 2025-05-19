@@ -5,10 +5,8 @@ import com.example.medcare.models.Account
 import com.example.medcare.models.Response
 
 interface IAuthRepository {
-    interface Remote {
-        suspend fun registerAccount(email: String, password: String): DataResult<Response<Any>>
-        suspend fun loginWithEmailPassword(email: String, password: String): DataResult<Response<Any>>
-        suspend fun getUserData(uid: String): DataResult<Response<Any>>
-        suspend fun createUser(account: Account): DataResult<Response<Any>>
-    }
+    suspend fun registerAccount(email: String, password: String): DataResult<Response<Any>>
+    suspend fun loginWithEmailPassword(email: String, password: String): DataResult<Response<Any>>
+    suspend fun getUserData(uid: String): DataResult<Response<Any>>
+    suspend fun createUser(account: Account): DataResult<Response<Any>>
 }

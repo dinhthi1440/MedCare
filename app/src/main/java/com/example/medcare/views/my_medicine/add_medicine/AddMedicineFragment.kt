@@ -29,6 +29,7 @@ class AddMedicineFragment :
     private var image = ""
     private var unit = "viên"
     private var medicine: Medicine? = null
+    private lateinit var newMedicine : Medicine
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -186,7 +187,7 @@ class AddMedicineFragment :
             return
         }
 
-        val newMedicine = Medicine(
+        newMedicine = Medicine(
             id = id,
             name = medicineName,
             image = image,
@@ -197,9 +198,9 @@ class AddMedicineFragment :
             note = note
         )
         if (isEdit) {
-            viewModel.updateMedicine(newMedicine)
+            viewModel.updateMedicine(uid, newMedicine)
         } else {
-            viewModel.insertMedicine(newMedicine)
+            viewModel.insertMedicine(uid, newMedicine)
         }
 
     }
@@ -225,14 +226,18 @@ class AddMedicineFragment :
             }
         }
         viewModel.getInsertStatus.observe(viewLifecycleOwner) {
-            if (it) {
-                val result = Bundle().apply {
-                    putBoolean("key_boolean", true)
+            when (it.statusCode) {
+                200 -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    val result = Bundle().apply {
+                        putBoolean("key_boolean", true)
+                    }
+                    parentFragmentManager.setFragmentResult("boolean_result_key", result)
+                    findNavController().popBackStack()
                 }
-                parentFragmentManager.setFragmentResult("boolean_result_key", result)
-                findNavController().popBackStack()
-            } else {
-                Toast.makeText(context, "Đã xảy ra lỗi khi thêm thuốc", Toast.LENGTH_SHORT).show()
+                500 -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

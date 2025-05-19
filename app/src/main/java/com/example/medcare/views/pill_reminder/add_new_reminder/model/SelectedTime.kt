@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 
 data class SelectedTime(
-    val id: Int,
-    val time: String
+    var id: Int = 0,
+    var time: String = ""
 ): Serializable {
     companion object{
         val differUtil = object : DiffUtil.ItemCallback<SelectedTime>(){
@@ -13,7 +13,7 @@ data class SelectedTime(
                 oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: SelectedTime, newItem: SelectedTime): Boolean =
-                oldItem.id == newItem.id
+                oldItem == newItem
         }
     }
 }

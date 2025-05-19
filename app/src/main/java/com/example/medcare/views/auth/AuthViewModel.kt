@@ -8,7 +8,7 @@ import com.example.medcare.models.Account
 import com.example.medcare.models.Doctor
 import com.example.medcare.models.Response
 
-class AuthViewModel(private val iAuthRepository: IAuthRepository.Remote): BaseViewModel() {
+class AuthViewModel(private val iAuthRepository: IAuthRepository): BaseViewModel() {
     val getSignUpStatus: LiveData<Response<Any>> get() = _setSignUpStatus
     private val _setSignUpStatus = MutableLiveData<Response<Any>>()
 

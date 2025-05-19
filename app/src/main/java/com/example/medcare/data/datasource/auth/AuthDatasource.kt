@@ -12,7 +12,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class AuthDatasource : IAuthDatasource.Remote {
+class AuthDatasource : IAuthDatasource {
     private val auth = FirebaseAuth.getInstance()
 
     override suspend fun registerAccount(email: String, password: String): Response<Any> {
@@ -62,7 +62,7 @@ class AuthDatasource : IAuthDatasource.Remote {
                 .get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        val fullName = document.getString("full_name") ?: ""
+                        val fullName = document.getString("fullName") ?: ""
                         val email = document.getString("email") ?: ""
                         val avatar = document.getString("avatar") ?: ""
                         val rule = document.getString("rule") ?: ""

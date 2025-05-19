@@ -163,6 +163,9 @@
         <action
             android:id="@+id/action_connectRelativesFragment_to_relativeRequestAddFragment"
             app:destination="@id/relativeRequestAddFragment" />
+        <action
+            android:id="@+id/action_connectRelativesFragment_to_addNewReminderFragment"
+            app:destination="@id/addNewReminderFragment" />
     </fragment>
     <fragment
         android:id="@+id/relativeReminderHistoryFragment"

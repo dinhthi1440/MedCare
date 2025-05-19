@@ -8,7 +8,7 @@ import com.example.medcare.data.repository.medicine.IMedicineRepos
 import com.example.medcare.models.Account
 import com.example.medcare.models.Response
 
-class AuthRepository(private val remote: IAuthDatasource.Remote) : BaseRepository(), IAuthRepository.Remote {
+class AuthRepository(private val remote: IAuthDatasource) : BaseRepository(), IAuthRepository {
     override suspend fun registerAccount(email: String, password: String): DataResult<Response<Any>> {
         return getResult { remote.registerAccount(email, password) }
     }

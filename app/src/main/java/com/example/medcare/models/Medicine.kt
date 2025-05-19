@@ -21,7 +21,7 @@ data class Medicine(
     var unit: String = "",
     var note: String = ""
 ) : Serializable, Parcelable {
-
+    constructor() : this("", "", "", "", 0, 0, 0, "", "")
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<Medicine>() {
             override fun areItemsTheSame(oldItem: Medicine, newItem: Medicine): Boolean =

@@ -9,8 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.example.medcare.extension.getData
 import com.example.medcare.extension.openDlLoading
+import com.example.medcare.utils.Constants
 import com.google.gson.Gson
 import java.text.DecimalFormat
 import org.koin.android.ext.android.get
@@ -22,6 +25,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected val binding get() = _binding as VB
     protected abstract val viewModel: BaseViewModel
     protected val gson = Gson()
+    protected var uid: String = ""
 
     protected val sharedPreferences by lazy { get<SharedPreferences>() }
     private val dialog by lazy { context?.let { Dialog(it) } }
@@ -30,16 +34,21 @@ abstract class BaseFragment<VB : ViewBinding>(
         return Dialog(context1)
     }
     protected fun listenBackScreen(
-        resultKey: String = "",
-        booleanKey: String = "",
         onResult: () -> Unit
     ) {
-        parentFragmentManager.setFragmentResultListener(resultKey, viewLifecycleOwner) { _, bundle ->
-            val reload = bundle.getBoolean(booleanKey, false)
+        parentFragmentManager.setFragmentResultListener("boolean_result_key", viewLifecycleOwner) { _, bundle ->
+            val reload = bundle.getBoolean("key_boolean", false)
             if (reload) {
                 onResult()
             }
         }
+    }
+    protected fun backScreenReset() {
+        val result = Bundle().apply {
+            putBoolean("key_boolean", true)
+        }
+        parentFragmentManager.setFragmentResult("boolean_result_key", result)
+        findNavController().popBackStack()
     }
 
     protected fun showKeyboard(context1: Context) {
@@ -56,6 +65,7 @@ abstract class BaseFragment<VB : ViewBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        uid = sharedPreferences.getData(Constants.SHARED_USER_ID)
         initData()
     }
 

@@ -12,7 +12,7 @@ abstract class BaseViewModel: ViewModel() {
     private val loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
         get() = loading
-    private val _messageError = MutableLiveData<String>()
+    protected val _messageError = MutableLiveData<String>()
     val messageError: LiveData<String>
         get() = _messageError
 

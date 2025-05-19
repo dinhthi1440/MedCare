@@ -5,15 +5,51 @@ import androidx.lifecycle.MutableLiveData
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.medicine.IMedicineRepos
 import com.example.medcare.models.Medicine
+import com.example.medcare.models.Response
 
-class MedicineDetailViewModel(private val iMedicineRepos: IMedicineRepos.Local): BaseViewModel() {
+class MedicineDetailViewModel(private val iMedicineRepos: IMedicineRepos): BaseViewModel() {
     private val _setMedicine = MutableLiveData<Medicine>()
     val getMedicine: LiveData<Medicine> get() = _setMedicine
-    fun getMedicineDetail(medicineId: String) {
+
+    private val _setDeleteStatus = MutableLiveData<Response<Any>>()
+    val getDeleteStatus: LiveData<Response<Any>> get() = _setDeleteStatus
+
+    fun getMedicineDetail(uid: String, medicineId: String) {
         executeTask(
-            request = {iMedicineRepos.getMedicineById(medicineId)},
+            request = {iMedicineRepos.getMedicineByIdRemote(uid, medicineId)},
             onSuccess = {
-                _setMedicine.value = it
+                when (it.statusCode) {
+                    200 -> {
+                        _setMedicine.value = it.data as Medicine
+                    }
+                    404 -> {
+                        _messageError.value = it.message
+                    }
+                    500 -> {
+                        _messageError.value = it.message
+                    }
+                }
+
+            },
+            onError = {}
+        )
+    }
+    fun deleteMedicineRemote(uid: String, medicineID: String) {
+        executeTask(
+            request = {iMedicineRepos.deleteMedicineRemote(uid, medicineID)},
+            onSuccess = {
+                when (it.statusCode) {
+                    200 -> {
+                        _setDeleteStatus.value = it
+                    }
+                    404 -> {
+                        _messageError.value = it.message
+                    }
+                    500 -> {
+                        _messageError.value = it.message
+                    }
+                }
+
             },
             onError = {}
         )

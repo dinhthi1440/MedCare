@@ -3,6 +3,7 @@ package com.example.medcare.views.my_medicine.medicine_detail
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -26,10 +27,13 @@ class MedicineDetailFragment :
         medicineId = arguments?.getString("medicine_id").toString()
         medicineName = arguments?.getString("medicine_name").toString()
         previousScreen = arguments?.getString("previous_screen").toString()
-        viewModel.getMedicineDetail(medicineId)
+        viewModel.getMedicineDetail(uid, medicineId)
     }
 
     override fun handleEvent() {
+        listenBackScreen {
+            viewModel.getMedicineDetail(uid, medicineId)
+        }
         if(previousScreen =="detail"){
             binding.btnEdit.visibility = View.GONE
             binding.btnDelete.visibility = View.GONE
@@ -38,7 +42,9 @@ class MedicineDetailFragment :
             findNavController().popBackStack()
         }
         binding.btnDelete.setOnClickListener {
-
+            dialog(requireContext()).confirmEvent("Xác nhận xoá", "Bạn có chắc chắn muốn xoá?") {
+                viewModel.deleteMedicineRemote(uid, medicineId)
+            }
         }
         binding.btnEdit.setOnClickListener {
             val bundle = Bundle().apply {
@@ -53,6 +59,10 @@ class MedicineDetailFragment :
         binding.txtLabel.text = medicineName
         viewModel.getMedicine.observe(viewLifecycleOwner) {
             binding.apply {
+                nestedScrollView.visibility = View.VISIBLE
+                btnDelete.visibility = View.VISIBLE
+                btnEdit.visibility = View.VISIBLE
+                txtError.visibility = View.GONE
                 txtMedicineName.text = it.name
                 txtExpirationDate.text = it.expirationDate
                 txtNote.text = it.note
@@ -80,6 +90,20 @@ class MedicineDetailFragment :
                     txtExpirationDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.ccRedText))
                     txtExpirationDate.text = "Ngày không hợp lệ"
                 }
+            }
+        }
+        viewModel.messageError.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            binding.txtError.text = it
+        }
+        viewModel.getDeleteStatus.observe(viewLifecycleOwner) {
+            if (it.statusCode == 200) {
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                val result = Bundle().apply {
+                    putBoolean("key_boolean", true)
+                }
+                parentFragmentManager.setFragmentResult("boolean_result_key", result)
+                findNavController().popBackStack()
             }
         }
     }

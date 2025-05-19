@@ -17,17 +17,14 @@ import com.example.medcare.utils.Constants
 import com.example.medcare.views.home.model.MenuItem
 import com.example.medcare.views.main.AlertActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.coroutines.coroutineContext
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     override val viewModel by viewModel<HomeViewModel>()
     private var account: Account? = null
     override fun initData() {
-        val json = sharedPreferences.getData(Constants.SHARED_USER)
-        account = gson.fromJson(json, Account::class.java)
-        if (account == null) {
 
-        }
     }
 
     override fun handleEvent() {
@@ -35,15 +32,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             findNavController().navigate(R.id.action_homeFragment_to_settingListFragment)
         }
     }
+    private fun bindUserData() {
+        val json = sharedPreferences.getData(Constants.SHARED_USER)
+        account = gson.fromJson(json, Account::class.java)
+        account?.let {
+            binding.txtUserName.text = it.fullName ?: ""
+            binding.txtUserMode.text = it.rule ?: ""
+        }
+    }
+
 
     override fun bindData() {
-        if (account != null) {
-            binding.txtUserName.text = account!!.fullName
-            binding.txtUserMode.text = account!!.rule
-        } else {
-
-        }
-        val isAdmin = account!!.rule == "doctor"
+        bindUserData()
+        val isAdmin = account?.rule == "doctor"
         var menuItems = listOf<MenuItem>()
         if (isAdmin) {
             menuItems = MenuItem.getAdminItems()

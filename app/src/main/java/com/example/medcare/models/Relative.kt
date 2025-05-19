@@ -4,11 +4,12 @@ import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 
 data class Relative(
-    val id: String,
-    val name: String,
-    val relativeTitle: String,
-    val avatar: String
+    var id: String = "",
+    var fullName: String = "",
+    var relativeTitle: String = "",
+    var avatar: String = ""
 ): Serializable {
+    constructor() : this("", "", "", "")
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<Relative>() {
             override fun areItemsTheSame(oldItem: Relative, newItem: Relative): Boolean =

@@ -2,6 +2,7 @@ package com.example.medcare.views.pill_reminder.add_new_reminder
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -11,12 +12,19 @@ import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentAddNewReminderBinding
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.extension.RandomUtil
+import com.example.medcare.extension.getData
+import com.example.medcare.models.Account
 import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
 import com.example.medcare.models.PillReminder
+import com.example.medcare.models.Relative
+import com.example.medcare.models.ReminderRelative
+import com.example.medcare.utils.Constants
+import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.UUID
 
 class AddNewReminderFragment :
     BaseFragment<FragmentAddNewReminderBinding>(FragmentAddNewReminderBinding::inflate) {
@@ -30,15 +38,24 @@ class AddNewReminderFragment :
     )
     private var reminderId = ""
     private var firstIn = true
+    private var relative: Relative? = null
+
     override fun initData() {
         reminderId = arguments?.getString("reminder_id") ?: ""
         alarmHelper = AlarmHelper(this.requireContext())
-        if (reminderId != ""){
-            viewModel.getReminderById(reminderId)
-        } else {
-            Log.e("TAG", "initData: selected_medicine jhjeere", )
+        val json = arguments?.getString("relative") ?: ""
+        if (json != "") {
+            relative = Gson().fromJson(json, Relative::class.java)
             viewModel.getData()
+        } else {
+            if (reminderId != ""){
+                viewModel.getReminderByIdRemote(uid, reminderId)
+            } else {
+                Log.e("TAG", "initData: selected_medicine jhjeere", )
+                viewModel.getData()
+            }
         }
+
     }
 
     override fun handleEvent() {
@@ -82,6 +99,7 @@ class AddNewReminderFragment :
                 val selectedList = ArrayList(viewModel.listInitialSelected.value ?: emptyList())
                 val result = Bundle().apply {
                     putParcelableArrayList("selected_medicine", selectedList)
+                    putString("relative_id", relative?.id ?: "")
                 }
                 findNavController().navigate(
                     R.id.action_addNewReminderFragment_to_selectMedicineFragment,
@@ -124,13 +142,38 @@ class AddNewReminderFragment :
                 viewModel.listInitialSelected.value?.toList() ?: listOf(),
                 true, note, disease
             )
-            viewModel.updateReminder(newPillReminder, alarmHelper, requireContext())
+            viewModel.updateReminder(uid, newPillReminder, alarmHelper, requireContext())
         } else {
-            viewModel.insertReminder(times = selectedTimes, content, note, disease)
+            if (relative != null) {
+                val json = sharedPreferences.getData(Constants.SHARED_USER)
+                val account = gson.fromJson(json, Account::class.java)
+                viewModel.insertReminderRelativeRemote(
+                    selectedTimes, content, note, disease,
+                    account.id,
+                    account.fullName,
+                    account.avatar,
+                    "",
+                    relative?.id ?: "",
+                    relative?.fullName ?: "",
+                    relative?.avatar ?: "",
+                    relative?.relativeTitle ?: ""
+                )
+            } else {
+                viewModel.insertReminder(uid, selectedTimes, content, note, disease)
+            }
         }
     }
 
     override fun bindData() {
+        if (reminderId == "") {
+            binding.txtError.visibility = View.GONE
+            binding.nestedScrollView2.visibility = View.VISIBLE
+            if (relative != null) {
+                binding.layoutCreateTo.visibility = View.VISIBLE
+                binding.txtRelativeName.text = relative?.fullName ?: ""
+                binding.txtDescription.text = relative?.relativeTitle ?: ""
+            }
+        }
         initAllPicker()
         bindAdapter()
         parentFragmentManager.setFragmentResultListener("frequency_result_key", viewLifecycleOwner) { _, bundle ->
@@ -142,19 +185,17 @@ class AddNewReminderFragment :
         }
         parentFragmentManager.setFragmentResultListener("selected_medicine_back", viewLifecycleOwner) { _, bundle ->
             val receivedList = bundle.getParcelableArrayList<Medicine>("selected_medicine") ?: emptyList()
-            Log.e("TAG", "bindData: selected_medicine là $receivedList", )
             receivedList.let {
                 viewModel.setListSelectedMedicine(it.toMutableList())
             }
         }
-        viewModel.getInsertStatus.observe(viewLifecycleOwner) {
-            if (!it) {
-                Toast.makeText(context, "Có lỗi trong khi thêm", Toast.LENGTH_SHORT).show()
-            }
+        viewModel.messageError.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
         viewModel.getUpdateStatus.observe(viewLifecycleOwner) {
             if (it){
-                findNavController().popBackStack()
+                Toast.makeText(context, "Đã sửa thành công", Toast.LENGTH_SHORT).show()
+                backScreenReset()
             } else {
                 Toast.makeText(context, "Đã có lỗi khi sửa, hãy thử lại", Toast.LENGTH_SHORT).show()
             }
@@ -162,7 +203,8 @@ class AddNewReminderFragment :
         viewModel.getPillReminder.observe(viewLifecycleOwner) {reminder ->
             if (reminderId != "" ){
                 if (firstIn) {
-                    Log.e("TAG", "bindData: selected_medicine đã chạy vào đay", )
+                    binding.nestedScrollView2.visibility = View.VISIBLE
+                    binding.txtError.visibility = View.GONE
                     selectedTimes = reminder.times.toMutableList()
                     binding.tietContent.setText(reminder.label)
                     binding.tietNote.setText(reminder.note)
@@ -172,13 +214,14 @@ class AddNewReminderFragment :
                     firstIn = false
                 }
             } else {
-                val result = Bundle().apply {
-                    putBoolean("key_boolean", true)
+                if (relative != null) {
+                    Toast.makeText(context, "Đã gửi yêu cầu nhắc nhở thành công", Toast.LENGTH_SHORT).show()
+                } else {
+                    context?.let { it1 -> alarmHelper.registerAlarm(it1, reminder) }
+                    Toast.makeText(context, "Đã hẹn giờ thành công", Toast.LENGTH_SHORT).show()
                 }
-                parentFragmentManager.setFragmentResult("boolean_result_key", result)
-                findNavController().popBackStack()
-                context?.let { it1 -> alarmHelper.registerAlarm(it1, reminder) }
-                Toast.makeText(context, "Đã hẹn giờ thành công", Toast.LENGTH_SHORT).show()
+                backScreenReset()
+
             }
         }
         viewModel.getFrequencyStr.observe(viewLifecycleOwner){
