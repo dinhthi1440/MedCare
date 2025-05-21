@@ -53,6 +53,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
+
     override fun bindData() {
         if (initEmail != "" && initPassword != "") {
             binding.textipEmail.setText(initEmail)
