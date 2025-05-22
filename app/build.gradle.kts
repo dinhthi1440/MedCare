@@ -84,4 +84,7 @@ dependencies {
 
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.firebaseui:firebase-ui-auth:9.0.0")
+
+    implementation("com.amazonaws:aws-android-sdk-s3:2.79.0")
+    implementation("com.amazonaws:aws-android-sdk-core:2.79.0")
 }

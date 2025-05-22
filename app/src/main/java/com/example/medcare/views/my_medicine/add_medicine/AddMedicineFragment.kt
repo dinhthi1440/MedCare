@@ -3,8 +3,10 @@ package com.example.medcare.views.my_medicine.add_medicine
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
@@ -13,7 +15,12 @@ import com.example.medcare.databinding.FragmentAddMedicineBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
+import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.regions.Region
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.s3.AmazonS3Client
 import com.example.medcare.R
 import com.example.medcare.models.Medicine
 import java.io.File
@@ -80,7 +87,14 @@ class AddMedicineFragment :
     override fun initData() {
         medicine = arguments?.getSerializable("medicine") as? Medicine
     }
-
+    fun uriToFile(context: Context, uri: Uri): File {
+        val inputStream = context.contentResolver.openInputStream(uri) ?: throw IllegalArgumentException("Can't open input stream from URI")
+        val tempFile = File.createTempFile("upload_", ".jpg", context.cacheDir)
+        tempFile.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+        return tempFile
+    }
     override fun handleEvent() {
         binding.apply {
             imgCamera.setOnClickListener {
@@ -93,7 +107,22 @@ class AddMedicineFragment :
                 findNavController().popBackStack()
             }
             btnAdd.setOnClickListener {
-                addMedicine(false)
+                val file = uriToFile(requireContext(), image.toUri())
+                val bucketName = "medcare-app-android"
+                val key = "images/${file.name}"
+
+                Thread {
+                    try {
+                        s3Client.putObject(bucketName, key, file)
+                        val url = s3Client.getResourceUrl(bucketName, key)
+                        Toast.makeText(context, "Uploaded to: $url", Toast.LENGTH_SHORT).show()
+                        Log.d("S3", "Uploaded to: $url")
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Upload failed", Toast.LENGTH_SHORT).show()
+                        Log.e("S3", "Upload failed", e)
+                    }
+                }.start()
+                //addMedicine(false)
             }
             btnSuccess.setOnClickListener {
                 addMedicine(true)
