@@ -36,7 +36,7 @@ val viewModelModule = module {
     viewModel { ReminderHistoryViewModel() }
     viewModel { ConnectRelativesViewModel(get()) }
     viewModel { RelativeHistoryViewModel() }
-    viewModel { RelativeRequestViewModel() }
+    viewModel { RelativeRequestViewModel(get()) }
     viewModel { RelativeReminderDetailViewModel() }
     viewModel { ContactDoctorViewModel() }
     viewModel { ChatDoctorViewModel() }

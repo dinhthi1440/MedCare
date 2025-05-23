@@ -1,7 +1,11 @@
 package com.example.medcare.data.datasource.relatives
 
+import com.example.medcare.models.Account
+import com.example.medcare.models.PillReminder
 import com.example.medcare.models.Relative
+import com.example.medcare.models.ReminderRelative
 import com.example.medcare.models.Response
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -179,70 +183,111 @@ class RelativesDataSource: IRelativesDataSource {
         }
 
     override suspend fun acceptRelativeRequestRemote(
-        uid: String,
+        user: Account,
         relative: Relative
-    ): Response<Any> {
-        return suspendCoroutine { continuation ->
-            val db = FirebaseFirestore.getInstance()
+    ): Response<Any> = suspendCoroutine { continuation ->
+        val db = FirebaseFirestore.getInstance()
 
-            val requestRef = db.collection("users")
-                .document(uid)
-                .collection("relatives_request")
-                .document(relative.id)
+        val requestRef = db.collection("users")
+            .document(user.id)
+            .collection("relatives_request")
+            .document(relative.id)
 
-            val targetRef = db.collection("users")
-                .document(uid)
-                .collection("relatives")
-                .document(relative.id)
+        val target1Ref = db.collection("users")
+            .document(user.id)
+            .collection("relatives")
+            .document(relative.id)
 
-            val userToAddRef = db.collection("users")
-                .document(relative.id)
+        val target2Ref = db.collection("users")
+            .document(relative.id)
+            .collection("relatives")
+            .document(user.id)
 
-            // Bước 1: Kiểm tra người được thêm có tồn tại không
-            userToAddRef.get()
-                .addOnSuccessListener { snapshot ->
-                    if (!snapshot.exists()) {
-                        // Người dùng không tồn tại → xoá request
-                        requestRef.delete()
-                        continuation.resume(Response(404, "Người dùng không còn tồn tại", false))
-                    } else {
-                        // Bước 2: Người tồn tại → thêm vào relatives
-                        targetRef.set(relative)
-                            .addOnSuccessListener {
-                                // Bước 3: Xoá request nếu thêm thành công
-                                requestRef.delete()
-                                    .addOnSuccessListener {
-                                        continuation.resume(
-                                            Response(
-                                                200,
-                                                "Chấp nhận lời mời thành công",
-                                                true
-                                            )
+        val userToAddRef = db.collection("users").document(relative.id)
+
+        // Kiểm tra người dùng có tồn tại không
+        userToAddRef.get()
+            .addOnSuccessListener { snapshot ->
+                if (!snapshot.exists()) {
+                    requestRef.delete()
+                    continuation.resume(Response(404, "Người dùng không còn tồn tại", false))
+                } else {
+                    // Tạo bản sao Relative cho chiều ngược lại (uid là người được thêm)
+                    val reverseRelative = Relative(
+                        user.id,
+                        user.fullName,
+                        "Bạn bè",
+                        user.avatar
+                    )
+
+                    // Thêm vào cả hai phía trong relatives
+                    val write1 = target1Ref.set(relative)
+                    val write2 = target2Ref.set(reverseRelative)
+
+                    Tasks.whenAll(write1, write2)
+                        .addOnSuccessListener {
+                            // Nếu thành công → xoá request
+                            requestRef.delete()
+                                .addOnSuccessListener {
+                                    continuation.resume(
+                                        Response(200, "Chấp nhận lời mời thành công", true)
+                                    )
+                                }
+                                .addOnFailureListener {
+                                    continuation.resume(
+                                        Response(
+                                            200,
+                                            "Chấp nhận thành công, nhưng lỗi khi xoá lời mời",
+                                            true
                                         )
-                                    }
-                                    .addOnFailureListener {
-                                        continuation.resume(
-                                            Response(
-                                                200,
-                                                "Chấp nhận thành công, nhưng lỗi khi xoá lời mời",
-                                                true
-                                            )
-                                        )
-                                    }
-                            }
-                            .addOnFailureListener {
-                                continuation.resume(Response(500, "Lỗi khi thêm người thân", false))
-                            }
-                    }
-
-
+                                    )
+                                }
+                        }
+                        .addOnFailureListener {
+                            continuation.resume(
+                                Response(500, "Lỗi khi tạo quan hệ hai chiều", false)
+                            )
+                        }
                 }
-                .addOnFailureListener {
-                    continuation.resume(Response(500, "Lỗi khi kiểm tra người dùng", false))
-                }
-        }
+            }
+            .addOnFailureListener {
+                continuation.resume(
+                    Response(500, "Lỗi khi kiểm tra người dùng", false)
+                )
+            }
     }
 
+    override suspend fun getAllReminderRelativeFromRemote(uid: String): Response<Any> {
+        return suspendCoroutine { continuation ->
+            try {
+                val db = FirebaseFirestore.getInstance()
+                db.collection("users")
+                    .document(uid)
+                    .collection("reminder_relative_from")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        try {
+                            val list = result.documents.mapNotNull { doc ->
+                                doc.toObject(ReminderRelative::class.java)?.apply { id = doc.id }
+                            }
+
+                            if (list.isNotEmpty()) {
+                                continuation.resume(Response(200, "Lấy danh sách nhắc thuốc thành công", list))
+                            } else {
+                                continuation.resume(Response(204, "Không có lời nhắc thuốc nào", emptyList<PillReminder>()))
+                            }
+                        } catch (e: Exception) {
+                            continuation.resume(Response(500, "Lỗi xử lý dữ liệu nhắc thuốc", null))
+                        }
+                    }
+                    .addOnFailureListener { _ ->
+                        continuation.resume(Response(500, "Lỗi khi lấy danh sách nhắc thuốc", null))
+                    }
+            } catch (e: Exception) {
+                continuation.resume(Response(500, "Lỗi khi kết nối tới Firestore", null))
+            }
+        }
+    }
 
 
 }

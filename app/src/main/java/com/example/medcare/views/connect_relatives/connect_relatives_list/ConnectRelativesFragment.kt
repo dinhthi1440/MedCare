@@ -153,7 +153,7 @@ class ConnectRelativesFragment : BaseFragment<FragmentConnectRelativesBinding>(F
     }
 
     private fun onClickRequest(relative: Relative) {
-        viewModel.acceptRelativeRequestRemote(uid, relative)
+        viewModel.acceptRelativeRequestRemote(account!!, relative)
     }
 
     private fun onAddRelative(relative: Relative) {

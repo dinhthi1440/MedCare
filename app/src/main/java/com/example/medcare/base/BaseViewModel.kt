@@ -44,4 +44,7 @@ abstract class BaseViewModel: ViewModel() {
     private fun hideLoading() {
         loading.value = false
     }
+    fun setIsLoading(isShow: Boolean) {
+        loading.value = isShow
+    }
 }

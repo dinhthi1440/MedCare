@@ -25,9 +25,20 @@ class MedicineAdapter(private val isSelectMedicine: Boolean, private val onClick
         @SuppressLint("SetTextI18n")
         override fun bindView(item: Medicine, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
-            Glide.with(binding.root.context)
-                .load(item.image)
-                .into(binding.imageView)
+            Log.e("TAG", "bindView: 1111  image is ${item.image}" )
+            if (item.image != "") {
+                binding.imageViewNoImage.visibility = View.INVISIBLE
+                binding.imageView.visibility = View.VISIBLE
+                Glide.with(binding.root.context)
+                    .load(item.image)
+                    .error(R.drawable.error_image)
+                    .into(binding.imageView)
+            } else {
+                binding.imageViewNoImage.visibility = View.VISIBLE
+                binding.imageView.visibility = View.INVISIBLE
+            }
+
+
             if (!isSelectMedicine) {
                 binding.apply {
                     txtExpirationDate.visibility = View.GONE
@@ -35,7 +46,7 @@ class MedicineAdapter(private val isSelectMedicine: Boolean, private val onClick
                     txtMedicineName.text = item.name
 
                     txtDosageInput.visibility = View.VISIBLE
-                    txtDosageInput.text = "\uD83D\uDD22 Liều lượng: 3 viên"
+                    txtDosageInput.text = "\uD83D\uDD22 Liều lượng: ${item.dosage} ${item.unit}"
                  }
             } else {
                 binding.apply {

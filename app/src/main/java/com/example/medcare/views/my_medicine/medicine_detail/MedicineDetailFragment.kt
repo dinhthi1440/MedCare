@@ -69,9 +69,17 @@ class MedicineDetailFragment :
                 txtQuantity.text = "${it.quantity} ${it.unit}"
                 txtDosage.text = "${it.dosage} ${it.unit} / lần"
                 txtRealQuantity.text = "${it.realQuantity} ${it.unit}"
-                Glide.with(requireContext())
-                    .load(it.image)
-                    .into(imgMedicine)
+                if (it.image != "") {
+                    imgMedicineNoData.visibility = View.GONE
+                    imgMedicine.visibility = View.VISIBLE
+                    Glide.with(requireContext())
+                        .load(it.image)
+                        .into(imgMedicine)
+                } else {
+                    imgMedicineNoData.visibility = View.VISIBLE
+                    imgMedicine.visibility = View.GONE
+                }
+
                 if (it.quantity < 5 || it.quantity < it.dosage) {
                     txtQuantity.setTextColor(ContextCompat.getColor(requireContext(), R.color.ccRedText))
                 }

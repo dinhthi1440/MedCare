@@ -32,8 +32,8 @@ class MedicineRepos(
     override suspend fun insertMedicineRemote(
         uid: String,
         medicine: Medicine
-    ): DataResult<Response<Any>> {
-        return getResult { dataSource.insertMedicineRemote(uid, medicine) }
+    ): Response<Any> {
+        return dataSource.insertMedicineRemote(uid, medicine)
     }
 
     override suspend fun getAllMedicineRemote(uid: String): DataResult<Response<Any>> {

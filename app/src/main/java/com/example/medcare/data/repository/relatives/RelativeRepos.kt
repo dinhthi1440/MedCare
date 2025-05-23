@@ -3,6 +3,7 @@ package com.example.medcare.data.repository.relatives
 import com.example.medcare.base.BaseRepository
 import com.example.medcare.base.DataResult
 import com.example.medcare.data.datasource.relatives.IRelativesDataSource
+import com.example.medcare.models.Account
 import com.example.medcare.models.Relative
 import com.example.medcare.models.Response
 
@@ -27,10 +28,14 @@ class RelativeRepos(private val dataSource: IRelativesDataSource): BaseRepositor
     }
 
     override suspend fun acceptRelativeRequestRemote(
-        uid: String,
+        user: Account,
         relative: Relative
     ): DataResult<Response<Any>> {
-        return getResult { dataSource.acceptRelativeRequestRemote(uid, relative) }
+        return getResult { dataSource.acceptRelativeRequestRemote(user, relative) }
+    }
+
+    override suspend fun getAllReminderRelativeFromRemote(uid: String): DataResult<Response<Any>> {
+        return getResult { dataSource.getAllReminderRelativeFromRemote(uid) }
     }
 
 }

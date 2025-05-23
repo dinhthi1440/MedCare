@@ -21,6 +21,7 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Region
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3Client
+import com.bumptech.glide.Glide
 import com.example.medcare.R
 import com.example.medcare.models.Medicine
 import java.io.File
@@ -29,6 +30,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
+import com.example.medcare.BuildConfig
 
 class AddMedicineFragment :
     BaseFragment<FragmentAddMedicineBinding>(FragmentAddMedicineBinding::inflate) {
@@ -107,22 +109,8 @@ class AddMedicineFragment :
                 findNavController().popBackStack()
             }
             btnAdd.setOnClickListener {
-                val file = uriToFile(requireContext(), image.toUri())
-                val bucketName = "medcare-app-android"
-                val key = "images/${file.name}"
 
-                Thread {
-                    try {
-                        s3Client.putObject(bucketName, key, file)
-                        val url = s3Client.getResourceUrl(bucketName, key)
-                        Toast.makeText(context, "Uploaded to: $url", Toast.LENGTH_SHORT).show()
-                        Log.d("S3", "Uploaded to: $url")
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "Upload failed", Toast.LENGTH_SHORT).show()
-                        Log.e("S3", "Upload failed", e)
-                    }
-                }.start()
-                //addMedicine(false)
+                addMedicine(false)
             }
             btnSuccess.setOnClickListener {
                 addMedicine(true)
@@ -189,6 +177,8 @@ class AddMedicineFragment :
         val quantity = binding.tietQuantity.text?.toString()?.toIntOrNull()
         val dosage = binding.tietDosage.text?.toString()?.toIntOrNull()
 
+
+
         if (medicineName.isEmpty() || expirationDate.isEmpty() || quantity == null || dosage == null) {
             Toast.makeText(
                 requireContext(),
@@ -226,10 +216,12 @@ class AddMedicineFragment :
             unit = unit,
             note = note
         )
+        val file = if (image.isNotEmpty()) uriToFile(requireContext(), image.toUri()) else null
+
         if (isEdit) {
-            viewModel.updateMedicine(uid, newMedicine)
+            viewModel.updateMedicine(uid, newMedicine, file)
         } else {
-            viewModel.insertMedicine(uid, newMedicine)
+            viewModel.insertMedicine(uid, newMedicine, file)
         }
 
     }
@@ -240,12 +232,20 @@ class AddMedicineFragment :
             binding.apply {
                 btnAdd.visibility = View.GONE
                 btnSuccess.visibility = View.VISIBLE
+                if (medicine?.image != "") {
+                    cardView2.visibility = View.GONE
+                    cardview.visibility = View.VISIBLE
+                    Glide.with(requireContext())
+                        .load(medicine?.image)
+                        .into(imgMedicine)
+                }
                 txtLabel.text = "Sửa thuốc"
                 tietMedicineName.setText(medicine!!.name)
                 tietQuantity.setText(medicine!!.quantity.toString())
                 tietDosage.setText(medicine!!.dosage.toString())
                 tietNote.setText(medicine!!.note)
                 tietExpirationDate.setText(medicine!!.expirationDate)
+
                 val units = resources.getStringArray(R.array.medicine_units)
                 val index = units.indexOf(medicine!!.unit)
                 if (index >= 0) {

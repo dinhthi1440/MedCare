@@ -3,13 +3,14 @@ package com.example.medcare.views.connect_relatives.relative_request_add
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.medcare.base.BaseViewModel
+import com.example.medcare.data.repository.relatives.IRelativeRepos
 import com.example.medcare.models.Medicine
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.ReminderRelative
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 
-class RelativeRequestViewModel : BaseViewModel() {
+class RelativeRequestViewModel(private val iRelativeRepos: IRelativeRepos) : BaseViewModel() {
     val reminderTo = mutableListOf(
         ReminderRelative(
             "id1",

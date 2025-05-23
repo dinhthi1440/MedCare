@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.relatives.IRelativeRepos
+import com.example.medcare.models.Account
 import com.example.medcare.models.Relative
 
 class ConnectRelativesViewModel(private val iRelativeRepos: IRelativeRepos) : BaseViewModel() {
@@ -85,9 +86,9 @@ class ConnectRelativesViewModel(private val iRelativeRepos: IRelativeRepos) : Ba
         )
     }
 
-    fun acceptRelativeRequestRemote( uid: String, relative: Relative ) {
+    fun acceptRelativeRequestRemote( user: Account, relative: Relative ) {
         executeTask(
-            request = {iRelativeRepos.acceptRelativeRequestRemote(uid, relative)},
+            request = {iRelativeRepos.acceptRelativeRequestRemote(user, relative)},
             onSuccess = {
                 when (it.statusCode) {
                     200 -> {

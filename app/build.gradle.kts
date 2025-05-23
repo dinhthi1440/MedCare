@@ -1,3 +1,4 @@
+import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +9,11 @@ plugins {
 android {
     namespace = "com.example.medcare"
     compileSdk = 35
+    val envFile = rootProject.file(".env")
+    val envProps = Properties()
+    if (envFile.exists()) {
+        envProps.load(envFile.inputStream())
+    }
 
     defaultConfig {
         applicationId = "com.example.medcare"
@@ -17,6 +23,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "AWS_ACCESS_KEY", "\"${envProps["AWS_ACCESS_KEY"] ?: ""}\"")
+        buildConfigField("String", "AWS_SECRET_KEY", "\"${envProps["AWS_SECRET_KEY"] ?: ""}\"")
+        buildConfigField("String", "AWS_BUCKET_NAME", "\"${envProps["AWS_BUCKET_NAME"] ?: ""}\"")
+        buildConfigField("String", "AWS_REGION", "\"${envProps["AWS_REGION"] ?: ""}\"")
     }
 
     buildTypes {
@@ -36,6 +47,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures{
+        buildConfig = true
         viewBinding = true
     }
 }

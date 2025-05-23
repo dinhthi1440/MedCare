@@ -101,8 +101,17 @@
                 app:layout_constraintVertical_bias="0.0" >
                 <ImageView
                     android:id="@+id/img_medicine"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="fitCenter"/>
+                <ImageView
+                    android:id="@+id/img_medicine_no_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="40dp"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_no_pictures_x512"
                     android:scaleType="fitCenter"/>
             </androidx.cardview.widget.CardView>
 

@@ -243,15 +243,15 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
             val db = FirebaseFirestore.getInstance()
             val toRef = db.collection("users")
                 .document(reminderRelative.receiverID)
-                .collection("reminder_relative_to")
+                .collection("reminder_relative_from")
                 .document(reminderRelative.pillReminder.id)
 
             val fromRef = db.collection("users")
                 .document(reminderRelative.senderID)
-                .collection("reminder_relative_from")
+                .collection("reminder_relative_to")
                 .document(reminderRelative.pillReminder.id)
             val task1 = toRef.set(reminderRelative)
-            val reminderCopy = Gson().fromJson(Gson().toJson(reminderRelative), ReminderRelative::class.java)
+            val reminderCopy = reminderRelative
             val task2 = fromRef.set(reminderCopy)
 
             Tasks.whenAllComplete(task1, task2)
@@ -269,5 +269,7 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
                 }
         }
     }
+
+
 
 }

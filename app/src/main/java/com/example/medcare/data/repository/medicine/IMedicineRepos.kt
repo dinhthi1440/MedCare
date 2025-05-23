@@ -10,7 +10,7 @@ interface IMedicineRepos {
     suspend fun deleteMedicine(idMedicine: String): DataResult<Int>
     suspend fun getMedicineById(idMedicine: String): DataResult<Medicine>
     suspend fun updateMedicine(medicine: Medicine): DataResult<Int>
-    suspend fun insertMedicineRemote(uid: String, medicine: Medicine): DataResult<Response<Any>>
+    suspend fun insertMedicineRemote(uid: String, medicine: Medicine): Response<Any>
     suspend fun getAllMedicineRemote(uid: String): DataResult<Response<Any>>
     suspend fun getMedicineByIdRemote(uid: String, medicineID: String): DataResult<Response<Any>>
     suspend fun updateMedicineRemote(uid: String, medicine: Medicine): DataResult<Response<Any>>
