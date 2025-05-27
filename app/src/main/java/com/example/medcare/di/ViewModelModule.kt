@@ -18,7 +18,6 @@ import com.example.medcare.views.my_medicine.medicine_list.MyMedicineViewModel
 import com.example.medcare.views.pill_reminder.reminder_detail.ReminderDetailViewModel
 import com.example.medcare.views.reminder_history.reminder_history_list.ReminderHistoryViewModel
 import com.example.medcare.views.setting.setting_list.SettingViewModel
-import com.example.medcare.views.user_manager.user_detail.UserDetailViewModel
 import com.example.medcare.views.user_manager.user_list.UserListViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -33,15 +32,14 @@ val viewModelModule = module {
     viewModel { NewReminderViewModel(get()) }
     viewModel { SelectMedicineViewModel(get()) }
     viewModel { ReminderDetailViewModel(get()) }
-    viewModel { ReminderHistoryViewModel() }
+    viewModel { ReminderHistoryViewModel(get()) }
     viewModel { ConnectRelativesViewModel(get()) }
     viewModel { RelativeHistoryViewModel() }
     viewModel { RelativeRequestViewModel(get()) }
-    viewModel { RelativeReminderDetailViewModel() }
-    viewModel { ContactDoctorViewModel() }
-    viewModel { ChatDoctorViewModel() }
-    viewModel { SettingViewModel() }
-    viewModel { UserDetailViewModel() }
-    viewModel { UserListViewModel() }
-    viewModel { FeedbackViewModel() }
+    viewModel { RelativeReminderDetailViewModel(get()) }
+    viewModel { ContactDoctorViewModel(get()) }
+    viewModel { ChatDoctorViewModel(get()) }
+    viewModel { SettingViewModel(get()) }
+    viewModel { UserListViewModel(get()) }
+    viewModel { FeedbackViewModel(get()) }
 }

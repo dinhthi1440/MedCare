@@ -1,6 +1,7 @@
 package com.example.medcare.data.datasource.relatives
 
 import com.example.medcare.models.Account
+import com.example.medcare.models.PillReminder
 import com.example.medcare.models.Relative
 import com.example.medcare.models.Response
 
@@ -19,4 +20,7 @@ interface IRelativesDataSource {
 
     //reminder
     suspend fun getAllReminderRelativeFromRemote(uid: String): Response<Any>
+    suspend fun updateReminderRelativeFromToRemote(pillReminder: PillReminder): Response<Any>
+    suspend fun getReminderRelativeFromToByID(uid: String, reminderID: String): Response<Any>
+
 }

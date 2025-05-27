@@ -16,6 +16,8 @@
     <color name="yourSelectedColor">#E0E8FC</color>
     <color name="yourUnselectedColor">#F2F2F2</color>
     <color name="ccGreen">#FF4CAF50</color>
+    <color name="ccGreenText">#2F973C</color>
+    <color name="ccOrangeText">#FF7700</color>
     <color name="ccGreenBtn">#64B17A</color>
     <color name="ccRed">#C13A30</color>
 </resources>

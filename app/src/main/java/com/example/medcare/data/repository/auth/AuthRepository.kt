@@ -12,15 +12,38 @@ class AuthRepository(private val remote: IAuthDatasource) : BaseRepository(), IA
     override suspend fun registerAccount(email: String, password: String): DataResult<Response<Any>> {
         return getResult { remote.registerAccount(email, password) }
     }
-    override suspend fun loginWithEmailPassword(email: String, password: String): DataResult<Response<Any>> {
-        return getResult { remote.loginWithEmailPassword(email, password) }
+    override suspend fun loginWithEmailPassword(email: String, password: String): Response<Any> {
+        return remote.loginWithEmailPassword(email, password)
     }
 
-    override suspend fun getUserData(uid: String): DataResult<Response<Any>> {
-        return getResult { remote.getUserData(uid) }
+    override suspend fun getUserData(uid: String): Response<Any> {
+        return  remote.getUserData(uid)
     }
 
     override suspend fun createUser(account: Account): DataResult<Response<Any>> {
         return getResult { remote.createUser(account) }
+    }
+
+    override suspend fun updateUser(account: Account): Response<Any> {
+        return remote.updateUser(account)
+    }
+
+    override suspend fun updateUserByFiled(
+        accountID: String,
+        fields: Map<String, Any>
+    ): Response<Any> {
+        return remote.updateUserByFiled(accountID, fields)
+    }
+
+    override suspend fun getAllUser(): DataResult<Response<Any>> {
+        return getResult { remote.getAllUser() }
+    }
+
+    override suspend fun deleteUserByID(accountID: String): Response<Any> {
+        return remote.deleteUserByID(accountID)
+    }
+
+    override suspend fun searchUserByName(searchString: String): DataResult<Response<Any>> {
+        return getResult { remote.searchUserByName(searchString) }
     }
 }

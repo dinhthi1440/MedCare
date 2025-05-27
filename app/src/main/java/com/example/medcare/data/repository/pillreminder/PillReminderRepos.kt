@@ -4,7 +4,7 @@ import com.example.medcare.base.BaseRepository
 import com.example.medcare.base.DataResult
 import com.example.medcare.data.datasource.pillreminder.IPillReminderDataSource
 import com.example.medcare.models.PillReminder
-import com.example.medcare.models.ReminderRelative
+import com.example.medcare.models.ReminderHistory
 import com.example.medcare.models.Response
 
 class PillReminderRepos(private val dataSource: IPillReminderDataSource): BaseRepository(), IPillReminderRepos  {
@@ -69,8 +69,15 @@ class PillReminderRepos(private val dataSource: IPillReminderDataSource): BaseRe
     }
 
     override suspend fun insertReminderRelativeRemote(
-        reminderRelative: ReminderRelative
+        reminderRelative: PillReminder
     ): DataResult<Response<Any>> {
         return getResult { dataSource.insertReminderRelativeRemote(reminderRelative) }
+    }
+
+    override suspend fun insertReminderHistory(
+        uid: String,
+        reminderHistory: ReminderHistory
+    ): DataResult<Response<Any>> {
+        return getResult { dataSource.insertReminderHistory(uid, reminderHistory) }
     }
 }

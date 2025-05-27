@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
@@ -26,6 +28,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected abstract val viewModel: BaseViewModel
     protected val gson = Gson()
     protected var uid: String = ""
+    protected var isBackReset: Boolean = false
 
     protected val sharedPreferences by lazy { get<SharedPreferences>() }
     private val dialog by lazy { context?.let { Dialog(it) } }
@@ -44,16 +47,20 @@ abstract class BaseFragment<VB : ViewBinding>(
         }
     }
     protected fun backScreenReset() {
-        val result = Bundle().apply {
-            putBoolean("key_boolean", true)
+        if (isBackReset) {
+            val result = Bundle().apply {
+                putBoolean("key_boolean", true)
+            }
+            parentFragmentManager.setFragmentResult("boolean_result_key", result)
+            findNavController().popBackStack()
+        } else {
+            findNavController().popBackStack()
         }
-        parentFragmentManager.setFragmentResult("boolean_result_key", result)
-        findNavController().popBackStack()
     }
 
     protected fun showKeyboard(context1: Context) {
         val inputMethodManager =
-            context1?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            context1.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 
@@ -61,6 +68,11 @@ abstract class BaseFragment<VB : ViewBinding>(
         val inputMethodManager =
             view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+    protected fun hideKeyboardAndClearFocus(view: View) {
+        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        view.clearFocus()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +102,14 @@ abstract class BaseFragment<VB : ViewBinding>(
         bindData()
         handleEvent()
         destroy()
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    backScreenReset()
+                }
+            }
+        )
     }
 
 

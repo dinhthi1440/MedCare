@@ -4,10 +4,11 @@ import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 
 data class Doctor(
-    val id: String,
-    val name: String,
-    val avatar: String
+    var id: String = "",
+    var fullName: String = "",
+    var avatar: String = ""
 ) : Serializable {
+    constructor() : this ("", "", "")
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<Doctor>() {
             override fun areItemsTheSame(oldItem: Doctor, newItem: Doctor): Boolean =

@@ -31,14 +31,15 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
 import com.example.medcare.BuildConfig
+import com.example.medcare.utils.FileUtils
 
 class AddMedicineFragment :
     BaseFragment<FragmentAddMedicineBinding>(FragmentAddMedicineBinding::inflate) {
     override val viewModel by viewModel<AddMedicineViewModel>()
-    private var image = ""
     private var unit = "viên"
     private var medicine: Medicine? = null
     private lateinit var newMedicine : Medicine
+    private var image = ""
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -88,14 +89,6 @@ class AddMedicineFragment :
 
     override fun initData() {
         medicine = arguments?.getSerializable("medicine") as? Medicine
-    }
-    fun uriToFile(context: Context, uri: Uri): File {
-        val inputStream = context.contentResolver.openInputStream(uri) ?: throw IllegalArgumentException("Can't open input stream from URI")
-        val tempFile = File.createTempFile("upload_", ".jpg", context.cacheDir)
-        tempFile.outputStream().use { outputStream ->
-            inputStream.copyTo(outputStream)
-        }
-        return tempFile
     }
     override fun handleEvent() {
         binding.apply {
@@ -216,7 +209,7 @@ class AddMedicineFragment :
             unit = unit,
             note = note
         )
-        val file = if (image.isNotEmpty()) uriToFile(requireContext(), image.toUri()) else null
+        val file = if (image.isNotEmpty()) FileUtils.uriToFile(requireContext(), image.toUri()) else null
 
         if (isEdit) {
             viewModel.updateMedicine(uid, newMedicine, file)

@@ -10,7 +10,6 @@
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_stroke_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,25 +29,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/txt_label"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/inter"
-            android:text="Tin nhắn bác sĩ"
-            android:textAlignment="center"
-            android:textColor="@color/ccBlueText"
-            android:textFontWeight="600"
-            android:textSize="20sp"
+            android:layout_marginEnd="16dp"
+            android:hint="Tìm kiếm bác sĩ..."
+            app:endIconContentDescription="Tìm kiếm bác sĩ"
+            app:endIconDrawable="@drawable/ic_search"
+            app:endIconMode="custom"
+            app:hintAnimationEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_back"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:targetApi="p" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -60,7 +62,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:nestedScrollingEnabled="false"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,21 +71,20 @@
 
     <TextView
         android:id="@+id/txt_label_doctor_chat_empty"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bạn chưa có lời mời nào!"
-        android:textAlignment="center"
+        android:text=""
         android:textColor="@color/ccRedText"
         android:textFontWeight="500"
         android:textSize="14sp"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
-        app:layout_constraintVertical_bias="0.49"
+        app:layout_constraintVertical_bias="0.486"
         tools:targetApi="p" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

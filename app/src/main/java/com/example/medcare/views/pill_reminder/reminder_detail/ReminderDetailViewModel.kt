@@ -7,8 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.pillreminder.IPillReminderRepos
 import com.example.medcare.extension.AlarmHelper
+import com.example.medcare.models.HistoryStatus
 import com.example.medcare.models.PillReminder
+import com.example.medcare.models.ReminderHistory
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos) : BaseViewModel() {
 
@@ -69,6 +74,29 @@ class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos
             },
             onError = {
 
+            }
+        )
+    }
+
+    fun insertHistory(uid: String, reminder: PillReminder) {
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val todayString = today.format(formatter)
+        val history = ReminderHistory(
+            UUID.randomUUID().toString(),
+            reminder.label,
+            todayString,
+            reminder.times.first().time,
+            HistoryStatus.NOT_CONFIRMED.status,
+            reminder
+        )
+        executeTask(
+            request = {iPillReminderRepos.insertReminderHistory(uid, history)},
+            onSuccess = {
+                _messageError.value = it.message
+            },
+            onError = {
+                _messageError.value = "Lỗi"
             }
         )
     }

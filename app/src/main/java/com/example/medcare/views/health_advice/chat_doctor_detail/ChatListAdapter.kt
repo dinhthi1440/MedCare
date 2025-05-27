@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.medcare.R
 import com.example.medcare.models.ChatMessage
+import com.example.medcare.utils.TimeUtils
 
 class ChatListAdapter(private val currentUserID: String)  : RecyclerView.Adapter<MessageHolder>() {
 
@@ -29,10 +30,11 @@ class ChatListAdapter(private val currentUserID: String)  : RecyclerView.Adapter
     override fun getItemCount() = listOfMessage.size
     override fun onBindViewHolder(holder: MessageHolder, position: Int) {
         val message = listOfMessage[position]
+        val time = TimeUtils.timeUntil(message.timeMessage)
         holder.messageText.visibility = View.VISIBLE
         holder.timeOfSent.visibility = View.VISIBLE
         holder.messageText.text = message.content
-        holder.timeOfSent.text = "11:30"
+        holder.timeOfSent.text = message.timeMessage
     }
 
     override fun getItemViewType(position: Int) =

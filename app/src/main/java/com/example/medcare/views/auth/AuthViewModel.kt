@@ -2,11 +2,13 @@ package com.example.medcare.views.auth
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.auth.IAuthRepository
 import com.example.medcare.models.Account
 import com.example.medcare.models.Doctor
 import com.example.medcare.models.Response
+import kotlinx.coroutines.launch
 
 class AuthViewModel(private val iAuthRepository: IAuthRepository): BaseViewModel() {
     val getSignUpStatus: LiveData<Response<Any>> get() = _setSignUpStatus
@@ -35,15 +37,16 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository): BaseViewModel
     }
 
     fun loginWithEmailPassword(email: String, password: String){
-        executeTask(
-            request = {iAuthRepository.loginWithEmailPassword(email, password)},
-            onSuccess = {
-                _setLoginStatus.value = it
-            },
-            onError = {
-                _setLoginStatus.value = Response(500, it.message.toString())
+        viewModelScope.launch {
+            setIsLoading(true)
+            try {
+                val data = iAuthRepository.loginWithEmailPassword(email, password)
+                _setLoginStatus.value = data
+            } catch (e: Exception) {
+                setIsLoading(false)
+                _setLoginStatus.value = Response(500, e.message.toString())
             }
-        )
+        }
     }
     fun createUserData(account: Account){
         executeTask(
@@ -58,9 +61,9 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository): BaseViewModel
     }
 
     fun getUserDataByID(uid: String) {
-        executeTask(
-            request = { iAuthRepository.getUserData(uid) },
-            onSuccess = { response ->
+        viewModelScope.launch {
+            try {
+                val response = iAuthRepository.getUserData(uid)
                 when (response.statusCode) {
                     200 -> {
                         val user = response.data as? Account
@@ -101,15 +104,16 @@ class AuthViewModel(private val iAuthRepository: IAuthRepository): BaseViewModel
                         )
                     }
                 }
-            },
-            onError = {
+                setIsLoading(false)
+            } catch (e: Exception) {
+                setIsLoading(false)
                 _setUserStatus.value = Response(
                     500,
-                    it.message ?: "Đã xảy ra lỗi không xác định",
+                    e.message ?: "Đã xảy ra lỗi không xác định",
                     null
                 )
             }
-        )
+        }
     }
 
 }

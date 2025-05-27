@@ -44,6 +44,9 @@ class ReminderDetailFragment : BaseFragment<FragmentReminderDetailBinding>(Fragm
             swtOn.setOnCheckedChangeListener { _, isOn ->
                 onChangeSwitch(isOn)
             }
+            txtReminderLabel.setOnClickListener {
+                viewModel.insertHistory(uid, viewModel.getReminder.value!!)
+            }
         }
     }
     private fun onChangeSwitch(isOn: Boolean) {

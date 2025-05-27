@@ -34,10 +34,7 @@ class MedicineDetailFragment :
         listenBackScreen {
             viewModel.getMedicineDetail(uid, medicineId)
         }
-        if(previousScreen =="detail"){
-            binding.btnEdit.visibility = View.GONE
-            binding.btnDelete.visibility = View.GONE
-        }
+
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -59,9 +56,14 @@ class MedicineDetailFragment :
         binding.txtLabel.text = medicineName
         viewModel.getMedicine.observe(viewLifecycleOwner) {
             binding.apply {
+                if(previousScreen =="detail"){
+                    btnEdit.visibility = View.GONE
+                    btnDelete.visibility = View.GONE
+                } else {
+                    btnDelete.visibility = View.VISIBLE
+                    btnEdit.visibility = View.VISIBLE
+                }
                 nestedScrollView.visibility = View.VISIBLE
-                btnDelete.visibility = View.VISIBLE
-                btnEdit.visibility = View.VISIBLE
                 txtError.visibility = View.GONE
                 txtMedicineName.text = it.name
                 txtExpirationDate.text = it.expirationDate

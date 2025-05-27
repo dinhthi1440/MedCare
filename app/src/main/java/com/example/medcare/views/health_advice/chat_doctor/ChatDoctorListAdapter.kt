@@ -13,9 +13,10 @@ import com.example.medcare.databinding.ItemDoctorBinding
 import com.example.medcare.databinding.ItemReminderRelativesBinding
 import com.example.medcare.models.Doctor
 import com.example.medcare.models.DoctorChat
-import com.example.medcare.models.ReminderRelative
+import com.example.medcare.utils.TimeUtils
 
 class ChatDoctorListAdapter (
+    private val uid: String,
     private val onClick: (DoctorChat) -> Unit,
 ) : BaseAdapter<DoctorChat, BaseViewHolder<DoctorChat>>(DoctorChat.differUtil) {
     override fun onCreateViewHolder(
@@ -32,16 +33,16 @@ class ChatDoctorListAdapter (
         @SuppressLint("SetTextI18n")
         override fun bindView(item: DoctorChat, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
-            val myID = "user_123"
+            val myID = uid
             binding.apply {
                 txtDescription.visibility = View.VISIBLE
                 txtLastMessageTime.visibility = View.VISIBLE
                 if (item.patientID == myID) {
-                    txtRelativeName.text = item.patientName
-                } else {
                     txtRelativeName.text = item.doctorName
+                } else {
+                    txtRelativeName.text = item.patientName
                 }
-                if (item.isPatientSendLastMessage) {
+                if (item.lastMessageSenderID == myID) {
                     txtDescription.text = "Bạn: ${item.lastMessage}"
                 } else {
                     txtDescription.text = item.lastMessage
@@ -50,8 +51,8 @@ class ChatDoctorListAdapter (
                         txtDescription.setTextColor(ContextCompat.getColor(root.context, R.color.black))
                     }
                 }
-
-                txtLastMessageTime.text = "1 giờ"
+                val time = TimeUtils.timeUntil(item.timeLastMessage)
+                txtLastMessageTime.text = "$time trước"
                 root.setOnClickListener {
                     onClick(item)
                 }

@@ -4,19 +4,24 @@ import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 
 data class DoctorChat(
-    val id: String,
-    val patientID: String,
-    val patientName: String,
-    val patientAvatar: String,
-    val doctorID: String,
-    val doctorName: String,
-    val doctorAvatar: String,
-    val lastMessage: String,
-    val timeLastMessage: String,
-    val isReadLastMessage: Boolean,
-    val timeReadLastMessage: String,
-    val isPatientSendLastMessage: Boolean
+    var id: String = "",
+    var patientID: String = "",
+    var patientName: String = "",
+    var patientAvatar: String = "",
+    var doctorID: String = "",
+    var doctorName: String = "",
+    var doctorAvatar: String = "",
+    var lastMessage: String = "",
+    var timeLastMessage: String = "",
+    var isReadLastMessage: Boolean = false,
+    var timeReadLastMessage: String = "",
+    var lastMessageSenderID: String = "",
 ) : Serializable {
+    constructor() : this(
+        "", "", "", "", "", "", "",
+        "", "", false, "", ""
+    )
+
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<DoctorChat>() {
             override fun areItemsTheSame(oldItem: DoctorChat, newItem: DoctorChat): Boolean =

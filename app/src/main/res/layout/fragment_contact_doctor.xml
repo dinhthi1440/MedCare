@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="48dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/inter"
             android:text="Tư vấn sức khoẻ"
@@ -45,30 +45,11 @@
             android:textFontWeight="600"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/cv_doctor_chat_liist"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_back"
             app:layout_constraintTop_toTopOf="parent"
             tools:targetApi="p" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_doctor_chat_liist"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="16dp"
-            android:backgroundTint="@color/ccBlueBtnPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
-            <ImageView
-                android:padding="4dp"
-                android:src="@drawable/ic_chat_doctor"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -93,6 +74,7 @@
             android:id="@+id/edt_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,7 +102,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/inter"
-                android:text="Truy cập gần đây"
+                android:text="Tin nhắn gần đây"
                 android:textAlignment="center"
                 android:textColor="@color/ccBlueText"
                 android:textFontWeight="500"
@@ -136,12 +118,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_doctor_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="194dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:nestedScrollingEnabled="false"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -149,19 +130,25 @@
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/txt_label_request_add_friend_empty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bạn chưa có lời mời nào!"
+                android:id="@+id/txt_label_doctor_chat_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/ccRedText"
                 android:textFontWeight="500"
                 android:textSize="14sp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView10"
+                app:layout_constraintVertical_bias="0.0"
                 tools:targetApi="p" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

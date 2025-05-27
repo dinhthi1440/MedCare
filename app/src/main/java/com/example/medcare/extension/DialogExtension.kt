@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.R
 import com.example.medcare.databinding.DlAddRelativeBinding
@@ -16,8 +17,13 @@ import com.example.medcare.databinding.DlChangeRuleBinding
 import com.example.medcare.databinding.DlChangeStatusHistoryBinding
 import com.example.medcare.databinding.DlConfirmBinding
 import com.example.medcare.databinding.DlSelectCustomDateBinding
+import com.example.medcare.models.HistoryStatus
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustom
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustomAdapter
+import androidx.core.graphics.drawable.toDrawable
+import com.bumptech.glide.Glide
+import com.example.medcare.databinding.DlConfirmPassAdminBinding
+import com.example.medcare.databinding.DlShowImageBinding
 
 fun Dialog.openDlLoading(stopFlag: Boolean) {
     val binding = DlAnimationLoadingBinding.inflate(layoutInflater)
@@ -96,7 +102,7 @@ fun Dialog.confirmEvent(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        setBackgroundDrawable(TRANSPARENT.toDrawable())
         attributes = attributes.apply {
             gravity = Gravity.CENTER
         }
@@ -115,6 +121,58 @@ fun Dialog.confirmEvent(
     show()
 }
 
+fun Dialog.confirmPassAdmin(
+    onConfirm: (String) -> Unit,
+) {
+    val binding = DlConfirmPassAdminBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(TRANSPARENT.toDrawable())
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnOk.setOnClickListener {
+            val text = textipPassword.text.toString()
+            if (text.isNotBlank()){
+                onConfirm(text)
+                dismiss()
+            }
+        }
+    }
+    show()
+}
+
+fun Dialog.showImage(urlImage: String) {
+    val binding = DlShowImageBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(TRANSPARENT.toDrawable())
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    Glide.with(binding.root.context).load(urlImage).into(binding.imageShowImage)
+    binding.btnClose.setOnClickListener {
+        dismiss()
+    }
+    show()
+}
+
 fun Dialog.addNoteInRelativeAdd(
     onConfirm: (relativeLabel: String) -> Unit,
 ) {
@@ -126,7 +184,7 @@ fun Dialog.addNoteInRelativeAdd(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        setBackgroundDrawable(TRANSPARENT.toDrawable())
         attributes = attributes.apply {
             gravity = Gravity.CENTER
         }
@@ -176,7 +234,7 @@ fun Dialog.changeStatusHistory(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        setBackgroundDrawable(TRANSPARENT.toDrawable())
         attributes = attributes.apply {
             gravity = Gravity.CENTER
         }
@@ -186,11 +244,11 @@ fun Dialog.changeStatusHistory(
             dismiss()
         }
         btnDrink.setOnClickListener {
-            onClick("Drank")
+            onClick(HistoryStatus.DRANK.status)
             dismiss()
         }
         btnMissed.setOnClickListener {
-            onClick("Missed")
+            onClick(HistoryStatus.MISSED.status)
             dismiss()
         }
     }

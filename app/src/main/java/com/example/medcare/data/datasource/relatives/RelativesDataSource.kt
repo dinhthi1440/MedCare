@@ -2,11 +2,12 @@ package com.example.medcare.data.datasource.relatives
 
 import com.example.medcare.models.Account
 import com.example.medcare.models.PillReminder
+import com.example.medcare.models.PillReminderResult
 import com.example.medcare.models.Relative
-import com.example.medcare.models.ReminderRelative
 import com.example.medcare.models.Response
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -263,18 +264,20 @@ class RelativesDataSource: IRelativesDataSource {
                 val db = FirebaseFirestore.getInstance()
                 db.collection("users")
                     .document(uid)
-                    .collection("reminder_relative_from")
+                    .collection("pill_reminders")
                     .get()
                     .addOnSuccessListener { result ->
                         try {
                             val list = result.documents.mapNotNull { doc ->
-                                doc.toObject(ReminderRelative::class.java)?.apply { id = doc.id }
+                                doc.toObject(PillReminder::class.java)?.apply { id = doc.id }
                             }
-
-                            if (list.isNotEmpty()) {
-                                continuation.resume(Response(200, "Lấy danh sách nhắc thuốc thành công", list))
+                            val listSendTo = list.filter { it.senderID == uid && it.receiverID != uid }
+                            val listSendFrom = list.filter { it.senderID != uid && it.receiverID == uid }
+                            if (listSendTo.isNotEmpty() || listSendFrom.isNotEmpty()) {
+                                val data = PillReminderResult(listSendTo, listSendFrom)
+                                continuation.resume(Response(200, "Lấy danh sách nhắc thuốc thành công", data))
                             } else {
-                                continuation.resume(Response(204, "Không có lời nhắc thuốc nào", emptyList<PillReminder>()))
+                                continuation.resume(Response(204, "Không có lời nhắc thuốc nào", PillReminderResult(emptyList(), emptyList())))
                             }
                         } catch (e: Exception) {
                             continuation.resume(Response(500, "Lỗi xử lý dữ liệu nhắc thuốc", null))
@@ -286,6 +289,78 @@ class RelativesDataSource: IRelativesDataSource {
             } catch (e: Exception) {
                 continuation.resume(Response(500, "Lỗi khi kết nối tới Firestore", null))
             }
+        }
+    }
+
+    override suspend fun updateReminderRelativeFromToRemote(
+        reminderRelative: PillReminder
+    ): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            val toRef = db.collection("users")
+                .document(reminderRelative.receiverID)
+                .collection("pill_reminders")
+                .document(reminderRelative.id)
+
+            val fromRef = db.collection("users")
+                .document(reminderRelative.senderID)
+                .collection("pill_reminders")
+                .document(reminderRelative.id)
+
+            val task1 = toRef.set(reminderRelative, SetOptions.merge())
+            val reminderCopy = reminderRelative
+            val task2 = fromRef.set(reminderCopy, SetOptions.merge())
+
+            Tasks.whenAllComplete(task1, task2)
+                .addOnSuccessListener { tasks ->
+                    val failedTasks = tasks.filter { !it.isSuccessful }
+                    if (failedTasks.isEmpty()) {
+                        continuation.resume(Response(200, "Cập nhật nhắc thuốc thành công", true))
+                    } else {
+                        val errorMsg = failedTasks.joinToString("\n") {
+                            it.exception?.message ?: "Lỗi không xác định"
+                        }
+                        continuation.resume(
+                            Response(
+                                500,
+                                "Một hoặc nhiều thao tác cập nhật thất bại: $errorMsg",
+                                false
+                            )
+                        )
+                    }
+                }
+                .addOnFailureListener {
+                    continuation.resume(
+                        Response(
+                            500,
+                            "Lỗi khi cập nhật nhắc thuốc: ${it.message}",
+                            false
+                        )
+                    )
+                }
+        }
+    }
+
+    override suspend fun getReminderRelativeFromToByID(uid: String, reminderID: String): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            db.collection("users")
+                .document(uid)
+                .collection("pill_reminders")
+                .document(reminderID)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val reminder =
+                            document.toObject(PillReminder::class.java)?.apply { id = document.id }
+                        continuation.resume(Response(200, "Lấy nhắc thuốc thành công", reminder))
+                    } else {
+                        continuation.resume(Response(404, "Không tìm thấy nhắc thuốc", null))
+                    }
+                }
+                .addOnFailureListener {
+                    continuation.resume(Response(500, "Lỗi khi lấy nhắc thuốc", null))
+                }
         }
     }
 

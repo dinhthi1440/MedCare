@@ -98,7 +98,7 @@ class OnBoardingInforFragment : BaseFragment<FragmentOnBoardingInforBinding>(Fra
                 val avatar = ""
                 val userID = sharedPreferences.getData(Constants.SHARED_USER_ID)
                 val email = sharedPreferences.getData(Constants.SHARED_EMAIL)
-                account = Account(userID, fullName, "", email, avatar, role, "active")
+                account = Account(userID, fullName, email, avatar, role, "active")
                 viewModel.createUserData(account)
 
             }

@@ -4,15 +4,16 @@ import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 
 data class Feedback(
-    val id: String,
-    val content: String,
-    val senderID: String,
-    val senderName: String,
-    val senderAvatar: String,
-    val date: String,
-    val time: String,
-    val status: String
+    var id: String,
+    var content: String,
+    var senderID: String,
+    var senderName: String,
+    var senderAvatar: String,
+    var date: String,
+    var time: String,
+    var status: String
 ) : Serializable {
+    constructor() : this("", "", "", "", "", "", "", "")
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<Feedback>() {
             override fun areItemsTheSame(oldItem: Feedback, newItem: Feedback): Boolean =

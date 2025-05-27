@@ -2,15 +2,11 @@ package com.example.medcare.views.health_advice.contact_doctor
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
 import com.example.medcare.databinding.ItemDoctorBinding
-import com.example.medcare.databinding.ItemReminderRelativesBinding
 import com.example.medcare.models.Doctor
-import com.example.medcare.models.ReminderRelative
 
 class DoctorAdapter (
     private val onClick: (Doctor) -> Unit,
@@ -30,7 +26,7 @@ class DoctorAdapter (
         override fun bindView(item: Doctor, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
             binding.apply {
-                txtRelativeName.text = item.name
+                txtRelativeName.text = item.fullName
                 root.setOnClickListener {
                     onClick(item)
                 }

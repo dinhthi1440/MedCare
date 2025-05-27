@@ -58,17 +58,6 @@ class MedicationReminderViewModel(private val iPillReminderRepos: IPillReminderR
         }
     }
 
-    fun updateReminder(pillReminder: PillReminder){
-        executeTask(
-            request = {iPillReminderRepos.updatePillReminder(pillReminder)},
-            onSuccess = {
-
-            },
-            onError = {
-
-            }
-        )
-    }
     fun updateFieldsReminder(
         uid: String,
         reminderID: String,

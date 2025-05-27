@@ -8,6 +8,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentHomeBinding
@@ -39,22 +40,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             binding.txtUserName.text = it.fullName ?: ""
             binding.txtUserMode.text = it.rule ?: ""
         }
+        if (account?.avatar != "") {
+            Glide.with(requireContext())
+                .load(account?.avatar)
+                .into(binding.imgUser)
+        }
     }
 
 
     override fun bindData() {
         bindUserData()
-        val isAdmin = account?.rule == "doctor"
         var menuItems = listOf<MenuItem>()
-        if (isAdmin) {
+        if (account?.rule == "admin") {
             menuItems = MenuItem.getAdminItems()
             binding.txtTitle.text = "Xin chào, bạn đang ở chế độ quản trị viên!"
             binding.constraintLayout2.visibility = View.GONE
             binding.txtUserMode.text = "Quản trị viên"
+        } else if (account?.rule == "doctor") {
+            menuItems = MenuItem.getUserItems()
+            binding.txtUserMode.text = "Bác sĩ"
         } else {
             menuItems = MenuItem.getUserItems()
             binding.txtUserMode.text = "Người dùng"
         }
+
 
         val recyclerView: RecyclerView = binding.recyclerView
         recyclerView.layoutManager = GridLayoutManager(this.requireContext(), 2)

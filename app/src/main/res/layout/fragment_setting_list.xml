@@ -126,7 +126,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/inter"
-                    android:text="Thông tin cá nhân"
+                    android:text="Cập nhật thông tin cá nhân"
                     android:textAlignment="viewStart"
                     android:textColor="@color/ccBlueText"
                     android:textFontWeight="500"
@@ -147,7 +147,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_notificaion_setting"
+                android:id="@+id/layout_notification_setting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -196,7 +196,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_notificaion_setting"
+                app:layout_constraintTop_toBottomOf="@+id/layout_notification_setting"
                 app:layout_constraintVertical_bias="0.0">
 
                 <TextView

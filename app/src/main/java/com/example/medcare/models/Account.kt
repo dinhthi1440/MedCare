@@ -4,14 +4,14 @@ import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 
 data class Account(
-    val id: String,
-    val fullName: String,
-    val userName: String,
-    val email: String,
-    val avatar: String,
-    val rule: String,
-    val status: String
+    var id: String,
+    var fullName: String,
+    var email: String,
+    var avatar: String,
+    var rule: String,
+    var status: String
 ) : Serializable {
+    constructor() : this("", "" ,"" ,"", "", "")
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<Account>() {
             override fun areItemsTheSame(oldItem: Account, newItem: Account): Boolean =

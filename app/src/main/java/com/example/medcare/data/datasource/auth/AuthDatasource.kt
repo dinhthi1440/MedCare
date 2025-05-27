@@ -1,6 +1,7 @@
 package com.example.medcare.data.datasource.auth
 
 import com.example.medcare.models.Account
+import com.example.medcare.models.Medicine
 import com.example.medcare.models.Response
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -8,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -68,7 +70,7 @@ class AuthDatasource : IAuthDatasource {
                         val rule = document.getString("rule") ?: ""
                         val status = document.getString("status") ?: ""
                         val userData = Account(
-                            uid, fullName, "", email, avatar, rule, status
+                            uid, fullName, email, avatar, rule, status
                         )
                         continuation.resume(Response(200, "Lấy dữ liệu thành công", userData))
                     } else {
@@ -95,4 +97,119 @@ class AuthDatasource : IAuthDatasource {
                 }
         }
     }
+    override suspend fun updateUser(account: Account): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            val updates = mapOf(
+                "fullName" to account.fullName,
+                "avatar" to account.avatar,
+                "rule" to account.rule
+            )
+
+            db.collection("users")
+                .document(account.id)
+                .update(updates)
+                .addOnSuccessListener {
+                    continuation.resume(Response(200, "Cập nhật người dùng thành công", true))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Response(500, "Cập nhật thất bại: ${it.message}", false))
+                }
+        }
+    }
+
+    override suspend fun updateUserByFiled(accountID: String, fields: Map<String, Any>): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            db.collection("users")
+                .document(accountID)
+                .update(fields)
+                .addOnSuccessListener {
+                    continuation.resume(Response(200, "Đã sửa thông tin", true))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Response(500, "Cập nhật thất bại", false))
+                }
+        }
+    }
+
+    override suspend fun getAllUser(): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            db.collection("users")
+                .whereNotEqualTo("rule", "admin")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    val userList = querySnapshot.documents.mapNotNull { document ->
+                        document.toObject(Account::class.java)?.apply { id = document.id }
+                    }
+                    if (userList.isEmpty()) {
+                        continuation.resume(Response(204, "Danh sách người dùng trống", emptyList<Account>()))
+                    } else {
+                        continuation.resume(Response(200, "Lấy danh sách người dùng thành công", userList))
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(
+                        Response(
+                            500,
+                            "Lỗi khi lấy dữ liệu, hãy thử lại",
+                            null
+                        )
+                    )
+                }
+        }
+    }
+
+    override suspend fun deleteUserByID(accountID: String): Response<Any> {
+        return try {
+            val db = FirebaseFirestore.getInstance()
+            val documentRef = db.collection("users").document(accountID)
+
+            val snapshot = documentRef.get().await()
+
+            if (!snapshot.exists()) {
+                return Response(404, "Người dùng không tồn tại")
+            }
+
+            documentRef.delete().await()
+            Response(200, "Xóa người dùng thành công")
+        } catch (e: Exception) {
+            Response(500, "Lỗi khi xóa người dùng")
+        }
+    }
+
+    override suspend fun searchUserByName(searchString: String): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            db.collection("users")
+                .whereNotEqualTo("rule", "admin")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    val filteredList = querySnapshot.documents.mapNotNull { document ->
+                        document.toObject(Account::class.java)?.apply { id = document.id }
+                    }.filter { account ->
+                        account.fullName?.contains(searchString, ignoreCase = true) == true
+                    }
+
+                    if (filteredList.isEmpty()) {
+                        continuation.resume(Response(204, "Không tìm thấy người dùng phù hợp", emptyList<Account>()))
+                    } else {
+                        continuation.resume(Response(200, "Tìm thấy người dùng phù hợp", filteredList))
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(
+                        Response(
+                            500,
+                            "Lỗi khi lấy dữ liệu, hãy thử lại",
+                            null
+                        )
+                    )
+                }
+        }
+    }
+
+
+
 }

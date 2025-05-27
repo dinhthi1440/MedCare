@@ -2,6 +2,7 @@ package com.example.medcare.data.repository.relatives
 
 import com.example.medcare.base.DataResult
 import com.example.medcare.models.Account
+import com.example.medcare.models.PillReminder
 import com.example.medcare.models.Relative
 import com.example.medcare.models.Response
 
@@ -19,4 +20,6 @@ interface IRelativeRepos {
 
     //reminder
     suspend fun getAllReminderRelativeFromRemote(uid: String): DataResult<Response<Any>>
+    suspend fun updateReminderRelativeFromToRemote(pillReminder: PillReminder): DataResult<Response<Any>>
+    suspend fun getPillReminderByIdRemote(uid: String, reminderID: String): DataResult<Response<Any>>
 }

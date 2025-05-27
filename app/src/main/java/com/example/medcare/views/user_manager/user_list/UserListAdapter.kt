@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.medcare.R
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
@@ -39,12 +40,19 @@ class UserListAdapter (
                         else -> "Quản trị viên"
                     }
                 txtEmail.text = item.email
+                if (item.avatar.isNotBlank()) {
+                    Glide.with(root.context).load(item.avatar).into(imgUser)
+                }
                 if (item.status == "active") {
                     txtStatusAccount.text = "Hoạt động"
                     txtStatusAccount.setTextColor(ContextCompat.getColor(root.context, R.color.ccGreen))
-                } else {
+                    btnLock.setTextColor(ContextCompat.getColor(root.context, R.color.ccBlueText))
+                    btnLock.text = "Khóa"
+                } else if (item.status == "locked") {
                     txtStatusAccount.text = "Đã khóa"
                     txtStatusAccount.setTextColor(ContextCompat.getColor(root.context, R.color.ccRedText))
+                    btnLock.text = "Mở khóa"
+                    btnLock.setTextColor(ContextCompat.getColor(root.context, R.color.ccOrangeText))
                 }
                 btnView.setOnClickListener {
                     onView(item)

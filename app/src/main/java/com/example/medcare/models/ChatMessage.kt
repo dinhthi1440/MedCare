@@ -4,13 +4,15 @@ import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 
 data class ChatMessage(
-    val id: String,
-    val senderID: String,
-    val content: String,
-    val timeMessage: String,
-    val timeRead: String,
-    val isRead: Boolean,
+    var id: String,
+    var senderID: String,
+    var content: String,
+    var timeMessage: String,
+    var timeMessageLong: Long,
+    var timeRead: String,
+    var isRead: Boolean,
 ) : Serializable {
+    constructor() : this("" , "", "", "", 0, "",false)
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<ChatMessage>() {
             override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean =

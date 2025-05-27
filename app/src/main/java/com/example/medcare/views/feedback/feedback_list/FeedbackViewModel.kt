@@ -2,65 +2,117 @@ package com.example.medcare.views.feedback.feedback_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.medcare.base.BaseViewModel
+import com.example.medcare.data.repository.feedback.IFeedbackRepository
+import com.example.medcare.models.Account
 import com.example.medcare.models.Feedback
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class FeedbackViewModel : BaseViewModel() {
-    val feedbackList = listOf(
-        Feedback(
-            id = "fb001",
-            content = "Ứng dụng đôi lúc bị treo khi thêm thuốc.",
-            senderID = "acc001",
-            senderName = "Nguyễn Văn A",
-            senderAvatar = "https://example.com/avatar/a.jpg",
-            date = "2025-05-01",
-            time = "10:15",
-            status = "pending"
-        ),
-        Feedback(
-            id = "fb002",
-            content = "Nên thêm tính năng ghi chú khi nhắc uống thuốc.",
-            senderID = "acc002",
-            senderName = "Trần Thị B",
-            senderAvatar = "https://example.com/avatar/b.jpg",
-            date = "2025-05-02",
-            time = "09:30",
-            status = "processing"
-        ),
-        Feedback(
-            id = "fb003",
-            content = "Không nhận được thông báo nhắc nhở.",
-            senderID = "acc004",
-            senderName = "Phạm Thị D",
-            senderAvatar = "https://example.com/avatar/d.jpg",
-            date = "2025-05-03",
-            time = "14:45",
-            status = "resolved"
-        ),
-        Feedback(
-            id = "fb004",
-            content = "Rất hài lòng với giao diện của ứng dụng!",
-            senderID = "acc005",
-            senderName = "Đỗ Mạnh E",
-            senderAvatar = "https://example.com/avatar/e.jpg",
-            date = "2025-05-03",
-            time = "16:00",
-            status = "resolved"
-        ),
-        Feedback(
-            id = "fb005",
-            content = "Tài khoản tôi bị khoá mà không rõ lý do.",
-            senderID = "acc003",
-            senderName = "Lê Văn C",
-            senderAvatar = "https://example.com/avatar/c.jpg",
-            date = "2025-05-04",
-            time = "11:20",
-            status = "pending"
-        )
-    )
+class FeedbackViewModel(private val iFeedbackRepository: IFeedbackRepository) : BaseViewModel() {
     val getFeedbacks: LiveData<MutableList<Feedback>> get() = _setFeedbacks
     private val _setFeedbacks = MutableLiveData<MutableList<Feedback>>()
-    fun getFeedbackList() {
-        _setFeedbacks.value = feedbackList.toMutableList()
+
+    val getFeedbackDetail: LiveData<Feedback> get() = _setFeedbackDetail
+    private val _setFeedbackDetail = MutableLiveData<Feedback>()
+
+    private val _setUpdateStatus = MutableLiveData<String>()
+    val getUpdateStatus: LiveData<String> get() = _setUpdateStatus
+
+    private val _setDeleteStatus = MutableLiveData<String>()
+    val getDeleteStatus: LiveData<String> get() = _setDeleteStatus
+
+    fun getFeedbackList(searchString: String) {
+        executeTask(
+            request = {
+                if (searchString.isBlank()){
+                    iFeedbackRepository.getAllFeedback()
+                } else {
+                    iFeedbackRepository.searchFeedback(searchString)
+                }
+            },
+            onSuccess = {
+                when (it.statusCode) {
+                    200 -> {
+                        val listFeedback = it.data as List<Feedback>
+                        _setFeedbacks.value = listFeedback.toMutableList()
+                    }
+                    204, 500 -> {
+                        _messageError.value = it.message
+                    }
+                }
+            },
+            onError = {
+                _messageError.value = "Lỗi khi lấy dữ liệu"
+            }
+        )
+
+    }
+
+    fun getFeedbackByID(feedbackID: String) {
+        executeTask(
+            request = {iFeedbackRepository.getFeedbackByID(feedbackID)},
+            onSuccess = {
+                when (it.statusCode) {
+                    200 -> {
+                        val feedbackDetail = it.data as Feedback
+                        _setFeedbackDetail.value = feedbackDetail
+                    }
+                    204, 500 -> {
+                        _messageError.value = it.message
+                    }
+                }
+            },
+            onError = {
+                _messageError.value = "Lỗi không xác định"
+            }
+        )
+    }
+
+    fun updateFeedback(feedbackID: String, fields: Map<String, Any>) {
+        executeTask(
+            request = {iFeedbackRepository.updateUserByFiled(feedbackID, fields)},
+            onSuccess = {
+                when (it.statusCode) {
+                    200 -> {
+                        _messageError.value = it.message
+                        _setUpdateStatus.value = "Success"
+                    }
+                    else -> {
+                        _messageError.value = it.message
+                    }
+                }
+            },
+            onError = {
+                _messageError.value = "Lỗi không xác định"
+            }
+        )
+    }
+
+    fun deleteFeedback(feedbackID: String) {
+        executeTask(
+            request = {iFeedbackRepository.deleteFeedbackByID(feedbackID)},
+            onSuccess = {
+                when (it.statusCode) {
+                    200 -> {
+                        _messageError.value = it.message
+                        _setDeleteStatus.value = "Success"
+                    }
+                    404 , 500 -> {
+                        _messageError.value = it.message
+                    }
+                }
+            },
+            onError = {
+                _messageError.value = "Lỗi không xác định"
+            }
+        )
     }
 }

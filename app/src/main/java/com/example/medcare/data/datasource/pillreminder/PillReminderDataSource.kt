@@ -1,17 +1,16 @@
 package com.example.medcare.data.datasource.pillreminder
 
-import android.util.Log
 import com.example.medcare.data.database.local.DataBaseLocal
 import com.example.medcare.models.PillReminder
-import com.example.medcare.models.ReminderRelative
+import com.example.medcare.models.ReminderHistory
+import com.example.medcare.models.ReminderRequestStatus
 import com.example.medcare.models.Response
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillReminderDataSource  {
+class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal) : IPillReminderDataSource {
     override suspend fun insertPillReminder(pillReminder: PillReminder): Long {
         return dataBaseLocal.pillReminderDAO.insertPillReminder(pillReminder)
     }
@@ -65,12 +64,27 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
                         try {
                             val list = result.documents.mapNotNull { doc ->
                                 doc.toObject(PillReminder::class.java)?.apply { id = doc.id }
+                            }.filter {
+                                (it.senderID == uid && it.receiverID == uid) ||
+                                        (it.receiverID == uid && it.statusRequest == ReminderRequestStatus.ACCEPTED.status)
                             }
 
                             if (list.isNotEmpty()) {
-                                continuation.resume(Response(200, "Lấy danh sách nhắc thuốc thành công", list))
+                                continuation.resume(
+                                    Response(
+                                        200,
+                                        "Lấy danh sách nhắc thuốc thành công",
+                                        list
+                                    )
+                                )
                             } else {
-                                continuation.resume(Response(204, "Không có lời nhắc thuốc nào", emptyList<PillReminder>()))
+                                continuation.resume(
+                                    Response(
+                                        204,
+                                        "Không có lời nhắc thuốc nào",
+                                        emptyList<PillReminder>()
+                                    )
+                                )
                             }
                         } catch (e: Exception) {
                             continuation.resume(Response(500, "Lỗi xử lý dữ liệu nhắc thuốc", null))
@@ -102,13 +116,25 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
                     if (document.exists()) {
                         docRef.delete()
                             .addOnSuccessListener {
-                                continuation.resume(Response(200, "Xoá nhắc thuốc thành công", true))
+                                continuation.resume(
+                                    Response(
+                                        200,
+                                        "Xoá nhắc thuốc thành công",
+                                        true
+                                    )
+                                )
                             }
                             .addOnFailureListener {
                                 continuation.resume(Response(500, "Lỗi khi xoá", false))
                             }
                     } else {
-                        continuation.resume(Response(404, "Không tìm thấy nhắc thuốc để xoá", false))
+                        continuation.resume(
+                            Response(
+                                404,
+                                "Không tìm thấy nhắc thuốc để xoá",
+                                false
+                            )
+                        )
                     }
                 }
                 .addOnFailureListener {
@@ -134,13 +160,25 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
                     if (document.exists()) {
                         docRef.set(pillReminder)
                             .addOnSuccessListener {
-                                continuation.resume(Response(200, "Cập nhật nhắc thuốc thành công", true))
+                                continuation.resume(
+                                    Response(
+                                        200,
+                                        "Cập nhật nhắc thuốc thành công",
+                                        true
+                                    )
+                                )
                             }
                             .addOnFailureListener {
                                 continuation.resume(Response(500, "Lỗi khi cập nhật", false))
                             }
                     } else {
-                        continuation.resume(Response(404, "Không tìm thấy nhắc thuốc để cập nhật", false))
+                        continuation.resume(
+                            Response(
+                                404,
+                                "Không tìm thấy nhắc thuốc để cập nhật",
+                                false
+                            )
+                        )
                     }
                 }
                 .addOnFailureListener {
@@ -213,7 +251,6 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
     }
 
 
-
     override suspend fun getPillReminderByIdRemote(uid: String, reminderId: String): Response<Any> {
         return suspendCoroutine { continuation ->
             val db = FirebaseFirestore.getInstance()
@@ -224,7 +261,8 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
                 .get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        val reminder = document.toObject(PillReminder::class.java)?.apply { id = document.id }
+                        val reminder =
+                            document.toObject(PillReminder::class.java)?.apply { id = document.id }
                         continuation.resume(Response(200, "Lấy nhắc thuốc thành công", reminder))
                     } else {
                         continuation.resume(Response(404, "Không tìm thấy nhắc thuốc", null))
@@ -237,19 +275,19 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
     }
 
     override suspend fun insertReminderRelativeRemote(
-        reminderRelative: ReminderRelative
+        reminderRelative: PillReminder
     ): Response<Any> {
         return suspendCoroutine { continuation ->
             val db = FirebaseFirestore.getInstance()
             val toRef = db.collection("users")
                 .document(reminderRelative.receiverID)
-                .collection("reminder_relative_from")
-                .document(reminderRelative.pillReminder.id)
+                .collection("pill_reminders")
+                .document(reminderRelative.id)
 
             val fromRef = db.collection("users")
                 .document(reminderRelative.senderID)
-                .collection("reminder_relative_to")
-                .document(reminderRelative.pillReminder.id)
+                .collection("pill_reminders")
+                .document(reminderRelative.id)
             val task1 = toRef.set(reminderRelative)
             val reminderCopy = reminderRelative
             val task2 = fromRef.set(reminderCopy)
@@ -260,16 +298,47 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal): IPillRem
                     if (failedTasks.isEmpty()) {
                         continuation.resume(Response(200, "Thêm nhắc thuốc thành công", true))
                     } else {
-                        val errorMsg = failedTasks.joinToString("\n") { it.exception?.message ?: "Lỗi không xác định" }
-                        continuation.resume(Response(500, "Một hoặc nhiều thao tác thất bại: $errorMsg", false))
+                        val errorMsg = failedTasks.joinToString("\n") {
+                            it.exception?.message ?: "Lỗi không xác định"
+                        }
+                        continuation.resume(
+                            Response(
+                                500,
+                                "Một hoặc nhiều thao tác thất bại: $errorMsg",
+                                false
+                            )
+                        )
                     }
                 }
                 .addOnFailureListener {
-                    continuation.resume(Response(500, "Lỗi khi thêm nhắc thuốc: ${it.message}", false))
+                    continuation.resume( 
+                        Response(
+                            500,
+                            "Lỗi khi thêm nhắc thuốc: ${it.message}",
+                            false
+                        )
+                    )
                 }
         }
     }
 
+    override suspend fun insertReminderHistory(
+        uid: String,
+        reminderHistory: ReminderHistory
+    ): Response<Any> {
+        val db = FirebaseFirestore.getInstance()
+        return suspendCoroutine { continuation ->
+            db.collection("users")
+                .document(uid).collection("reminder_history").document(reminderHistory.id)
+                .set(reminderHistory)
+                .addOnSuccessListener {
+                    continuation.resume(Response(200, "Thêm lịch sử dùng thuốc thành công", true))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Response(500, "Lỗi khi thêm lịch sử dùng thuốc", false))
+                }
+        }
+    }
 
 
 }

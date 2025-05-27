@@ -25,7 +25,6 @@ class MedicineAdapter(private val isSelectMedicine: Boolean, private val onClick
         @SuppressLint("SetTextI18n")
         override fun bindView(item: Medicine, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
-            Log.e("TAG", "bindView: 1111  image is ${item.image}" )
             if (item.image != "") {
                 binding.imageViewNoImage.visibility = View.INVISIBLE
                 binding.imageView.visibility = View.VISIBLE

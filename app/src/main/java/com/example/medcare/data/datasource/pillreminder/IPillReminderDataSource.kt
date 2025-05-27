@@ -1,7 +1,7 @@
 package com.example.medcare.data.datasource.pillreminder
 
 import com.example.medcare.models.PillReminder
-import com.example.medcare.models.ReminderRelative
+import com.example.medcare.models.ReminderHistory
 import com.example.medcare.models.Response
 
 interface IPillReminderDataSource {
@@ -24,7 +24,9 @@ interface IPillReminderDataSource {
     suspend fun getPillReminderByIdRemote(uid: String, reminderId: String): Response<Any>
 
     //relative
-    suspend fun insertReminderRelativeRemote(reminderRelative: ReminderRelative): Response<Any>
+    suspend fun insertReminderRelativeRemote(reminderRelative: PillReminder): Response<Any>
+
+    suspend fun insertReminderHistory(uid: String, reminderHistory: ReminderHistory): Response<Any>
 
 
 

@@ -14,7 +14,7 @@ import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.models.PillReminder
-import com.example.medcare.models.ReminderRelative
+import com.example.medcare.models.ReminderRequestStatus
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -57,7 +57,10 @@ class NewReminderViewModel(
         times: List<SelectedTime>,
         content: String,
         note: String,
-        disease: String
+        disease: String,
+        senderID: String,
+        senderName: String,
+        senderAvatar: String,
     ) {
         val reminder = PillReminder(
             UUID.randomUUID().toString(),
@@ -65,7 +68,7 @@ class NewReminderViewModel(
             times,
             frequencySelected,
             listInitialSelected.value?.toList() ?: listOf(),
-            true, note, disease
+            true, note, disease, senderID, senderName, senderAvatar, "", senderID
         )
         executeTask(
             request = {iPillReminderRepos.insertPillReminderRemote(uid, reminder)},
@@ -164,24 +167,21 @@ class NewReminderViewModel(
         receiverAvatar: String,
         receiverDescription: String
     ) {
-        val reminder = PillReminder(
+        val reminderRelative = PillReminder(
             UUID.randomUUID().toString(),
             content,
             times,
             frequencySelected,
             listInitialSelected.value?.toList() ?: listOf(),
-            true, note, disease
-        )
-        val reminderRelative = ReminderRelative(
-            reminder.id, senderID, senderName, senderAvatar, senderDescription,
-            receiverID, receiverName, receiverAvatar, receiverDescription, reminder
+            true, note, disease, senderID, senderName, senderAvatar, senderDescription,
+            receiverID, receiverName, receiverAvatar, receiverDescription, ReminderRequestStatus.REQUESTING.status
         )
         executeTask(
             request = { iPillReminderRepos.insertReminderRelativeRemote(reminderRelative) },
             onSuccess = {
                 when (it.statusCode) {
                     200 -> {
-                        _setPillReminder.value = reminderRelative.pillReminder
+                        _setPillReminder.value = reminderRelative
                     }
 
                     500 -> {
