@@ -14,10 +14,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MyMedicineFragment :
     BaseFragment<FragmentMyMedicineBinding>(FragmentMyMedicineBinding::inflate) {
     private val medicineAdapter by lazy { MedicineAdapter(true, ::onclickMedicineItem) }
+
     override val viewModel by viewModel<MyMedicineViewModel>()
 
     override fun initData() {
-        viewModel.getMedicineList()
+        viewModel.getMedicineList(uid)
     }
 
     override fun handleEvent() {
@@ -30,22 +31,25 @@ class MyMedicineFragment :
     }
 
     override fun bindData() {
-        listenBackScreen("boolean_result_key", "key_boolean") {
-            viewModel.getMedicineList()
+        listenBackScreen {
+            viewModel.getMedicineList(uid)
         }
-        viewModel.getMedicines.observe(viewLifecycleOwner) { medicines ->
-            if (medicines.isNotEmpty()){
-                binding.txtEmptyList.visibility = View.GONE
-                binding.rcvMedicineList.visibility = View.VISIBLE
-                Log.e("TAG", "bindData: 1111 data ${medicines.first()}", )
-                binding.rcvMedicineList.layoutManager = LinearLayoutManager(binding.root.context)
-                medicineAdapter.submitList(medicines)
-                binding.rcvMedicineList.adapter = medicineAdapter
-            } else {
-                binding.txtEmptyList.visibility = View.VISIBLE
-                binding.rcvMedicineList.visibility = View.GONE
+        viewModel.getMedicines.observe(viewLifecycleOwner) { it ->
+            when (it.statusCode) {
+                200 -> {
+                    val medicines = it.data as? List<Medicine>
+                    binding.txtEmptyList.visibility = View.GONE
+                    binding.rcvMedicineList.visibility = View.VISIBLE
+                    binding.rcvMedicineList.layoutManager = LinearLayoutManager(binding.root.context)
+                    medicineAdapter.submitList(medicines)
+                    binding.rcvMedicineList.adapter = medicineAdapter
+                }
+                204, 500 -> {
+                    binding.txtEmptyList.visibility = View.VISIBLE
+                    binding.txtEmptyList.text = it.message
+                    binding.rcvMedicineList.visibility = View.GONE
+                }
             }
-
         }
     }
 

@@ -8,6 +8,20 @@
     android:layout_height="match_parent"
     tools:context=".views.my_medicine.medicine_list.MyMedicineFragment">
 
+    <TextView
+        android:id="@+id/txt_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/ccRedText"
+        android:textFontWeight="500"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        tools:targetApi="p" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
@@ -62,6 +76,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="4dp"
         android:fillViewport="true"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btn_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,8 +101,17 @@
                 app:layout_constraintVertical_bias="0.0" >
                 <ImageView
                     android:id="@+id/img_medicine"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="fitCenter"/>
+                <ImageView
+                    android:id="@+id/img_medicine_no_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="40dp"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_no_pictures_x512"
                     android:scaleType="fitCenter"/>
             </androidx.cardview.widget.CardView>
 
@@ -411,6 +435,7 @@
         android:textColor="@color/white"
         android:textFontWeight="500"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btn_delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -421,6 +446,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_delete"
         android:layout_width="0dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@drawable/bg_white_blue_stoke_btn"

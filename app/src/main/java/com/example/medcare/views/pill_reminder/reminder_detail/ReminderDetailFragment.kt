@@ -2,6 +2,8 @@ package com.example.medcare.views.pill_reminder.reminder_detail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.R
@@ -18,7 +20,7 @@ class ReminderDetailFragment : BaseFragment<FragmentReminderDetailBinding>(Fragm
     private var reminderId = ""
     override fun initData() {
         reminderId = arguments?.getString("reminder_id").toString()
-
+        viewModel.getReminderById(uid, reminderId)
     }
 
     override fun handleEvent() {
@@ -29,7 +31,7 @@ class ReminderDetailFragment : BaseFragment<FragmentReminderDetailBinding>(Fragm
             btnDelete.setOnClickListener {
                 dialog(requireContext()).confirmEvent("Xác nhận xoá", "Bạn có chắc chắn muốn xoá?") {
                     if (viewModel.getReminder.value != null) {
-                        viewModel.deleteReminder(viewModel.getReminder.value!!, requireContext())
+                        viewModel.deleteReminder(uid, viewModel.getReminder.value!!, requireContext())
                     }
                 }
             }
@@ -42,21 +44,29 @@ class ReminderDetailFragment : BaseFragment<FragmentReminderDetailBinding>(Fragm
             swtOn.setOnCheckedChangeListener { _, isOn ->
                 onChangeSwitch(isOn)
             }
+            txtReminderLabel.setOnClickListener {
+                viewModel.insertHistory(uid, viewModel.getReminder.value!!)
+            }
         }
     }
     private fun onChangeSwitch(isOn: Boolean) {
         val pillReminder = viewModel.getReminder.value
         if (pillReminder != null) {
             pillReminder.isOn = isOn
-            viewModel.updateReminder(pillReminder)
+            val updateData = hashMapOf<String, Any>(
+                "on" to isOn,
+            )
+            viewModel.updateFieldsReminder(uid, pillReminder.id , updateData)
         }
     }
 
     @SuppressLint("SetTextI18n")
     override fun bindData() {
-        viewModel.getReminderById(reminderId)
         viewModel.getReminder.observe(viewLifecycleOwner) {reminder ->
             binding.apply {
+                layoutEditReminder.visibility = View.VISIBLE
+                nestedScrollView.visibility = View.VISIBLE
+                txtError.visibility = View.GONE
                 txtReminderLabel.text = "\uD83D\uDCCC ${reminder.label}"
                 txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: ${reminder.frequency.label}"
                 val timeString = reminder.times.joinToString(", ") { it.time}
@@ -69,14 +79,17 @@ class ReminderDetailFragment : BaseFragment<FragmentReminderDetailBinding>(Fragm
                 rcvMedicineList.adapter = medicineAdapter
             }
         }
+        viewModel.messageError.observe(viewLifecycleOwner) {
+            binding.txtError.text = it
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
         viewModel.getDeleteStatus.observe(viewLifecycleOwner) {
             if (it){
-                val result = Bundle().apply {
-                    putBoolean("key_boolean", true)
-                }
-                parentFragmentManager.setFragmentResult("boolean_result_key", result)
-                findNavController().popBackStack()
+                backScreenReset()
             }
+        }
+        listenBackScreen{
+            viewModel.getReminderById(uid, reminderId)
         }
     }
     private fun onclickMedicineItem(medicine: Medicine) {

@@ -3,8 +3,10 @@ package com.example.medcare.views.my_medicine.add_medicine
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
@@ -13,7 +15,13 @@ import com.example.medcare.databinding.FragmentAddMedicineBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
+import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.regions.Region
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.s3.AmazonS3Client
+import com.bumptech.glide.Glide
 import com.example.medcare.R
 import com.example.medcare.models.Medicine
 import java.io.File
@@ -22,13 +30,16 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
+import com.example.medcare.BuildConfig
+import com.example.medcare.utils.FileUtils
 
 class AddMedicineFragment :
     BaseFragment<FragmentAddMedicineBinding>(FragmentAddMedicineBinding::inflate) {
     override val viewModel by viewModel<AddMedicineViewModel>()
-    private var image = ""
     private var unit = "viên"
     private var medicine: Medicine? = null
+    private lateinit var newMedicine : Medicine
+    private var image = ""
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -79,7 +90,6 @@ class AddMedicineFragment :
     override fun initData() {
         medicine = arguments?.getSerializable("medicine") as? Medicine
     }
-
     override fun handleEvent() {
         binding.apply {
             imgCamera.setOnClickListener {
@@ -92,6 +102,7 @@ class AddMedicineFragment :
                 findNavController().popBackStack()
             }
             btnAdd.setOnClickListener {
+
                 addMedicine(false)
             }
             btnSuccess.setOnClickListener {
@@ -159,6 +170,8 @@ class AddMedicineFragment :
         val quantity = binding.tietQuantity.text?.toString()?.toIntOrNull()
         val dosage = binding.tietDosage.text?.toString()?.toIntOrNull()
 
+
+
         if (medicineName.isEmpty() || expirationDate.isEmpty() || quantity == null || dosage == null) {
             Toast.makeText(
                 requireContext(),
@@ -186,7 +199,7 @@ class AddMedicineFragment :
             return
         }
 
-        val newMedicine = Medicine(
+        newMedicine = Medicine(
             id = id,
             name = medicineName,
             image = image,
@@ -196,10 +209,12 @@ class AddMedicineFragment :
             unit = unit,
             note = note
         )
+        val file = if (image.isNotEmpty()) FileUtils.uriToFile(requireContext(), image.toUri()) else null
+
         if (isEdit) {
-            viewModel.updateMedicine(newMedicine)
+            viewModel.updateMedicine(uid, newMedicine, file)
         } else {
-            viewModel.insertMedicine(newMedicine)
+            viewModel.insertMedicine(uid, newMedicine, file)
         }
 
     }
@@ -210,12 +225,20 @@ class AddMedicineFragment :
             binding.apply {
                 btnAdd.visibility = View.GONE
                 btnSuccess.visibility = View.VISIBLE
+                if (medicine?.image != "") {
+                    cardView2.visibility = View.GONE
+                    cardview.visibility = View.VISIBLE
+                    Glide.with(requireContext())
+                        .load(medicine?.image)
+                        .into(imgMedicine)
+                }
                 txtLabel.text = "Sửa thuốc"
                 tietMedicineName.setText(medicine!!.name)
                 tietQuantity.setText(medicine!!.quantity.toString())
                 tietDosage.setText(medicine!!.dosage.toString())
                 tietNote.setText(medicine!!.note)
                 tietExpirationDate.setText(medicine!!.expirationDate)
+
                 val units = resources.getStringArray(R.array.medicine_units)
                 val index = units.indexOf(medicine!!.unit)
                 if (index >= 0) {
@@ -225,14 +248,18 @@ class AddMedicineFragment :
             }
         }
         viewModel.getInsertStatus.observe(viewLifecycleOwner) {
-            if (it) {
-                val result = Bundle().apply {
-                    putBoolean("key_boolean", true)
+            when (it.statusCode) {
+                200 -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                    val result = Bundle().apply {
+                        putBoolean("key_boolean", true)
+                    }
+                    parentFragmentManager.setFragmentResult("boolean_result_key", result)
+                    findNavController().popBackStack()
                 }
-                parentFragmentManager.setFragmentResult("boolean_result_key", result)
-                findNavController().popBackStack()
-            } else {
-                Toast.makeText(context, "Đã xảy ra lỗi khi thêm thuốc", Toast.LENGTH_SHORT).show()
+                500 -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

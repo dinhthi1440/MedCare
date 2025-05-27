@@ -3,13 +3,15 @@ package com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency
 import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 data class FrequencyModel(
-    val id: Int,
-    val label: String,
+    var id: Int = 0,
+    var label: String = "",
     var isSelected: Boolean = false,
     var listDateSelected: List<DateCustom>? = null
-): Serializable {
-    companion object{
-        val differUtil = object : DiffUtil.ItemCallback<FrequencyModel>(){
+) : Serializable {
+    constructor() : this(0, "", false, null)
+
+    companion object {
+        val differUtil = object : DiffUtil.ItemCallback<FrequencyModel>() {
             override fun areItemsTheSame(oldItem: FrequencyModel, newItem: FrequencyModel): Boolean =
                 oldItem.id == newItem.id
 

@@ -1,12 +1,19 @@
+import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.example.medcare"
     compileSdk = 35
+    val envFile = rootProject.file(".env")
+    val envProps = Properties()
+    if (envFile.exists()) {
+        envProps.load(envFile.inputStream())
+    }
 
     defaultConfig {
         applicationId = "com.example.medcare"
@@ -16,6 +23,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "AWS_ACCESS_KEY", "\"${envProps["AWS_ACCESS_KEY"] ?: ""}\"")
+        buildConfigField("String", "AWS_SECRET_KEY", "\"${envProps["AWS_SECRET_KEY"] ?: ""}\"")
+        buildConfigField("String", "AWS_BUCKET_NAME", "\"${envProps["AWS_BUCKET_NAME"] ?: ""}\"")
+        buildConfigField("String", "AWS_REGION", "\"${envProps["AWS_REGION"] ?: ""}\"")
     }
 
     buildTypes {
@@ -35,6 +47,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures{
+        buildConfig = true
         viewBinding = true
     }
 }
@@ -49,6 +62,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
     implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.3")
+    implementation("com.google.firebase:firebase-firestore-ktx:25.1.4")
+    implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha13")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -78,4 +93,10 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.13.0")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.firebaseui:firebase-ui-auth:9.0.0")
+
+    implementation("com.amazonaws:aws-android-sdk-s3:2.79.0")
+    implementation("com.amazonaws:aws-android-sdk-core:2.79.0")
 }

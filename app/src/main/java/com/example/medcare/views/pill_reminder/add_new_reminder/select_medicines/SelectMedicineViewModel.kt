@@ -5,21 +5,27 @@ import androidx.lifecycle.MutableLiveData
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.medicine.IMedicineRepos
 import com.example.medcare.models.Medicine
+import com.example.medcare.models.Response
 
-class SelectMedicineViewModel(private val iMedicineRepos: IMedicineRepos.Local) : BaseViewModel() {
-    private val _setMedicines = MutableLiveData<MutableList<Medicine>>()
-    val getMedicines: LiveData<MutableList<Medicine>> get() = _setMedicines
+class SelectMedicineViewModel(private val iMedicineRepos: IMedicineRepos) : BaseViewModel() {
     private val _setSelectedMedicine = MutableLiveData<MutableList<Medicine>>()
     val getSelectedMedicine: LiveData<MutableList<Medicine>> get() = _setSelectedMedicine
-    fun getMedicineList(){
+    private val _setMedicines = MutableLiveData<Response<Any>>()
+    val getMedicines: LiveData<Response<Any>> get() = _setMedicines
+    fun getMedicineList(uid: String) {
         executeTask(
-            request =  {iMedicineRepos.getAllMedicine()},
+            request = { iMedicineRepos.getAllMedicineRemote(uid) },
             onSuccess = {
-                _setMedicines.value = it.toMutableList()
+                _setMedicines.value = it
             },
             onError = {
-
+                _setMedicines.value = Response(
+                    500,
+                    "Lỗi khi lấy dữ liệu, hãy thử lại",
+                    null
+                )
             }
+
         )
     }
 

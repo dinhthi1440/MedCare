@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_bg_app"
-    tools:context=".views.signup.SignUpFragment">
+    tools:context=".views.auth.signup.SignUpFragment">
 
     <ImageView
         android:id="@+id/imgLogo"
@@ -65,7 +65,8 @@
                 android:hint="Mật khẩu"
                 app:startIconDrawable="@drawable/ic_padlock_24"
                 app:startIconScaleType="center"
-                app:startIconTint="@color/ccBlue">
+                app:startIconTint="@color/ccBlue"
+                app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textip_password"
@@ -82,7 +83,8 @@
                 android:hint="Xác nhận mật khẩu"
                 app:startIconDrawable="@drawable/ic_padlock_24"
                 app:startIconScaleType="center"
-                app:startIconTint="@color/ccBlue">
+                app:startIconTint="@color/ccBlue"
+                app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textip_password_confirm"
@@ -115,7 +117,7 @@
                     android:text="Đã có tài khoản" />
 
                 <TextView
-                    android:id="@+id/textv_signup"
+                    android:id="@+id/txt_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"

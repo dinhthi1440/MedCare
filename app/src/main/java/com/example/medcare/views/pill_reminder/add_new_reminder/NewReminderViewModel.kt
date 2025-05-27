@@ -5,17 +5,22 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.pillreminder.IPillReminderRepos
+import com.example.medcare.data.repository.relatives.IRelativeRepos
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.models.PillReminder
+import com.example.medcare.models.ReminderRequestStatus
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Local) : BaseViewModel() {
+class NewReminderViewModel(
+    private val iPillReminderRepos: IPillReminderRepos
+) : BaseViewModel() {
     var frequencySelected = FrequencyModel(1, "Hôm nay", true)
 
     private val _setFrequencyStr = MutableLiveData<String>()
@@ -48,10 +53,14 @@ class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Lo
     }
 
     fun insertReminder(
+        uid: String,
         times: List<SelectedTime>,
         content: String,
         note: String,
-        disease: String
+        disease: String,
+        senderID: String,
+        senderName: String,
+        senderAvatar: String,
     ) {
         val reminder = PillReminder(
             UUID.randomUUID().toString(),
@@ -59,27 +68,37 @@ class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Lo
             times,
             frequencySelected,
             listInitialSelected.value?.toList() ?: listOf(),
-            true, note, disease
+            true, note, disease, senderID, senderName, senderAvatar, "", senderID
         )
         executeTask(
-            request = {iPillReminderRepos.insertPillReminder(reminder)},
+            request = {iPillReminderRepos.insertPillReminderRemote(uid, reminder)},
             onSuccess = {
-                _setInsertStatus.value = (it>=0)
-                _setPillReminder.value = reminder
-                _setInsertStatus.value = true
+                when (it.statusCode) {
+                    200 -> {
+                        _setPillReminder.value = reminder
+                    }
+                    500 -> {
+                        _messageError.value = it.message
+                    }
+                }
             },
             onError = {
-                _setInsertStatus.value = false
+                _messageError.value = "Lỗi không xác định"
             }
         )
     }
 
-    fun getReminderById(reminderId: String) {
+    fun getReminderByIdRemote(uid: String, reminderId: String) {
         executeTask(
-            request = { iPillReminderRepos.getPillReminderById(reminderId) },
+            request = { iPillReminderRepos.getPillReminderByIdRemote(uid, reminderId) },
             onSuccess = {
-                if (it != null) {
-                    _setPillReminder.value = it
+                when (it.statusCode) {
+                    200 -> {
+                        _setPillReminder.value = it.data as PillReminder
+                    }
+                    404, 500 -> {
+                        _messageError.value = it.message
+                    }
                 }
             },
             onError = {
@@ -88,7 +107,7 @@ class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Lo
         )
     }
 
-    fun updateReminder(pillReminder: PillReminder, alarmHelper: AlarmHelper, context: Context){
+    fun updateReminder(uid: String, pillReminder: PillReminder, alarmHelper: AlarmHelper, context: Context){
         viewModelScope.launch {
             val oldSelectedTimes = getPillReminder.value?.times ?: mutableListOf()
             val newSelectedTimes = pillReminder.times
@@ -120,11 +139,59 @@ class NewReminderViewModel(private val iPillReminderRepos: IPillReminderRepos.Lo
                 )
                 context.let { it1 -> alarmHelper.registerAlarm(it1, reminder) }
             }
-            iPillReminderRepos.updatePillReminder(pillReminder)
-            _setUpdateStatus.value = true
+            val response = iPillReminderRepos.updatePillReminderRemote(uid, pillReminder)
+            when (response.statusCode) {
+                200 -> {
+                    _setUpdateStatus.value = true
+                }
+                404, 500 -> {
+                    _messageError.value = response.message
+                }
+            }
+
         }
 
     }
 
+    fun insertReminderRelativeRemote(
+        times: List<SelectedTime>,
+        content: String,
+        note: String,
+        disease: String,
+        senderID: String,
+        senderName: String,
+        senderAvatar: String,
+        senderDescription: String,
+        receiverID: String,
+        receiverName: String,
+        receiverAvatar: String,
+        receiverDescription: String
+    ) {
+        val reminderRelative = PillReminder(
+            UUID.randomUUID().toString(),
+            content,
+            times,
+            frequencySelected,
+            listInitialSelected.value?.toList() ?: listOf(),
+            true, note, disease, senderID, senderName, senderAvatar, senderDescription,
+            receiverID, receiverName, receiverAvatar, receiverDescription, ReminderRequestStatus.REQUESTING.status
+        )
+        executeTask(
+            request = { iPillReminderRepos.insertReminderRelativeRemote(reminderRelative) },
+            onSuccess = {
+                when (it.statusCode) {
+                    200 -> {
+                        _setPillReminder.value = reminderRelative
+                    }
 
+                    500 -> {
+                        _messageError.value = it.message
+                    }
+                }
+            },
+            onError = {
+
+            }
+        )
+    }
 }

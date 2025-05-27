@@ -23,7 +23,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:background="#303030"
-            app:cardCornerRadius="25dp"
+            app:cardCornerRadius="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -47,7 +47,7 @@
             android:fontFamily="@font/inter"
             android:maxLength="50"
             android:maxLines="1"
-            android:text="Đinh Văn Thi"
+            android:text=""
             android:textColor="@color/black"
             android:textFontWeight="500"
             android:textSize="18sp"
@@ -56,6 +56,27 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/cardView"
             app:layout_constraintTop_toTopOf="@+id/cardView"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/txt_user_mode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/inter"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="@color/ccGrayBlackText"
+            android:textFontWeight="300"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardView"
+            app:layout_constraintEnd_toStartOf="@+id/icon_logo_app"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/txt_user_name"
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
@@ -86,7 +107,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txt_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -112,7 +133,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/txt_title"
         app:layout_constraintVertical_bias="0.0"
         app:spanCount="2" />
 

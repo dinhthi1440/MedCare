@@ -30,11 +30,16 @@ class PillReminderAdapter(
         @SuppressLint("SetTextI18n")
         override fun bindView(item: PillReminder, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
-            Log.e("TAG", "bindView: item là ${item}", )
             binding.apply {
-                txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: ${item.frequency.label}"
+                val frequencyText = if (item.frequency.label == "Tuỳ chỉnh") {
+                    item.frequency.listDateSelected?.joinToString(", ") { it.abbreviation } ?: ""
+                } else {
+                    item.frequency.label
+                }
+                txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: $frequencyText"
                 txtReminderLabel.text = item.label
-                txtReminderTime.text = "⏰ Thời gian: ${item.times.first().time}"
+                val timeList = item.times
+                txtReminderTime.text = "⏰ Thời gian: ${timeList.map { it.time }.joinToString(", ")}"
                 swtOn.isChecked = item.isOn
                 root.setOnClickListener {
                     layoutDeleteBtn.visibility = View.GONE
@@ -57,6 +62,8 @@ class PillReminderAdapter(
                 layoutDeleteBtn.setOnClickListener {
                     onRemove(item)
                 }
+                val medicineList = item.medicines
+                txtReminderMedicines.text = "\uD83D\uDC8A Thuốc: ${medicineList.map { it.name }.joinToString(", ")}"
                 txtReminderMedicines.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
                         val layout = txtReminderMedicines.layout

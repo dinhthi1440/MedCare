@@ -3,6 +3,8 @@ package com.example.medcare.views.connect_relatives.relative_reminder_detail
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.R
@@ -10,16 +12,19 @@ import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentRelativeReminderDetailBinding
 import com.example.medcare.extension.confirmEvent
 import com.example.medcare.models.Medicine
+import com.example.medcare.models.ReminderRequestStatus
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class RelativeReminderDetailFragment : BaseFragment<FragmentRelativeReminderDetailBinding>(FragmentRelativeReminderDetailBinding::inflate) {
     private val medicineAdapter by lazy { MedicineAdapter(true, ::onclickMedicineItem) }
+    private lateinit var reminderID: String
     override val viewModel by viewModel<RelativeReminderDetailViewModel>()
 
     override fun initData() {
-        viewModel.getReminderById()
+        reminderID = arguments?.getString("reminderID").toString()
+        viewModel.getReminderById(uid, reminderID)
     }
 
     override fun handleEvent() {
@@ -27,13 +32,20 @@ class RelativeReminderDetailFragment : BaseFragment<FragmentRelativeReminderDeta
             btnBack.setOnClickListener {
                 findNavController().popBackStack()
             }
-//            btnDelete.setOnClickListener {
+            btnCancel.setOnClickListener {
 //                dialog(requireContext()).confirmEvent("Xác nhận xoá", "Bạn có chắc chắn muốn xoá?") {
 //                    if (viewModel.getReminder.value != null) {
 //                        viewModel.deleteReminder(viewModel.getReminder.value!!, requireContext())
 //                    }
 //                }
-//            }
+            }
+            btnConfirm.setOnClickListener {
+                dialog(requireContext()).confirmEvent("Xác nhận", "Bạn có muốn chấp nhận lời nhắc này? Thuốc chưa có sẽ được tự động thêm vào danh sách của bạn") {
+                    var reminder = viewModel.getRelativeReminder.value
+                    reminder?.statusRequest = ReminderRequestStatus.ACCEPTED.status
+                    viewModel.updateReminder(reminder!!)
+                }
+            }
 //            layoutEditReminder.setOnClickListener {
 //                val bundle = Bundle().apply {
 //                    putString("reminder_id", viewModel.getReminder.value?.id)
@@ -45,34 +57,49 @@ class RelativeReminderDetailFragment : BaseFragment<FragmentRelativeReminderDeta
 
     @SuppressLint("SetTextI18n")
     override fun bindData() {
-        var myID = "user_123"
         viewModel.getRelativeReminder.observe(viewLifecycleOwner) {reminder ->
             binding.apply {
-                if (reminder.senderID == myID) {
+                nestedScrollView.visibility = View.VISIBLE
+                if (reminder.senderID == uid) {
                     txtFromOrTo.text = "Tới: "
                     txtRelativeName.text = reminder.receiverName
                     txtDescription.text = reminder.receiverDescription
-                    btnConfirm.visibility = View.GONE
-                    btnDefuse.visibility = View.GONE
-                    btnDelete.visibility = View.VISIBLE
+                    btnCancel.visibility = View.VISIBLE
                 } else {
                     txtFromOrTo.text = "Tạo bởi: "
                     txtRelativeName.text = reminder.senderName
                     txtDescription.text = reminder.senderDescription
-                    btnConfirm.visibility = View.VISIBLE
-                    btnDefuse.visibility = View.VISIBLE
-                    btnDelete.visibility = View.GONE
+                    if (reminder.statusRequest == ReminderRequestStatus.ACCEPTED.status) {
+                        btnDelete.visibility = View.VISIBLE
+                        btnDefuse.visibility = View.VISIBLE
+                    } else {
+                        btnConfirm.visibility = View.VISIBLE
+                        btnDefuse.visibility = View.VISIBLE
+                    }
                 }
-                txtReminderLabel.text = "\uD83D\uDCCC ${reminder.pillReminder.label}"
-                txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: ${reminder.pillReminder.frequency.label}"
-                val timeString = reminder.pillReminder.times.joinToString(", ") { it.time}
+                bindStatus(reminder.statusRequest ?: "")
+                txtReminderLabel.text = "\uD83D\uDCCC ${reminder.label}"
+                txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: ${reminder.frequency.label}"
+                val timeString = reminder.times.joinToString(", ") { it.time}
                 txtReminderTime.text = "⏰ Thời gian: $timeString"
-                txtDisease.text = "\uD83D\uDC89 Bệnh điều trị: ${reminder.pillReminder.disease}"
-                txtNote.text = reminder.pillReminder.note
+                txtDisease.text = "\uD83D\uDC89 Bệnh điều trị: ${reminder.disease}"
+                txtNote.text = reminder.note
                 rcvMedicineList.layoutManager = LinearLayoutManager(context)
-                medicineAdapter.submitList(reminder.pillReminder.medicines)
+                medicineAdapter.submitList(reminder.medicines)
                 rcvMedicineList.adapter = medicineAdapter
             }
+        }
+        viewModel.getStatusUpdate.observe(viewLifecycleOwner) {
+            bindStatus(it)
+            binding.apply {
+                if (it == ReminderRequestStatus.ACCEPTED.status) {
+                    btnConfirm.visibility = View.GONE
+                    btnDefuse.visibility = View.GONE
+                    btnCancel.visibility = View.GONE
+                    btnDelete.visibility = View.VISIBLE
+                }
+            }
+
         }
 //        viewModel.getDeleteStatus.observe(viewLifecycleOwner) {
 //            if (it){
@@ -83,6 +110,10 @@ class RelativeReminderDetailFragment : BaseFragment<FragmentRelativeReminderDeta
 //                findNavController().popBackStack()
 //            }
 //        }
+        viewModel.messageError.observe(viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            binding.txtError.text = it
+        }
     }
     private fun onclickMedicineItem(medicine: Medicine) {
         val bundle = Bundle().apply {
@@ -90,7 +121,29 @@ class RelativeReminderDetailFragment : BaseFragment<FragmentRelativeReminderDeta
             putString("medicine_name", medicine.name)
             putString("previous_screen", "detail")
         }
-        findNavController().navigate(R.id.action_reminderDetailFragment_to_medicineDetailFragment, bundle)
+        findNavController().navigate(R.id.action_relativeReminderDetailFragment_to_medicineDetailFragment, bundle)
+    }
+    private fun bindStatus(status: String) {
+        binding.apply {
+            when (status) {
+                ReminderRequestStatus.REQUESTING.status -> {
+                    txtStatus.text = "Chờ xác nhận"
+                    txtStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccOrangeText))
+                }
+                ReminderRequestStatus.ACCEPTED.status -> {
+                    txtStatus.text = "Đã chấp nhận"
+                    txtStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccGreenText))
+                }
+                ReminderRequestStatus.DELETED.status -> {
+                    txtStatus.text = "Đã bị xóa"
+                    txtStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccRedText))
+                }
+                ReminderRequestStatus.CANCEL.status -> {
+                    txtStatus.text = "Đã bị hủy"
+                    txtStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccBlueText))
+                }
+            }
+        }
     }
 
     override fun destroy() {

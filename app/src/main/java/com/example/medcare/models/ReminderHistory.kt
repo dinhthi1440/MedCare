@@ -6,13 +6,14 @@ import java.io.Serializable
 
 data class ReminderHistory(
     @PrimaryKey
-    val id: String,
-    val label: String,
-    val date: String,
-    val time: String,
+    var id: String,
+    var label: String,
+    var date: String,
+    var time: String,
     var status: String,
-    val reminder: PillReminder
+    var reminder: PillReminder
 ) : Serializable {
+    constructor() : this( "", "", "", "", "", PillReminder())
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<ReminderHistory>() {
             override fun areItemsTheSame(oldItem: ReminderHistory, newItem: ReminderHistory): Boolean =
@@ -23,3 +24,10 @@ data class ReminderHistory(
         }
     }
 }
+
+enum class HistoryStatus(val status: String) {
+    DRANK("Đã uống"),
+    MISSED("Bỏ lỡ"),
+    NOT_CONFIRMED("Xác nhận")
+}
+

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.medcare.views.login.LoginFragment"
+        android:id=" @+id/loginFragment"
+        android:name="com.example.medcare.views.auth.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -16,10 +16,13 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_onBoardingInforFragment"
+            app:destination="@id/onBoardingInforFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.medcare.views.signup.SignUpFragment"
+        android:name="com.example.medcare.views.auth.signup.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
     <fragment
@@ -45,6 +48,18 @@
         <action
             android:id="@+id/action_homeFragment_to_connectRelativesFragment"
             app:destination="@id/connectRelativesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contactDoctorFragment"
+            app:destination="@id/contactDoctorFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingListFragment"
+            app:destination="@id/settingListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userListManagerFragment"
+            app:destination="@id/userListManagerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_feedbackListFragment"
+            app:destination="@id/feedbackListFragment" />
     </fragment>
     <fragment
         android:id="@+id/myMedicineFragment"
@@ -55,7 +70,7 @@
             android:id="@+id/action_myMedicineFragment_to_medicineDetailFragment"
             app:destination="@id/medicineDetailFragment" />
         <action
-            android:id="@+id/action_myMedicineFragment_to_addMedicineFragment"
+             android:id="@+id/action_myMedicineFragment_to_addMedicineFragment"
             app:destination="@id/addMedicineFragment" />
     </fragment>
     <fragment
@@ -136,7 +151,11 @@
         android:id="@+id/reminderHistoryDetailFragment"
         android:name="com.example.medcare.views.reminder_history.reminder_history_detail.ReminderHistoryDetailFragment"
         android:label="fragment_reminder_history_detail"
-        tools:layout="@layout/fragment_reminder_history_detail" />
+        tools:layout="@layout/fragment_reminder_history_detail" >
+        <action
+            android:id="@+id/action_reminderHistoryDetailFragment_to_medicineDetailFragment"
+            app:destination="@id/medicineDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/connectRelativesFragment"
         android:name="com.example.medcare.views.connect_relatives.connect_relatives_list.ConnectRelativesFragment"
@@ -148,6 +167,9 @@
         <action
             android:id="@+id/action_connectRelativesFragment_to_relativeRequestAddFragment"
             app:destination="@id/relativeRequestAddFragment" />
+        <action
+            android:id="@+id/action_connectRelativesFragment_to_addNewReminderFragment"
+            app:destination="@id/addNewReminderFragment" />
     </fragment>
     <fragment
         android:id="@+id/relativeReminderHistoryFragment"
@@ -167,5 +189,109 @@
         android:id="@+id/relativeReminderDetailFragment"
         android:name="com.example.medcare.views.connect_relatives.relative_reminder_detail.RelativeReminderDetailFragment"
         android:label="fragment_relative_reminder_detail"
-        tools:layout="@layout/fragment_relative_reminder_detail" />
+        tools:layout="@layout/fragment_relative_reminder_detail" >
+        <action
+            android:id="@+id/action_relativeReminderDetailFragment_to_medicineDetailFragment"
+            app:destination="@id/medicineDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactDoctorFragment"
+        android:name="com.example.medcare.views.health_advice.contact_doctor.ContactDoctorFragment"
+        android:label="fragment_contact_doctor"
+        tools:layout="@layout/fragment_contact_doctor" >
+        <action
+            android:id="@+id/action_contactDoctorFragment_to_chatDoctorListFragment"
+            app:destination="@id/chatDoctorListFragment" />
+        <action
+            android:id="@+id/action_contactDoctorFragment_to_chatDoctorDetailFragment"
+            app:destination="@id/chatDoctorDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatDoctorListFragment"
+        android:name="com.example.medcare.views.health_advice.chat_doctor.ChatDoctorListFragment"
+        android:label="fragment_chat_doctor_list"
+        tools:layout="@layout/fragment_chat_doctor_list" >
+        <action
+            android:id="@+id/action_chatDoctorListFragment_to_chatDoctorDetailFragment"
+            app:destination="@id/chatDoctorDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatDoctorDetailFragment"
+        android:name="com.example.medcare.views.health_advice.chat_doctor_detail.ChatDoctorDetailFragment"
+        android:label="fragment_chat_doctor_detail"
+        tools:layout="@layout/fragment_chat_doctor_detail" />
+    <fragment
+        android:id="@+id/settingListFragment"
+        android:name="com.example.medcare.views.setting.setting_list.SettingListFragment"
+        android:label="fragment_setting_list"
+        tools:layout="@layout/fragment_setting_list" >
+        <action
+            android:id="@+id/action_settingListFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_settingListFragment_to_settingInformationFragment"
+            app:destination="@id/settingInformationFragment" />
+        <action
+            android:id="@+id/action_settingListFragment_to_settingNotificationFragment"
+            app:destination="@id/settingNotificationFragment" />
+        <action
+            android:id="@+id/action_settingListFragment_to_changePassFragment"
+            app:destination="@id/changePassFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userListManagerFragment"
+        android:name="com.example.medcare.views.user_manager.user_list.UserListManagerFragment"
+        android:label="fragment_user_list_manager"
+        tools:layout="@layout/fragment_user_list_manager" >
+        <action
+            android:id="@+id/action_userListManagerFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetailFragment"
+        android:name="com.example.medcare.views.user_manager.user_detail.UserDetailFragment"
+        android:label="fragment_user_detail"
+        tools:layout="@layout/fragment_user_detail" />
+    <fragment
+        android:id="@+id/feedbackListFragment"
+        android:name="com.example.medcare.views.feedback.feedback_list.FeedbackListFragment"
+        android:label="fragment_feedback_list"
+        tools:layout="@layout/fragment_feedback_list" >
+        <action
+            android:id="@+id/action_feedbackListFragment_to_feedbackDetailFragment"
+            app:destination="@id/feedbackDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedbackDetailFragment"
+        android:name="com.example.medcare.views.feedback.feedback_detail.FeedbackDetailFragment"
+        android:label="fragment_feedback_detail"
+        tools:layout="@layout/fragment_feedback_detail" />
+    <fragment
+        android:id="@+id/onBoardingInforFragment"
+        android:name="com.example.medcare.views.auth.onboarding_infor.OnBoardingInforFragment"
+        android:label="fragment_on_boarding_infor"
+        tools:layout="@layout/fragment_on_boarding_infor" >
+        <action
+            android:id="@+id/action_onBoardingInforFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingInformationFragment"
+        android:name="com.example.medcare.views.setting.setting_information.SettingInformationFragment"
+        android:label="fragment_setting_information"
+        tools:layout="@layout/fragment_setting_information" />
+    <fragment
+        android:id="@+id/changePassFragment"
+        android:name="com.example.medcare.views.setting.setting_change_password.ChangePassFragment"
+        android:label="fragment_change_pass"
+        tools:layout="@layout/fragment_change_pass" >
+        <action
+            android:id="@+id/action_changePassFragment_to_loginFragment2"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingNotificationFragment"
+        android:name="com.example.medcare.views.setting.setting_notification.SettingNotificationFragment"
+        android:label="fragment_setting_notification"
+        tools:layout="@layout/fragment_setting_notification" />
 </navigation>

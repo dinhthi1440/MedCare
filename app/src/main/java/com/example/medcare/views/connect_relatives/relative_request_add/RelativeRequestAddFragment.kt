@@ -1,32 +1,32 @@
 package com.example.medcare.views.connect_relatives.relative_request_add
 
+import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentRelativeRequestAddBinding
-import com.example.medcare.models.ReminderRelative
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import com.example.medcare.extension.confirmEvent
+import com.example.medcare.models.PillReminder
+import com.example.medcare.models.ReminderRequestStatus
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class RelativeRequestAddFragment : BaseFragment<FragmentRelativeRequestAddBinding>(FragmentRelativeRequestAddBinding::inflate) {
 
     private val beReminderAdapter by lazy {
-        RelativeRequestAdapter(::onClickReminder)
+        RelativeRequestAdapter(uid, ::onClickReminder,)
     }
     private val reminderToAdapter by lazy {
-        RelativeRequestAdapter(::onClickReminder)
+        RelativeRequestAdapter(uid, ::onClickReminder)
     }
     override val viewModel by viewModel<RelativeRequestViewModel>()
 
     override fun initData() {
-        viewModel.getData()
+        viewModel.getData(uid)
     }
 
     override fun handleEvent() {
@@ -64,12 +64,18 @@ class RelativeRequestAddFragment : BaseFragment<FragmentRelativeRequestAddBindin
                 beReminderAdapter.submitList(it)
                 binding.rcvBeReminder.adapter = beReminderAdapter
             }
+            viewModel.messageError.observe(viewLifecycleOwner) {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
         }
 
     }
 
-    private fun onClickReminder(reminderRelative: ReminderRelative){
-        findNavController().navigate(R.id.action_relativeRequestAddFragment_to_relativeReminderDetailFragment)
+    private fun onClickReminder(reminderRelative: PillReminder){
+        val bundle = Bundle().apply {
+            putString("reminderID", reminderRelative.id)
+        }
+        findNavController().navigate(R.id.action_relativeRequestAddFragment_to_relativeReminderDetailFragment, bundle)
     }
 
     override fun destroy() {

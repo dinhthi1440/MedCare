@@ -9,6 +9,7 @@ import com.example.medcare.R
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
 import com.example.medcare.databinding.ItemReminderHistoryBinding
+import com.example.medcare.models.HistoryStatus
 import com.example.medcare.models.ReminderHistory
 
 class ReminderHistoryAdapter(private val onClick: (ReminderHistory) -> Unit,
@@ -29,17 +30,17 @@ class ReminderHistoryAdapter(private val onClick: (ReminderHistory) -> Unit,
         override fun bindView(item: ReminderHistory, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
             binding.apply {
-                txtReminderLabel.text = item.label
+                txtReminderLabel.text = "\uD83D\uDCCC ${item.label}"
                 txtReminderDay.text = "Ngày: ${item.date}"
                 txtReminderTime.text = item.time
                 txtReminderHisStatus.text = item.status
-                if (item.status == "Đã uống") {
+                if (item.status == HistoryStatus.DRANK.status) {
                     imgCheckSuccess.visibility = View.VISIBLE
                     imgMissing.visibility = View.GONE
                     txtStatusBtn.visibility = View.GONE
                     txtReminderHisStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccGreen))
                     layoutReminderHistory.setBackgroundResource(R.drawable.bg_reminder_history_green)
-                } else if (item.status == "Bỏ lỡ") {
+                } else if (item.status == HistoryStatus.MISSED.status) {
                     imgCheckSuccess.visibility = View.GONE
                     imgMissing.visibility = View.VISIBLE
                     txtStatusBtn.visibility = View.GONE

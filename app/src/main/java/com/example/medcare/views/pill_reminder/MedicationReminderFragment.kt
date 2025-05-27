@@ -2,6 +2,7 @@ package com.example.medcare.views.pill_reminder
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.R
@@ -22,7 +23,7 @@ class MedicationReminderFragment :
     }
 
     override fun initData() {
-        viewModel.getReminderList()
+        viewModel.getReminderList(uid)
     }
 
     override fun handleEvent() {
@@ -48,8 +49,12 @@ class MedicationReminderFragment :
                 binding.rcvPillReminder.adapter = reminderAdapter
             }
         }
-        listenBackScreen("boolean_result_key", "key_boolean") {
-            viewModel.getReminderList()
+        viewModel.messageError.observe(viewLifecycleOwner) {
+            binding.txtEmptyList.text = it
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+        listenBackScreen{
+            viewModel.getReminderList(uid)
         }
     }
 
@@ -62,11 +67,14 @@ class MedicationReminderFragment :
 
     private fun onChangeSwitch(pillReminder: PillReminder, isOn: Boolean) {
         pillReminder.isOn = isOn
-        viewModel.updateReminder(pillReminder)
+        val updateData = hashMapOf<String, Any>(
+            "on" to isOn,
+        )
+        viewModel.updateFieldsReminder(uid, pillReminder.id, updateData)
     }
 
     private fun onRemoveReminder(pillReminder: PillReminder) {
-        viewModel.deleteReminder(pillReminder, requireContext())
+        viewModel.deleteReminder(uid, pillReminder, requireContext())
     }
 
     override fun destroy() {

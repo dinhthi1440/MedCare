@@ -12,7 +12,7 @@ import com.example.medcare.models.Relative
 
 class RelativeAdapter(
     private val onView: (Relative) -> Unit,
-    private val onCreateReminder: (idRelative: String) -> Unit,
+    private val onCreateReminder: (relative :Relative) -> Unit,
     private val onRemove: (Relative) -> Unit
 ) : BaseAdapter<Relative, BaseViewHolder<Relative>>(Relative.differUtil) {
     override fun onCreateViewHolder(
@@ -30,13 +30,13 @@ class RelativeAdapter(
         override fun bindView(item: Relative, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
             binding.apply {
-                txtRelativeName.text = item.name
+                txtRelativeName.text = item.fullName
                 txtTitleRelative.text = item.relativeTitle
                 btnView.setOnClickListener {
                     onView(item)
                 }
                 btnCreateReminder.setOnClickListener {
-                    onCreateReminder(item.id)
+                    onCreateReminder(item)
                 }
                 root.setOnLongClickListener {
                     onRemove(item)
