@@ -44,6 +44,10 @@ class ContactDoctorFragment : BaseFragment<FragmentContactDoctorBinding>(Fragmen
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             binding.txtLabelDoctorChatEmpty.text = it
         }
+        listenBackScreen {
+            Toast.makeText(context, "là $isBackReset", Toast.LENGTH_SHORT).show()
+            viewModel.getChatList(uid)
+        }
 
     }
 

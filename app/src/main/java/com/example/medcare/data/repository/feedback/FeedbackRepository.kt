@@ -13,11 +13,11 @@ class FeedbackRepository (private val remote: IFeedbackDatasource) : BaseReposit
         return getResult { remote.insertFeedback(feedback) }
     }
 
-    override suspend fun updateUserByFiled(
-        accountID: String,
+    override suspend fun updateFeedbackByFiled(
+        feedbackID: String,
         fields: Map<String, Any>
     ): DataResult<Response<Any>> {
-        return getResult { remote.updateUserByFiled(accountID, fields) }
+        return getResult { remote.updateFeedbackByFiled(feedbackID, fields) }
     }
 
     override suspend fun getAllFeedback(): DataResult<Response<Any>> {
@@ -34,6 +34,10 @@ class FeedbackRepository (private val remote: IFeedbackDatasource) : BaseReposit
 
     override suspend fun getFeedbackByID(feedbackID: String): DataResult<Response<Any>> {
         return getResult { remote.getFeedbackByID(feedbackID) }
+    }
+
+    override suspend fun getFeedbackByUserID(uid: String): DataResult<Response<Any>> {
+        return getResult { remote.getFeedbackByUserID(uid) }
     }
 
 }

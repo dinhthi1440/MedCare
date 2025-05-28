@@ -1,6 +1,7 @@
 package com.example.medcare.views.health_advice.chat_doctor_detail
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

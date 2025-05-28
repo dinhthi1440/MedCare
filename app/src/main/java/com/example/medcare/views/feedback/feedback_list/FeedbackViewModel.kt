@@ -29,6 +29,7 @@ class FeedbackViewModel(private val iFeedbackRepository: IFeedbackRepository) : 
     private val _setDeleteStatus = MutableLiveData<String>()
     val getDeleteStatus: LiveData<String> get() = _setDeleteStatus
 
+
     fun getFeedbackList(searchString: String) {
         executeTask(
             request = {
@@ -78,7 +79,7 @@ class FeedbackViewModel(private val iFeedbackRepository: IFeedbackRepository) : 
 
     fun updateFeedback(feedbackID: String, fields: Map<String, Any>) {
         executeTask(
-            request = {iFeedbackRepository.updateUserByFiled(feedbackID, fields)},
+            request = {iFeedbackRepository.updateFeedbackByFiled(feedbackID, fields)},
             onSuccess = {
                 when (it.statusCode) {
                     200 -> {
@@ -102,7 +103,6 @@ class FeedbackViewModel(private val iFeedbackRepository: IFeedbackRepository) : 
             onSuccess = {
                 when (it.statusCode) {
                     200 -> {
-                        _messageError.value = it.message
                         _setDeleteStatus.value = "Success"
                     }
                     404 , 500 -> {

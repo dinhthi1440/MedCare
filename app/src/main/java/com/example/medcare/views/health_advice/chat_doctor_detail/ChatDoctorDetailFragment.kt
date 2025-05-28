@@ -50,7 +50,7 @@ class ChatDoctorDetailFragment : BaseFragment<FragmentChatDoctorDetailBinding>(F
     @SuppressLint("ClickableViewAccessibility")
     override fun handleEvent() {
         binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
+            backScreenReset()
         }
         binding.imgSend.setOnClickListener {
             val comment = binding.edtComment.text.toString()
@@ -92,22 +92,25 @@ class ChatDoctorDetailFragment : BaseFragment<FragmentChatDoctorDetailBinding>(F
 
     override fun bindData() {
         binding.txtLabel.text = doctorName
-        viewModel.getChatDetail.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty()) {
+        viewModel.getChatDetail.observe(viewLifecycleOwner) { messages ->
+            if (messages.isNullOrEmpty()) {
                 binding.txtLabelDoctorChatEmpty.visibility = View.VISIBLE
                 binding.rcvDoctorList.visibility = View.GONE
             } else {
                 binding.txtLabelDoctorChatEmpty.visibility = View.GONE
-
                 binding.rcvDoctorList.layoutManager = LinearLayoutManager(binding.root.context)
-                chatMessageAdapter.setList(it)
+                val listMessage = messages.sortedBy { it.timeMessageLong }
+                chatMessageAdapter.setList(listMessage)
                 binding.rcvDoctorList.adapter = chatMessageAdapter
-                binding.rcvDoctorList.scrollToPosition(it.size - 1)
+                binding.rcvDoctorList.scrollToPosition(messages.size - 1)
                 binding.rcvDoctorList.visibility = View.VISIBLE
             }
         }
         viewModel.messageError.observe(viewLifecycleOwner) {
             binding.txtLabelDoctorChatEmpty.text = it
+        }
+        viewModel.getInsertStatus.observe(viewLifecycleOwner) {
+            isBackReset = true
         }
         listenMessage()
     }

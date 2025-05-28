@@ -1,9 +1,19 @@
 package com.example.medcare.views.home
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,6 +41,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun handleEvent() {
         binding.imgUser.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingListFragment)
+        }
+        binding.iconLogoApp.setOnClickListener {
+
         }
     }
     private fun bindUserData() {
@@ -99,6 +112,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         }
     }
+
 
     override fun destroy() {
 

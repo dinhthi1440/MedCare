@@ -19,6 +19,9 @@ class ChatDoctorViewModel(private val iDoctorRepos: IDoctorRepos) : BaseViewMode
     val getChatDetail: LiveData<MutableList<ChatMessage>> get() = _setChatDetail
     private val _setChatDetail = MutableLiveData<MutableList<ChatMessage>>()
 
+    val getInsertStatus: LiveData<String> get() = _setInsertStatus
+    private val _setInsertStatus = MutableLiveData<String>()
+
     fun getSearchDoctorChatList(searchString: String ) {
 
     }
@@ -78,7 +81,7 @@ class ChatDoctorViewModel(private val iDoctorRepos: IDoctorRepos) : BaseViewMode
             val result = iDoctorRepos.insertChatMessage(uid, partnerID, chatMessage, doctorChat)
             when (result.statusCode) {
                 200 -> {
-                    _messageError.value = result.message
+                    _setInsertStatus.value = result.message
                 }
                 500 -> {
                     _messageError.value = result.message

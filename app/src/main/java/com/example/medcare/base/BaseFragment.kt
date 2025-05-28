@@ -56,6 +56,7 @@ abstract class BaseFragment<VB : ViewBinding>(
         } else {
             findNavController().popBackStack()
         }
+
     }
 
     protected fun showKeyboard(context1: Context) {

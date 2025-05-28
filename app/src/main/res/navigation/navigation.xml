@@ -237,6 +237,9 @@
         <action
             android:id="@+id/action_settingListFragment_to_changePassFragment"
             app:destination="@id/changePassFragment" />
+        <action
+            android:id="@+id/action_settingListFragment_to_settingFeedbackFragment"
+            app:destination="@id/settingFeedbackFragment" />
     </fragment>
     <fragment
         android:id="@+id/userListManagerFragment"
@@ -294,4 +297,13 @@
         android:name="com.example.medcare.views.setting.setting_notification.SettingNotificationFragment"
         android:label="fragment_setting_notification"
         tools:layout="@layout/fragment_setting_notification" />
+    <fragment
+        android:id="@+id/settingFeedbackFragment"
+        android:name="com.example.medcare.views.setting.feedback.SettingFeedbackFragment"
+        android:label="fragment_setting_feeback"
+        tools:layout="@layout/fragment_setting_feeback" >
+        <action
+            android:id="@+id/action_settingFeedbackFragment_to_feedbackDetailFragment"
+            app:destination="@id/feedbackDetailFragment" />
+    </fragment>
 </navigation>

@@ -33,7 +33,7 @@ class FeedbackAdapter (
                 txtTime.text = "${item.date} ${item.time}"
                 if (item.status == "processing") {
                     txtHandleStatus.text = "Đang xử lý"
-                    txtHandleStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccBlueText))
+                    txtHandleStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccOrangeText))
                 } else if(item.status == "pending") {
                     txtHandleStatus.text = "Chưa xử lý"
                     txtHandleStatus.setTextColor(ContextCompat.getColor(root.context, R.color.ccRedText))

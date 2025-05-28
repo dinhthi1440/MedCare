@@ -22,7 +22,9 @@ import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.Da
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.DateCustomAdapter
 import androidx.core.graphics.drawable.toDrawable
 import com.bumptech.glide.Glide
+import com.example.medcare.databinding.DlChangeStatusFeedbackBinding
 import com.example.medcare.databinding.DlConfirmPassAdminBinding
+import com.example.medcare.databinding.DlInputFeedbackBinding
 import com.example.medcare.databinding.DlShowImageBinding
 
 fun Dialog.openDlLoading(stopFlag: Boolean) {
@@ -41,6 +43,7 @@ fun Dialog.openDlLoading(stopFlag: Boolean) {
     show()
     setCancelable(stopFlag)
 }
+
 fun Dialog.selectCustomDate(
     listInitialSelected: MutableList<DateCustom> = mutableListOf(),
     callback: (listDateSelected: List<DateCustom>?) -> Unit
@@ -121,6 +124,37 @@ fun Dialog.confirmEvent(
     show()
 }
 
+fun Dialog.confirmFeedbackInput(
+    onConfirm: (String) -> Unit,
+) {
+    val binding = DlInputFeedbackBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(TRANSPARENT.toDrawable())
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnOk.setOnClickListener {
+            val text = textipContent.text.toString()
+            if (text.isNotBlank()) {
+                onConfirm(text)
+                dismiss()
+            }
+        }
+    }
+    show()
+}
+
 fun Dialog.confirmPassAdmin(
     onConfirm: (String) -> Unit,
 ) {
@@ -143,7 +177,7 @@ fun Dialog.confirmPassAdmin(
         }
         btnOk.setOnClickListener {
             val text = textipPassword.text.toString()
-            if (text.isNotBlank()){
+            if (text.isNotBlank()) {
                 onConfirm(text)
                 dismiss()
             }
@@ -287,6 +321,47 @@ fun Dialog.changeRule(
                 else -> ""
             }
             onConfirm(selectedRole)
+            dismiss()
+        }
+    }
+    show()
+}
+
+fun Dialog.changeStatusFeedback(
+    initRule: String,
+    onConfirm: (rule: String) -> Unit
+) {
+    val binding = DlChangeStatusFeedbackBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        when (initRule) {
+            "pending" -> rgRole.check(R.id.rbPending)
+            "handled" -> rgRole.check(R.id.rbHandled)
+            "processing" -> rgRole.check(R.id.rbProcessing)
+        }
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnOk.setOnClickListener {
+            val selectedRole = when (rgRole.checkedRadioButtonId) {
+                R.id.rbPending -> "pending"
+                R.id.rbHandled -> "handled"
+                else -> "processing"
+            }
+            if (selectedRole != initRule) {
+                onConfirm(selectedRole)
+            }
             dismiss()
         }
     }
