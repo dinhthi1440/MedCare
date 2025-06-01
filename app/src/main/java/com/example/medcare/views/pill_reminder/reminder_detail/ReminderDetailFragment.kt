@@ -11,6 +11,7 @@ import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentReminderDetailBinding
 import com.example.medcare.extension.confirmEvent
 import com.example.medcare.models.Medicine
+import com.example.medcare.utils.TimeUtils
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -55,6 +56,7 @@ class ReminderDetailFragment : BaseFragment<FragmentReminderDetailBinding>(Fragm
             pillReminder.isOn = isOn
             val updateData = hashMapOf<String, Any>(
                 "on" to isOn,
+                "updateAt" to TimeUtils.getCurrentCreatedAt()
             )
             viewModel.updateFieldsReminder(uid, pillReminder.id , updateData)
         }

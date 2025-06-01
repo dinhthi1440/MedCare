@@ -16,7 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class RelativeRequestAddFragment : BaseFragment<FragmentRelativeRequestAddBinding>(FragmentRelativeRequestAddBinding::inflate) {
-
+    private var tabID = 0
     private val beReminderAdapter by lazy {
         RelativeRequestAdapter(uid, ::onClickReminder,)
     }
@@ -32,20 +32,21 @@ class RelativeRequestAddFragment : BaseFragment<FragmentRelativeRequestAddBindin
     override fun handleEvent() {
         binding.apply {
             txtTabBeReminder.setOnClickListener {
-                rcvBeReminder.visibility = View.VISIBLE
-                rcvReminderTo.visibility = View.GONE
-                txtTabBeReminder.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.ccBlueBtnPrimary))
-                txtTabReminderTo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tabID = 0
+                updateTabUI()
             }
             txtTabReminderTo.setOnClickListener {
-                rcvBeReminder.visibility = View.GONE
-                rcvReminderTo.visibility = View.VISIBLE
-                txtTabBeReminder.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-                txtTabReminderTo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.ccBlueBtnPrimary))
+                tabID = 1
+                updateTabUI()
             }
             btnBack.setOnClickListener { findNavController().popBackStack() }
         }
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        updateTabUI()
     }
 
     override fun bindData() {
@@ -67,6 +68,9 @@ class RelativeRequestAddFragment : BaseFragment<FragmentRelativeRequestAddBindin
             viewModel.messageError.observe(viewLifecycleOwner) {
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
+            listenBackScreen {
+                viewModel.getData(uid)
+            }
         }
 
     }
@@ -76,6 +80,21 @@ class RelativeRequestAddFragment : BaseFragment<FragmentRelativeRequestAddBindin
             putString("reminderID", reminderRelative.id)
         }
         findNavController().navigate(R.id.action_relativeRequestAddFragment_to_relativeReminderDetailFragment, bundle)
+    }
+    private fun updateTabUI() {
+        binding.apply {
+            if (tabID == 0) { // "Be Reminder" tab is selected
+                rcvBeReminder.visibility = View.VISIBLE
+                rcvReminderTo.visibility = View.GONE
+                txtTabBeReminder.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.ccBlueBtnPrimary))
+                txtTabReminderTo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            } else { // "Reminder To" tab is selected
+                rcvBeReminder.visibility = View.GONE
+                rcvReminderTo.visibility = View.VISIBLE
+                txtTabBeReminder.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                txtTabReminderTo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.ccBlueBtnPrimary))
+            }
+        }
     }
 
     override fun destroy() {

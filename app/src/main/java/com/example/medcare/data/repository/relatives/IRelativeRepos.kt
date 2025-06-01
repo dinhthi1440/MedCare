@@ -9,6 +9,7 @@ import com.example.medcare.models.Response
 interface IRelativeRepos {
     //relatives
     suspend fun getAllRelativesRemote(uid: String): DataResult<Response<Any>>
+    suspend fun updateRelativesRemote(uid: String, relative: Relative): DataResult<Response<Any>>
 
     //search
     suspend fun getSearchRelativesRemote(searchString: String): DataResult<Response<Any>>
@@ -22,4 +23,6 @@ interface IRelativeRepos {
     suspend fun getAllReminderRelativeFromRemote(uid: String): DataResult<Response<Any>>
     suspend fun updateReminderRelativeFromToRemote(pillReminder: PillReminder): DataResult<Response<Any>>
     suspend fun getPillReminderByIdRemote(uid: String, reminderID: String): DataResult<Response<Any>>
+    suspend fun getRelativeHistoryByRelativeID(uid: String, relativeID: String): DataResult<Response<Any>>
+    suspend fun deleteRelativeReminderRemote(uid: String, idRelative: String, idReminder: String): DataResult<Response<Any>>
 }

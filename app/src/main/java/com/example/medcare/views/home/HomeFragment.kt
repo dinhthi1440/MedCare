@@ -1,20 +1,8 @@
 package com.example.medcare.views.home
 
-import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,14 +16,13 @@ import com.example.medcare.utils.Constants
 import com.example.medcare.views.home.model.MenuItem
 import com.example.medcare.views.main.AlertActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.coroutines.coroutineContext
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     override val viewModel by viewModel<HomeViewModel>()
     private var account: Account? = null
     override fun initData() {
-
+        viewModel.dataSynchronization(uid, requireContext())
     }
 
     override fun handleEvent() {
@@ -43,15 +30,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             findNavController().navigate(R.id.action_homeFragment_to_settingListFragment)
         }
         binding.iconLogoApp.setOnClickListener {
-
+            val alarmID = "386837"
+            val reminderID = "8e15f3b1-1f46-497f-9e08-70b8d5e8db90"
+            val alarmMessage = "Đến giờ uống thuốc!"
+            val i = Intent(context, AlertActivity::class.java).apply {
+                putExtra("alarm_id", alarmID)
+                putExtra("reminder_id", reminderID)
+                putExtra("alarm_message", alarmMessage)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+            context?.startActivity(i)
         }
     }
     private fun bindUserData() {
         val json = sharedPreferences.getData(Constants.SHARED_USER)
         account = gson.fromJson(json, Account::class.java)
         account?.let {
-            binding.txtUserName.text = it.fullName ?: ""
-            binding.txtUserMode.text = it.rule ?: ""
+            binding.txtUserName.text = it.fullName
+            binding.txtUserMode.text = it.rule
         }
         if (account?.avatar != "") {
             Glide.with(requireContext())
@@ -67,7 +63,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         if (account?.rule == "admin") {
             menuItems = MenuItem.getAdminItems()
             binding.txtTitle.text = "Xin chào, bạn đang ở chế độ quản trị viên!"
-            binding.constraintLayout2.visibility = View.GONE
             binding.txtUserMode.text = "Quản trị viên"
         } else if (account?.rule == "doctor") {
             menuItems = MenuItem.getUserItems()

@@ -34,6 +34,9 @@ class MedicineDetailViewModel(private val iMedicineRepos: IMedicineRepos): BaseV
             onError = {}
         )
     }
+    fun setMedicine(medicine: Medicine){
+        _setMedicine.value = medicine
+    }
     fun deleteMedicineRemote(uid: String, medicineID: String) {
         executeTask(
             request = {iMedicineRepos.deleteMedicineRemote(uid, medicineID)},

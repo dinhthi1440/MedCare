@@ -21,6 +21,7 @@ import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.Relative
 import com.example.medcare.utils.Constants
+import com.example.medcare.utils.TimeUtils
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,8 +32,7 @@ class AddNewReminderFragment :
     private val selectedMedicineAdapter by lazy { MedicineAdapter(false, ::onClickMedicine) }
     private lateinit var alarmHelper: AlarmHelper
     private var selectedTimes = mutableListOf(
-        SelectedTime(id = RandomUtil.randomIDInt(), time = "8:00"),
-        SelectedTime(id = RandomUtil.randomIDInt(), time = "12:30"),
+        SelectedTime(id = RandomUtil.randomIDInt(), time = "12:00")
     )
     private var reminderId = ""
     private var firstIn = true
@@ -145,11 +145,11 @@ class AddNewReminderFragment :
                 viewModel.frequencySelected,
                 viewModel.listInitialSelected.value?.toList() ?: listOf(),
                 true, note, disease, account.id, account.fullName,
+                pillReminder.createAt, TimeUtils.getCurrentCreatedAt()
             )
             viewModel.updateReminder(uid, newPillReminder, alarmHelper, requireContext())
         } else {
             if (relative != null) {
-
                 viewModel.insertReminderRelativeRemote(
                     selectedTimes, content, note, disease,
                     account.id,
@@ -159,7 +159,8 @@ class AddNewReminderFragment :
                     relative?.id ?: "",
                     relative?.fullName ?: "",
                     relative?.avatar ?: "",
-                    relative?.relativeTitle ?: ""
+                    relative?.relativeTitle ?: "",
+                    requireContext()
                 )
             } else {
                 viewModel.insertReminder(
@@ -214,6 +215,7 @@ class AddNewReminderFragment :
         viewModel.getUpdateStatus.observe(viewLifecycleOwner) {
             if (it) {
                 Toast.makeText(context, "Đã sửa thành công", Toast.LENGTH_SHORT).show()
+                isBackReset = true
                 backScreenReset()
             } else {
                 Toast.makeText(context, "Đã có lỗi khi sửa, hãy thử lại", Toast.LENGTH_SHORT).show()
@@ -239,12 +241,13 @@ class AddNewReminderFragment :
                         "Đã gửi yêu cầu nhắc nhở thành công",
                         Toast.LENGTH_SHORT
                     ).show()
+
                 } else {
                     context?.let { it1 -> alarmHelper.registerAlarm(it1, reminder) }
                     Toast.makeText(context, "Đã hẹn giờ thành công", Toast.LENGTH_SHORT).show()
                 }
+                isBackReset = true
                 backScreenReset()
-
             }
         }
         viewModel.getFrequencyStr.observe(viewLifecycleOwner) {
@@ -296,7 +299,8 @@ class AddNewReminderFragment :
         binding.apply {
             initPicker(0, 23, numPickerH)
             initPicker(0, 59, numPickerM)
-            numPickerH.value = 23
+            numPickerH.value = 12
+            numPickerM.value = 0
         }
     }
 }

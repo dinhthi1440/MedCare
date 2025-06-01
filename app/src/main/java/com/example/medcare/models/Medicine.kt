@@ -1,6 +1,5 @@
 package com.example.medcare.models
 
-import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
@@ -19,9 +18,13 @@ data class Medicine(
     var realQuantity: Int = 0,
     var dosage: Int = 0,
     var unit: String = "",
-    var note: String = ""
+    var note: String = "",
+    var createAt: String = "",
+    var updateAt: String = "",
+    var creatorID: String = "",
+    var creatorName: String = ""
 ) : Serializable, Parcelable {
-    constructor() : this("", "", "", "", 0, 0, 0, "", "")
+    constructor() : this("", "", "", "", 0, 0, 0, "", "", "", "", "", "")
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<Medicine>() {
             override fun areItemsTheSame(oldItem: Medicine, newItem: Medicine): Boolean =
@@ -43,7 +46,9 @@ data class Medicine(
                     realQuantity = parcel.readInt(),
                     dosage = parcel.readInt(),
                     unit = parcel.readString() ?: "",
-                    note = parcel.readString() ?: ""
+                    note = parcel.readString() ?: "",
+                    createAt = parcel.readString() ?:"",
+                    updateAt = parcel.readString() ?:""
                 )
             }
 
@@ -63,5 +68,7 @@ data class Medicine(
         parcel.writeInt(dosage)
         parcel.writeString(unit)
         parcel.writeString(note)
+        parcel.writeString(createAt)
+        parcel.writeString(updateAt)
     }
 }

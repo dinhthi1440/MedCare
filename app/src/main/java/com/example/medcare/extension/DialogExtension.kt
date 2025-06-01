@@ -24,8 +24,10 @@ import androidx.core.graphics.drawable.toDrawable
 import com.bumptech.glide.Glide
 import com.example.medcare.databinding.DlChangeStatusFeedbackBinding
 import com.example.medcare.databinding.DlConfirmPassAdminBinding
+import com.example.medcare.databinding.DlEditHistoryRelativeBinding
 import com.example.medcare.databinding.DlInputFeedbackBinding
 import com.example.medcare.databinding.DlShowImageBinding
+import com.example.medcare.models.Relative
 
 fun Dialog.openDlLoading(stopFlag: Boolean) {
     val binding = DlAnimationLoadingBinding.inflate(layoutInflater)
@@ -362,6 +364,47 @@ fun Dialog.changeStatusFeedback(
             if (selectedRole != initRule) {
                 onConfirm(selectedRole)
             }
+            dismiss()
+        }
+    }
+    show()
+}
+
+fun Dialog.editHistoryRelative(
+    initRelative: Relative,
+    onConfirm: (relative: Relative) -> Unit
+) {
+    val binding = DlEditHistoryRelativeBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    window?.apply {
+        setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        setBackgroundDrawable(ColorDrawable(TRANSPARENT))
+        attributes = attributes.apply {
+            gravity = Gravity.CENTER
+        }
+    }
+    binding.apply {
+        binding.checkViewHistory.isChecked = initRelative.canSeeReminderHistory ?: true
+        binding.checkCreateMedicine.isChecked = initRelative.canInsertMedicine ?: true
+        binding.checkCreateReminder.isChecked = initRelative.canInsertReminder ?: true
+        binding.textipContent.setText(initRelative.relativeTitle)
+        btnCancel.setOnClickListener {
+            dismiss()
+        }
+        btnOk.setOnClickListener {
+            val isCheckViewHistory = binding.checkViewHistory.isChecked
+            val isCheckCreateMedicine = binding.checkCreateMedicine.isChecked
+            val isCheckCreateReminder = binding.checkCreateReminder.isChecked
+            val relativeTitle = binding.textipContent.text.toString()
+            initRelative.canInsertMedicine = isCheckCreateMedicine
+            initRelative.canInsertReminder = isCheckCreateReminder
+            initRelative.canSeeReminderHistory = isCheckViewHistory
+            if (relativeTitle.isNotBlank()) initRelative.relativeTitle = relativeTitle
+            onConfirm(initRelative)
             dismiss()
         }
     }

@@ -63,7 +63,7 @@ class PillReminderAdapter(
                     onRemove(item)
                 }
                 val medicineList = item.medicines
-                txtReminderMedicines.text = "\uD83D\uDC8A Thuốc: ${medicineList.map { it.name }.joinToString(", ")}"
+                txtReminderMedicines.text = "\uD83D\uDC8A Thuốc: ${medicineList.joinToString(", ") { it.name }}"
                 txtReminderMedicines.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
                         val layout = txtReminderMedicines.layout
@@ -73,6 +73,7 @@ class PillReminderAdapter(
                                 val ellipsisCount = layout.getEllipsisCount(lines - 1)
                                 if (ellipsisCount > 0) {
                                     txtQuantityMedicine.visibility = View.VISIBLE
+                                    txtQuantityMedicine.text = "(${medicineList.size} loại thuốc)"
                                 }
                             }
                         }

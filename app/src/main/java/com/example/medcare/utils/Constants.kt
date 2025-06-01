@@ -5,6 +5,7 @@ object Constants {
     const val SHARED_PREF_ROOT = PROJECT_NAME + "SHARED_PREF"
     const val SHARED_DEFAULT = ""
     const val SHARED_USER_ID = PROJECT_NAME + "USER_ID"
+    const val SHARED_FULL_NAME = PROJECT_NAME + "FULL_NAME"
     const val SHARED_PASSWORD = PROJECT_NAME + "PASSWORD"
     const val SHARED_EMAIL = PROJECT_NAME + "EMAIL"
     const val SHARED_USER = PROJECT_NAME + "USER"
@@ -14,4 +15,6 @@ object Constants {
     const val SHARED_NOTIFICATION_DOSAGE = PROJECT_NAME + "NOTIFICATION_DOSAGE"
     const val SHARED_NOTIFICATION_MUSIC = PROJECT_NAME + "NOTIFICATION_MUSIC"
     const val SHARED_NOTIFICATION_SHAKE = PROJECT_NAME + "NOTIFICATION_SHAKE"
+    const val CHANNEL_ID = "notification_channel"
+    const val CHANNEL_NAME = "com.example.medcare"
 }

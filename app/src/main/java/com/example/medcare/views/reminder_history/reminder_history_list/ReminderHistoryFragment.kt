@@ -70,7 +70,7 @@ class ReminderHistoryFragment : BaseFragment<FragmentReminderHistoryBinding>(Fra
                     viewModel.updateHistory(uid, reminderHistory, HistoryStatus.DRANK.status )
                 }
                 HistoryStatus.MISSED.status-> {
-                    viewModel.updateHistory(uid, reminderHistory, HistoryStatus.DRANK.status )
+                    viewModel.updateHistory(uid, reminderHistory, HistoryStatus.MISSED.status )
                 }
             }
         }

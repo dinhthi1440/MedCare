@@ -18,8 +18,26 @@ class RelativeReminderDetailViewModel(private val iRelativeRepos: IRelativeRepos
     val getStatusUpdate: LiveData<String> get() = _setStatusUpdate
     private val _setStatusUpdate = MutableLiveData<String>()
 
-    fun deleteReminder(pillReminder: PillReminder, context: Context) {
+    val getDeleteStatus: LiveData<Boolean> get() = _setDeleteStatus
+    private val _setDeleteStatus = MutableLiveData<Boolean>()
 
+    fun deleteReminder(pillReminder: PillReminder) {
+        executeTask(
+            request = { iRelativeRepos.deleteRelativeReminderRemote(pillReminder.senderID, pillReminder.receiverID, pillReminder.id) },
+            onSuccess = {
+                when (it.statusCode) {
+                    200 -> {
+                        _setDeleteStatus.value = true
+                    }
+                    404, 500 -> {
+                        _messageError.value = it.message
+                    }
+                }
+            },
+            onError = {
+                _messageError.value = "Lỗi không xác định, vui lòng thử lại"
+            }
+        )
     }
 
     fun getReminderById(uid: String, reminderID: String) {

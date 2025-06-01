@@ -14,8 +14,6 @@ import kotlinx.coroutines.launch
 class MedicationReminderViewModel(private val iPillReminderRepos: IPillReminderRepos): BaseViewModel() {
     private val _setReminderList = MutableLiveData<MutableList<PillReminder>>()
     val getReminderList: LiveData<MutableList<PillReminder>> get() = _setReminderList
-    private val _setPatchStatus = MutableLiveData<Boolean>()
-    val getPatchStatus: LiveData<Boolean> get() = _setPatchStatus
     private lateinit var alarmHelper: AlarmHelper
     fun getReminderList(uid: String) {
         executeTask(

@@ -69,8 +69,10 @@ class AuthDatasource : IAuthDatasource {
                         val avatar = document.getString("avatar") ?: ""
                         val rule = document.getString("rule") ?: ""
                         val status = document.getString("status") ?: ""
+                        val createAt = document.getString("createAt") ?: ""
+                        val updateAt = document.getString("updateAt") ?: ""
                         val userData = Account(
-                            uid, fullName, email, avatar, rule, status
+                            uid, fullName, email, avatar, rule, status, createAt, updateAt
                         )
                         continuation.resume(Response(200, "Lấy dữ liệu thành công", userData))
                     } else {

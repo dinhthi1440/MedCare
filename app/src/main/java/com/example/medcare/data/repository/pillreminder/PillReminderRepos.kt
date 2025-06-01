@@ -8,8 +8,8 @@ import com.example.medcare.models.ReminderHistory
 import com.example.medcare.models.Response
 
 class PillReminderRepos(private val dataSource: IPillReminderDataSource): BaseRepository(), IPillReminderRepos  {
-    override suspend fun insertPillReminder(pillReminder: PillReminder): DataResult<Long> {
-        return getResult { dataSource.insertPillReminder(pillReminder) }
+    override suspend fun insertPillReminder(pillReminder: PillReminder): Long {
+        return dataSource.insertPillReminder(pillReminder)
     }
 
     override suspend fun getAllPillReminder(): DataResult<List<PillReminder>> {
@@ -70,8 +70,8 @@ class PillReminderRepos(private val dataSource: IPillReminderDataSource): BaseRe
 
     override suspend fun insertReminderRelativeRemote(
         reminderRelative: PillReminder
-    ): DataResult<Response<Any>> {
-        return getResult { dataSource.insertReminderRelativeRemote(reminderRelative) }
+    ): Response<Any> {
+        return dataSource.insertReminderRelativeRemote(reminderRelative)
     }
 
     override suspend fun insertReminderHistory(

@@ -2,19 +2,21 @@ package com.example.medcare.views.pill_reminder.add_new_reminder.select_medicine
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentSelectMedicineBinding
 import com.example.medcare.models.Medicine
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.medcare.R
 
 class SelectMedicineFragment :
     BaseFragment<FragmentSelectMedicineBinding>(FragmentSelectMedicineBinding::inflate) {
     override val viewModel by viewModel<SelectMedicineViewModel>()
     private val selectMedicineAdapter by lazy {
         SelectMedicineAdapter(
-            listInitialSelected,
+            viewModel.getSelectedMedicine.value?.toMutableSet() ?: mutableSetOf(),
             ::onSelectMedicine,
             ::onUnSelectMedicine
         )
@@ -46,24 +48,40 @@ class SelectMedicineFragment :
             parentFragmentManager.setFragmentResult("selected_medicine_back", result)
             findNavController().popBackStack()
         }
+        binding.layoutAddNew.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("relativeID", relativeID)
+            }
+            findNavController().navigate(R.id.action_selectMedicineFragment_to_addMedicineFragment, bundle)
+        }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val REQUEST_KEY_NEW_MEDICINE = "new_medicine_request"
+        val BUNDLE_KEY_MEDICINE = "new_medicine_object"
+
+        setFragmentResultListener(REQUEST_KEY_NEW_MEDICINE) { requestKey, bundle ->
+            val receivedMedicine: Medicine? = bundle.getParcelable(BUNDLE_KEY_MEDICINE)
+            receivedMedicine?.let {
+                viewModel.addMedicineToList(receivedMedicine)
+            }
+        }
     }
 
     override fun bindData() {
         viewModel.getMedicines.observe(viewLifecycleOwner) { it ->
-            when (it.statusCode) {
-                200 -> {
-                    val medicines = it.data as? List<Medicine>
-                    binding.txtEmptyList.visibility = View.GONE
-                    binding.rcvSelectMedicine.visibility = View.VISIBLE
-                    binding.rcvSelectMedicine.layoutManager = LinearLayoutManager(binding.root.context)
-                    selectMedicineAdapter.submitList(medicines)
-                    binding.rcvSelectMedicine.adapter = selectMedicineAdapter
-                }
-                204, 500 -> {
-                    binding.txtEmptyList.visibility = View.VISIBLE
-                    binding.txtEmptyList.text = it.message
-                    binding.rcvSelectMedicine.visibility = View.GONE
-                }
+            binding.txtEmptyList.visibility = View.GONE
+            binding.rcvSelectMedicine.visibility = View.VISIBLE
+            binding.rcvSelectMedicine.layoutManager = LinearLayoutManager(binding.root.context)
+            selectMedicineAdapter.submitList(it)
+            binding.rcvSelectMedicine.adapter = selectMedicineAdapter
+        }
+        listenBackScreen {
+            if (relativeID == "") {
+                viewModel.getMedicineList(uid)
+            } else {
+                viewModel.getMedicineList(relativeID)
             }
         }
     }

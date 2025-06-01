@@ -16,6 +16,7 @@ import com.example.medcare.extension.getData
 import com.example.medcare.extension.saveData
 import com.example.medcare.models.Account
 import com.example.medcare.utils.Constants
+import com.example.medcare.utils.TimeUtils
 import com.example.medcare.views.auth.AuthViewModel
 import java.io.File
 
@@ -98,7 +99,8 @@ class OnBoardingInforFragment : BaseFragment<FragmentOnBoardingInforBinding>(Fra
                 val avatar = ""
                 val userID = sharedPreferences.getData(Constants.SHARED_USER_ID)
                 val email = sharedPreferences.getData(Constants.SHARED_EMAIL)
-                account = Account(userID, fullName, email, avatar, role, "active")
+                val time = TimeUtils.getCurrentCreatedAt()
+                account = Account(userID, fullName, email, avatar, role, "active", time, time)
                 viewModel.createUserData(account)
 
             }
@@ -113,6 +115,7 @@ class OnBoardingInforFragment : BaseFragment<FragmentOnBoardingInforBinding>(Fra
             if (it.statusCode == 200 ){
                 val json = gson.toJson(account)
                 sharedPreferences.saveData(json, Constants.SHARED_USER)
+                sharedPreferences.saveData(account.fullName, Constants.SHARED_FULL_NAME)
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                 findNavController().navigate(
                     R.id.action_onBoardingInforFragment_to_homeFragment,

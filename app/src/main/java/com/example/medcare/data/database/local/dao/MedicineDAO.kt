@@ -24,4 +24,10 @@ interface MedicineDAO {
 
     @Update
     fun updateMedicine(medicine: Medicine): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAllMedicine(medicine: List<Medicine>): List<Long>
+
+    @Query("DELETE FROM ${DataBaseLocal.TABLE_MEDICINE}")
+    fun deleteAllMedicine(): Int
 }

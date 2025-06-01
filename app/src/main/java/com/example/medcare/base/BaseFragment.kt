@@ -28,6 +28,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected abstract val viewModel: BaseViewModel
     protected val gson = Gson()
     protected var uid: String = ""
+    protected var fullName: String = ""
     protected var isBackReset: Boolean = false
 
     protected val sharedPreferences by lazy { get<SharedPreferences>() }
@@ -79,6 +80,8 @@ abstract class BaseFragment<VB : ViewBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         uid = sharedPreferences.getData(Constants.SHARED_USER_ID)
+        fullName = sharedPreferences.getData(Constants.SHARED_FULL_NAME)
+
         initData()
     }
 

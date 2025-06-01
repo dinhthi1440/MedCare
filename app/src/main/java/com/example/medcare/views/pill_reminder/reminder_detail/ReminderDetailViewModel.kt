@@ -10,6 +10,7 @@ import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.models.HistoryStatus
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.ReminderHistory
+import com.example.medcare.utils.TimeUtils
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -88,7 +89,6 @@ class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos
             todayString,
             reminder.times.first().time,
             HistoryStatus.NOT_CONFIRMED.status,
-            reminder
         )
         executeTask(
             request = {iPillReminderRepos.insertReminderHistory(uid, history)},

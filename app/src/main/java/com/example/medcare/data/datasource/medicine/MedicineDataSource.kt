@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class MedicineDataSource(private val dataBaseLocal: DataBaseLocal): IMedicineDataSource {
+class MedicineDataSource(private val dataBaseLocal: DataBaseLocal) : IMedicineDataSource {
     override suspend fun insertMedicine(medicine: Medicine): Long {
         return dataBaseLocal.medicineDao.insertMedicine(medicine)
     }
@@ -57,9 +57,21 @@ class MedicineDataSource(private val dataBaseLocal: DataBaseLocal): IMedicineDat
                     }
 
                     if (medicineList.isEmpty()) {
-                        continuation.resume(Response(204, "Không có thuốc nào trong danh sách", emptyList<Medicine>()))
+                        continuation.resume(
+                            Response(
+                                204,
+                                "Không có thuốc nào trong danh sách",
+                                emptyList<Medicine>()
+                            )
+                        )
                     } else {
-                        continuation.resume(Response(200, "Lấy danh sách thuốc thành công", medicineList))
+                        continuation.resume(
+                            Response(
+                                200,
+                                "Lấy danh sách thuốc thành công",
+                                medicineList
+                            )
+                        )
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -84,10 +96,17 @@ class MedicineDataSource(private val dataBaseLocal: DataBaseLocal): IMedicineDat
                 .get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        val medicine = document.toObject(Medicine::class.java)?.apply { id = document.id }
+                        val medicine =
+                            document.toObject(Medicine::class.java)?.apply { id = document.id }
                         continuation.resume(Response(200, "Lấy thuốc thành công", medicine))
                     } else {
-                        continuation.resume(Response(404, "Không tìm thấy thuốc, có thể thuốc đã bị xoá", null))
+                        continuation.resume(
+                            Response(
+                                404,
+                                "Không tìm thấy thuốc, có thể thuốc đã bị xoá",
+                                null
+                            )
+                        )
                     }
                 }
                 .addOnFailureListener { exception ->

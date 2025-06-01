@@ -125,7 +125,11 @@
         android:id="@+id/selectMedicineFragment"
         android:name="com.example.medcare.views.pill_reminder.add_new_reminder.select_medicines.SelectMedicineFragment"
         android:label="fragment_select_medicine"
-        tools:layout="@layout/fragment_select_medicine" />
+        tools:layout="@layout/fragment_select_medicine" >
+        <action
+            android:id="@+id/action_selectMedicineFragment_to_addMedicineFragment"
+            app:destination="@id/addMedicineFragment" />
+    </fragment>
     <fragment
         android:id="@+id/reminderDetailFragment"
         android:name="com.example.medcare.views.pill_reminder.reminder_detail.ReminderDetailFragment"

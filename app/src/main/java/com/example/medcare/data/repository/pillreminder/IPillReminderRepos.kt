@@ -6,7 +6,7 @@ import com.example.medcare.models.ReminderHistory
 import com.example.medcare.models.Response
 
 interface IPillReminderRepos {
-    suspend fun insertPillReminder(pillReminder: PillReminder): DataResult<Long>
+    suspend fun insertPillReminder(pillReminder: PillReminder): Long
     suspend fun getAllPillReminder(): DataResult<List<PillReminder>>
     suspend fun deletePillReminder(idPillReminder: String): DataResult<Int>
     suspend fun updatePillReminder(pillReminder: PillReminder): DataResult<Int>
@@ -24,7 +24,7 @@ interface IPillReminderRepos {
     suspend fun getPillReminderByIdRemote(uid: String, reminderId: String): DataResult<Response<Any>>
 
     //relative
-    suspend fun insertReminderRelativeRemote(reminderRelative: PillReminder): DataResult<Response<Any>>
+    suspend fun insertReminderRelativeRemote(reminderRelative: PillReminder): Response<Any>
 
     suspend fun insertReminderHistory(uid: String, reminderHistory: ReminderHistory): DataResult<Response<Any>>
 }

@@ -73,6 +73,7 @@ class RelativeRequestAdapter (
                                 val ellipsisCount = layout.getEllipsisCount(lines - 1)
                                 if (ellipsisCount > 0) {
                                     txtQuantityMedicine.visibility = View.VISIBLE
+                                    txtQuantityMedicine.text = "(${medicineList.size} loại thuốc)"
                                 }
                             }
                         }

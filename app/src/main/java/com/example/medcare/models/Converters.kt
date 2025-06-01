@@ -40,4 +40,14 @@ class Converters {
     fun toFrequencyModel(value: String): FrequencyModel {
         return gson.fromJson(value, FrequencyModel::class.java)
     }
+
+    @TypeConverter
+    fun fromPillReminder(value: PillReminder): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun toPillReminder(value: String): PillReminder {
+        return Gson().fromJson(value, PillReminder::class.java)
+    }
 }

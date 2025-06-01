@@ -2,20 +2,26 @@ package com.example.medcare.views.pill_reminder.add_new_reminder
 
 import android.content.Context
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.pillreminder.IPillReminderRepos
-import com.example.medcare.data.repository.relatives.IRelativeRepos
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.add_frequency.FrequencyModel
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.ReminderRequestStatus
+import com.example.medcare.models.Response
+import com.example.medcare.utils.FileUtils
+import com.example.medcare.utils.FolderS3
+import com.example.medcare.utils.S3UploaderUtils
+import com.example.medcare.utils.TimeUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 class NewReminderViewModel(
@@ -52,6 +58,13 @@ class NewReminderViewModel(
         _setMedicinesSelected.value = listMedicine
     }
 
+    fun insertReminderToLocal(reminder: PillReminder) {
+        viewModelScope.launch(Dispatchers.IO){
+            iPillReminderRepos.insertPillReminder(reminder)
+
+        }
+    }
+
     fun insertReminder(
         uid: String,
         times: List<SelectedTime>,
@@ -62,13 +75,15 @@ class NewReminderViewModel(
         senderName: String,
         senderAvatar: String,
     ) {
+
         val reminder = PillReminder(
             UUID.randomUUID().toString(),
             content,
             times,
             frequencySelected,
             listInitialSelected.value?.toList() ?: listOf(),
-            true, note, disease, senderID, senderName, senderAvatar, "", senderID
+            true, note, disease, senderID, senderName, senderAvatar, "",
+            senderID,"", "","", "", TimeUtils.getCurrentCreatedAt(), ""
         )
         executeTask(
             request = {iPillReminderRepos.insertPillReminderRemote(uid, reminder)},
@@ -76,6 +91,7 @@ class NewReminderViewModel(
                 when (it.statusCode) {
                     200 -> {
                         _setPillReminder.value = reminder
+                        insertReminderToLocal(reminder)
                     }
                     500 -> {
                         _messageError.value = it.message
@@ -135,7 +151,7 @@ class NewReminderViewModel(
                     timesToAdd,
                     frequencySelected,
                     listOf(),
-                    true, "", ""
+                    true, "", "", "", ""
                 )
                 context.let { it1 -> alarmHelper.registerAlarm(it1, reminder) }
             }
@@ -165,33 +181,50 @@ class NewReminderViewModel(
         receiverID: String,
         receiverName: String,
         receiverAvatar: String,
-        receiverDescription: String
+        receiverDescription: String,
+        context: Context
     ) {
-        val reminderRelative = PillReminder(
-            UUID.randomUUID().toString(),
-            content,
-            times,
-            frequencySelected,
-            listInitialSelected.value?.toList() ?: listOf(),
-            true, note, disease, senderID, senderName, senderAvatar, senderDescription,
-            receiverID, receiverName, receiverAvatar, receiverDescription, ReminderRequestStatus.REQUESTING.status
-        )
-        executeTask(
-            request = { iPillReminderRepos.insertReminderRelativeRemote(reminderRelative) },
-            onSuccess = {
-                when (it.statusCode) {
-                    200 -> {
-                        _setPillReminder.value = reminderRelative
-                    }
-
-                    500 -> {
-                        _messageError.value = it.message
+        setIsLoading(true)
+        viewModelScope.launch {
+            listInitialSelected.value?.forEach { medicine ->
+                if (medicine.creatorID != "" ) {
+                    val file = if (medicine.image.isNotEmpty()) FileUtils.uriToFile(context, medicine.image.toUri()) else null
+                    if (file != null) {
+                        try {
+                            val imageUrl = S3UploaderUtils.uploadFileToS3(FolderS3.MEDICINES.folderName, file)
+                            if (imageUrl != null) {
+                                medicine.image = imageUrl
+                            }
+                        } catch (e: Exception) {
+                            Log.e("S3Uploader", "Upload failed", e)
+                            setIsLoading(false)
+                            medicine.image = ""
+                        }
                     }
                 }
-            },
-            onError = {
 
             }
-        )
+            val reminderRelative = PillReminder(
+                UUID.randomUUID().toString(),
+                content,
+                times,
+                frequencySelected,
+                listInitialSelected.value?.toList() ?: listOf(),
+                true, note, disease, senderID, senderName, senderAvatar, senderDescription,
+                receiverID, receiverName, receiverAvatar, receiverDescription,
+                ReminderRequestStatus.REQUESTING.status, TimeUtils.getCurrentCreatedAt(), ""
+            )
+            val it = iPillReminderRepos.insertReminderRelativeRemote(reminderRelative)
+            when (it.statusCode) {
+                200 -> {
+                    _setPillReminder.value = reminderRelative
+                }
+
+                500 -> {
+                    _messageError.value = it.message
+                }
+            }
+            setIsLoading(false)
+        }
     }
 }

@@ -54,29 +54,6 @@ class ConnectRelativesFragment : BaseFragment<FragmentConnectRelativesBinding>(F
             cvRequestReminder.setOnClickListener {
                 findNavController().navigate(R.id.action_connectRelativesFragment_to_relativeRequestAddFragment)
             }
-            edtSearch.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-                override fun afterTextChanged(s: Editable?) {
-                    // Sau khi text đã thay đổi
-//                    val text = s.toString()
-//                    if (text == "") {
-//                        nestedScrollView3.visibility = View.VISIBLE
-//                        rcvSearchList.visibility = View.GONE
-//                    } else {
-//                        nestedScrollView3.visibility = View.GONE
-//                        rcvSearchList.visibility = View.VISIBLE
-//                        if (isInputting){
-//
-//                        } else {
-//                            viewModel.getSearchRelatives(text)
-//                            isInputting = true
-//                        }
-//                    }
-                }
-            })
             tilSearch.setEndIconOnClickListener {
                 val searchText = edtSearch.text.toString()
                 if (searchText == "") {
@@ -128,6 +105,9 @@ class ConnectRelativesFragment : BaseFragment<FragmentConnectRelativesBinding>(F
         viewModel.messageError.observe(viewLifecycleOwner) {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
+        listenBackScreen {
+            resetData()
+        }
 
     }
     private fun onView(relative: Relative) {
@@ -135,15 +115,20 @@ class ConnectRelativesFragment : BaseFragment<FragmentConnectRelativesBinding>(F
         val bundle = Bundle().apply {
             putString("relative", json)
         }
-        findNavController().navigate(R.id.action_connectRelativesFragment_to_relativeReminderHistoryFragment)
+        findNavController().navigate(R.id.action_connectRelativesFragment_to_relativeReminderHistoryFragment, bundle)
     }
 
     private fun onCreateReminder(relative: Relative) {
-        val json = Gson().toJson(relative)
-        val bundle = Bundle().apply {
-            putString("relative", json)
+        if (relative.myCanSeeReminderHistory) {
+            val json = Gson().toJson(relative)
+            val bundle = Bundle().apply {
+                putString("relative", json)
+            }
+            findNavController().navigate(R.id.action_connectRelativesFragment_to_addNewReminderFragment, bundle)
+        } else {
+            Toast.makeText(context, "Bạn không có quyền tạo nhắc nhở cho người này!", Toast.LENGTH_SHORT).show()
         }
-        findNavController().navigate(R.id.action_connectRelativesFragment_to_addNewReminderFragment, bundle)
+        
     }
 
     private fun onRemove(relative: Relative) {
