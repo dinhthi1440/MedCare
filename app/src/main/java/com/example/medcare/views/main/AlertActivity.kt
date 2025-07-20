@@ -14,12 +14,18 @@ import com.example.medcare.data.database.local.DatabaseProvider
 import com.example.medcare.databinding.ActivityAlertBinding
 import com.example.medcare.extension.AlarmHelper
 import com.example.medcare.extension.getData
+import com.example.medcare.models.HistoryStatus
+import com.example.medcare.models.Medicine
 import com.example.medcare.views.pill_reminder.add_new_reminder.model.SelectedTime
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.ReminderHistory
+import com.example.medcare.models.ReminderRequestStatus
+import com.example.medcare.models.Response
 import com.example.medcare.utils.Constants
 import com.example.medcare.utils.TimeUtils
 import com.example.medcare.views.my_medicine.medicine_list.MedicineAdapter
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +35,7 @@ import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.get
 import java.util.UUID
 import kotlin.String
+import kotlin.coroutines.resume
 
 class AlertActivity : AppCompatActivity() {
 
@@ -64,7 +71,7 @@ class AlertActivity : AppCompatActivity() {
                     database.pillReminderDAO.getPillReminderById(id)
                 }
                 if (reminder?.isOn == true && reminder.receiverID == uid) {
-                    //alarmHelper.startAlarm()
+                    alarmHelper.startAlarm()
                     reminder.let { pillReminder ->
                         reminderData = pillReminder
                         val timeObject = pillReminder.times.find { it.id == alarmID.toInt() }
@@ -83,35 +90,76 @@ class AlertActivity : AppCompatActivity() {
             finish()
             CoroutineScope(Dispatchers.IO).launch  {
                 alarmHelper.stopAlarm()
+////                val history = ReminderHistory(
+////                    UUID.randomUUID().toString(),
+////                    reminderData.label,
+////                    TimeUtils.getCurrentDate(),
+////                    TimeUtils.getCurrentTime(),
+////                    HistoryStatus.NOT_CONFIRMED.status,
+////                    reminderData
+////                )
+//                database.historyDAO.insertHistory(history)
+//                uid.let {
+//                    val docRef = db.collection("users")
+//                        .document(it)
+//                        .collection("reminder_history")
+//                        .document(history.id)
+//                    docRef.get()
+//                        .addOnSuccessListener { documentSnapshot ->
+//                            if (!documentSnapshot.exists()) {
+//                                docRef.set(history)
+//                            }
+//                        }
+//                }
+
+                val listMedicine = mutableListOf<Medicine>()
+                val updateTasks = mutableListOf<Task<Void>>()
+
+                reminderData.medicines.forEach { medicine ->
+                    val refMedicine = db.collection("users")
+                        .document(reminderData.receiverID)
+                        .collection("medicines")
+                        .document(medicine.id)
+
+                    val quantityCal = medicine.quantity - medicine.dosage
+                    updateTasks.add(refMedicine.update("quantity", quantityCal))
+
+                    val updatedMedicine = medicine.copy(quantity = quantityCal)
+                    listMedicine.add(updatedMedicine)
+                }
+                db.collection("users")
+                    .document(reminderData.receiverID)
+                    .collection("pill_reminders")
+                    .document(reminderData.id)
+                    .update("medicines", listMedicine)
                 val history = ReminderHistory(
                     UUID.randomUUID().toString(),
                     reminderData.label,
                     TimeUtils.getCurrentDate(),
                     TimeUtils.getCurrentTime(),
-                    reminderData.note,
+                    HistoryStatus.NOT_CONFIRMED.status,
                     reminderData
                 )
                 database.historyDAO.insertHistory(history)
-                uid.let {
-                    val docRef = db.collection("users")
-                        .document(it)
-                        .collection("reminder_history")
-                        .document(history.id)
-                    docRef.get()
-                        .addOnSuccessListener { documentSnapshot ->
-                            if (!documentSnapshot.exists()) {
-                                docRef.set(history)
-                            }
-                        }
-                }
+                val raw = history
+                raw.reminder.medicines = listMedicine
+                Tasks.whenAll(updateTasks)
+                    .addOnSuccessListener {
+                        val historyRef = db.collection("users")
+                            .document(uid)
+                            .collection("reminder_history")
+                            .document(history.id)
+
+                        historyRef.set(raw)
+                    }
 
             }
 
         }
 
         binding.btnOk.setOnClickListener {
-//            alarmHelper.stopAlarm()
-//            finish()
+            alarmHelper.stopAlarm()
+            finish()
         }
     }
 

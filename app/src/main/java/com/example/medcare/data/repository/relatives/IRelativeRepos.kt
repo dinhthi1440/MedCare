@@ -25,4 +25,6 @@ interface IRelativeRepos {
     suspend fun getPillReminderByIdRemote(uid: String, reminderID: String): DataResult<Response<Any>>
     suspend fun getRelativeHistoryByRelativeID(uid: String, relativeID: String): DataResult<Response<Any>>
     suspend fun deleteRelativeReminderRemote(uid: String, idRelative: String, idReminder: String): DataResult<Response<Any>>
+
+    suspend fun insertPillReminder(pillReminder: PillReminder): Long
 }

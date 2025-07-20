@@ -31,6 +31,6 @@ data class ReminderHistory(
 enum class HistoryStatus(val status: String) {
     DRANK("Đã uống"),
     MISSED("Bỏ lỡ"),
-    NOT_CONFIRMED("Xác nhận")
+    NOT_CONFIRMED("Chưa xác nhận")
 }
 

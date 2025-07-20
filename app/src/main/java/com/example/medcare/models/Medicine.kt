@@ -47,8 +47,10 @@ data class Medicine(
                     dosage = parcel.readInt(),
                     unit = parcel.readString() ?: "",
                     note = parcel.readString() ?: "",
-                    createAt = parcel.readString() ?:"",
-                    updateAt = parcel.readString() ?:""
+                    createAt = parcel.readString() ?: "",
+                    updateAt = parcel.readString() ?: "",
+                    creatorID = parcel.readString() ?: "",
+                    creatorName = parcel.readString() ?: ""
                 )
             }
 
@@ -70,5 +72,7 @@ data class Medicine(
         parcel.writeString(note)
         parcel.writeString(createAt)
         parcel.writeString(updateAt)
+        parcel.writeString(creatorID)
+        parcel.writeString(creatorName)
     }
 }

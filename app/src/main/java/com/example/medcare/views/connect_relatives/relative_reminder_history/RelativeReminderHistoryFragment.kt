@@ -1,6 +1,7 @@
 package com.example.medcare.views.connect_relatives.relative_reminder_history
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -73,7 +74,11 @@ class RelativeReminderHistoryFragment : BaseFragment<FragmentRelativeReminderHis
         }
     }
     private fun onclickHistoryItem(reminderHistory: ReminderHistory) {
-        findNavController().navigate(R.id.action_reminderHistoryFragment_to_reminderHistoryDetailFragment)
+        val bundle = Bundle().apply {
+            putString("history_id", reminderHistory.id)
+            putString("user_id", relative.id)
+        }
+        findNavController().navigate(R.id.action_relativeReminderHistoryFragment_to_reminderHistoryDetailFragment, bundle)
     }
 
     private fun onChangeStatus(reminderHistory: ReminderHistory) {

@@ -41,7 +41,7 @@ class MedicineDetailFragment :
         } else if (medicineReminder != null) {
             viewModel.setMedicine(medicineReminder!!)
         } else {
-            if (ownerID != "" || ownerID != "null") {
+            if (ownerID != "" && ownerID != "null") {
                 viewModel.getMedicineDetail(ownerID, medicineId)
             } else {
                 viewModel.getMedicineDetail(uid, medicineId)

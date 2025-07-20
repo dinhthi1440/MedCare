@@ -1,6 +1,7 @@
 package com.example.medcare.data.datasource.relatives
 
 import android.util.Log
+import com.example.medcare.data.database.local.DataBaseLocal
 import com.example.medcare.models.Account
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.PillReminderResult
@@ -15,7 +16,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class RelativesDataSource : IRelativesDataSource {
+class RelativesDataSource(private val dataBaseLocal: DataBaseLocal) : IRelativesDataSource {
     val db = FirebaseFirestore.getInstance()
     override suspend fun insertRelativesRemote(uid: String, relative: Relative): Response<Any> {
         return suspendCoroutine { continuation ->
@@ -495,13 +496,16 @@ class RelativesDataSource : IRelativesDataSource {
             .document(uid)
             .collection("relatives")
             .document(relativeID)
+        val historyDocRef = db.collection("users")
+            .document(relativeID)
+            .collection("reminder_history")
 
         relativeDocRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val canSee = document.getBoolean("myCanSeeReminderHistory") ?: false
                     if (canSee) {
-                        relativeDocRef.collection("reminder_history").get()
+                        historyDocRef.get()
                             .addOnSuccessListener { result ->
                                 val list = result.documents.mapNotNull { doc ->
                                     doc.toObject(ReminderHistory::class.java)?.apply { id = doc.id }
@@ -598,5 +602,9 @@ class RelativesDataSource : IRelativesDataSource {
                     )
                 )
             }
+    }
+
+    override suspend fun insertPillReminder(pillReminder: PillReminder): Long {
+        return dataBaseLocal.pillReminderDAO.insertPillReminder(pillReminder)
     }
 }

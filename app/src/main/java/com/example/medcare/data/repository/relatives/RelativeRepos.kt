@@ -72,4 +72,8 @@ class RelativeRepos(private val dataSource: IRelativesDataSource): BaseRepositor
         return getResult {dataSource.deleteRelativeReminderRemote(uid, idRelative, idReminder)}
     }
 
+    override suspend fun insertPillReminder(pillReminder: PillReminder): Long {
+        return dataSource.insertPillReminder(pillReminder)
+    }
+
 }

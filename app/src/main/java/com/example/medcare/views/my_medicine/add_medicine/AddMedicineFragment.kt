@@ -209,6 +209,7 @@ class AddMedicineFragment :
             image = image,
             expirationDate = expirationDate,
             quantity = quantity,
+            realQuantity = quantity,
             dosage = dosage,
             unit = unit,
             note = note,

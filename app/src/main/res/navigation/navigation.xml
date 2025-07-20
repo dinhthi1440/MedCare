@@ -179,7 +179,11 @@
         android:id="@+id/relativeReminderHistoryFragment"
         android:name="com.example.medcare.views.connect_relatives.relative_reminder_history.RelativeReminderHistoryFragment"
         android:label="fragment_relative_reminder_history"
-        tools:layout="@layout/fragment_relative_reminder_history" />
+        tools:layout="@layout/fragment_relative_reminder_history" >
+        <action
+            android:id="@+id/action_relativeReminderHistoryFragment_to_reminderHistoryDetailFragment"
+            app:destination="@id/reminderHistoryDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/relativeRequestAddFragment"
         android:name="com.example.medcare.views.connect_relatives.relative_request_add.RelativeRequestAddFragment"

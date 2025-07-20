@@ -7,6 +7,7 @@ import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentAddNewReminderBinding
@@ -104,6 +105,7 @@ class AddNewReminderFragment :
                 val result = Bundle().apply {
                     putParcelableArrayList("selected_medicine", selectedList)
                     putString("relative_id", relative?.id ?: "")
+                    putString("canCreateMedicine", if (relative?.canInsertMedicine==true) "" else "1")
                 }
                 findNavController().navigate(
                     R.id.action_addNewReminderFragment_to_selectMedicineFragment,
@@ -137,17 +139,15 @@ class AddNewReminderFragment :
             return
         }
         if (reminderId != "") {
-            val pillReminder = viewModel.getPillReminder.value!!
-            val newPillReminder = PillReminder(
-                pillReminder.id,
-                content,
-                selectedTimes,
-                viewModel.frequencySelected,
-                viewModel.listInitialSelected.value?.toList() ?: listOf(),
-                true, note, disease, account.id, account.fullName,
-                pillReminder.createAt, TimeUtils.getCurrentCreatedAt()
-            )
-            viewModel.updateReminder(uid, newPillReminder, alarmHelper, requireContext())
+            var pillReminder = viewModel.getPillReminder.value!!
+            pillReminder.label = content
+            pillReminder.times = selectedTimes
+            pillReminder.frequency = viewModel.frequencySelected
+            pillReminder.medicines = viewModel.listInitialSelected.value?.toList() ?: listOf()
+            pillReminder.note = note
+            pillReminder.disease = disease
+            pillReminder.updateAt = TimeUtils.getCurrentCreatedAt()
+            viewModel.updateReminder(uid, pillReminder, alarmHelper, requireContext())
         } else {
             if (relative != null) {
                 viewModel.insertReminderRelativeRemote(
@@ -185,6 +185,12 @@ class AddNewReminderFragment :
                 binding.layoutCreateTo.visibility = View.VISIBLE
                 binding.txtRelativeName.text = relative?.fullName ?: ""
                 binding.txtDescription.text = relative?.relativeTitle ?: ""
+                if (relative?.avatar != "") {
+                    Glide.with(binding.root.context)
+                        .load(relative?.avatar)
+                        .error(R.drawable.error_image)
+                        .into(binding.imgAvatar)
+                }
             }
         }
         initAllPicker()
@@ -227,6 +233,7 @@ class AddNewReminderFragment :
                     binding.nestedScrollView2.visibility = View.VISIBLE
                     binding.txtError.visibility = View.GONE
                     selectedTimes = reminder.times.toMutableList()
+                    selectedTimeAdapter.submitList(selectedTimes)
                     binding.tietContent.setText(reminder.label)
                     binding.tietNote.setText(reminder.note)
                     binding.tietDisease.setText(reminder.disease)

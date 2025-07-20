@@ -23,7 +23,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:background="#303030"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -34,7 +34,6 @@
                 android:id="@+id/img_user"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp"
                 android:src="@drawable/ic_user" />
         </androidx.cardview.widget.CardView>
 

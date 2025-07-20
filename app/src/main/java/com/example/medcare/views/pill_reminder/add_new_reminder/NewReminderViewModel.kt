@@ -61,7 +61,6 @@ class NewReminderViewModel(
     fun insertReminderToLocal(reminder: PillReminder) {
         viewModelScope.launch(Dispatchers.IO){
             iPillReminderRepos.insertPillReminder(reminder)
-
         }
     }
 

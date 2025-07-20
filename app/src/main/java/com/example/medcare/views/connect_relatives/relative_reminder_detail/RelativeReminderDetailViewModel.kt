@@ -3,9 +3,12 @@ package com.example.medcare.views.connect_relatives.relative_reminder_detail
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.medcare.base.BaseViewModel
 import com.example.medcare.data.repository.relatives.IRelativeRepos
 import com.example.medcare.models.PillReminder
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class RelativeReminderDetailViewModel(private val iRelativeRepos: IRelativeRepos) : BaseViewModel() {
     //    private val _setDeleteStatus = MutableLiveData<Boolean>()
@@ -75,5 +78,11 @@ class RelativeReminderDetailViewModel(private val iRelativeRepos: IRelativeRepos
                 _messageError.value = "Lỗi lấy dữ liệu"
             }
         )
+    }
+    fun insertReminder(relativeReminder: PillReminder) {
+        viewModelScope.launch{
+            iRelativeRepos.insertPillReminder(relativeReminder)
+        }
+
     }
 }

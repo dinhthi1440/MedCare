@@ -26,4 +26,6 @@ interface IRelativesDataSource {
     suspend fun getRelativeHistoryByRelativeID(uid: String, relativeID: String): Response<Any>
     suspend fun deleteRelativeReminderRemote(uid: String, idRelative: String, idReminder: String): Response<Any>
 
+    suspend fun insertPillReminder(pillReminder: PillReminder): Long
+
 }

@@ -89,6 +89,7 @@ class ReminderDetailViewModel(private val iPillReminderRepos: IPillReminderRepos
             todayString,
             reminder.times.first().time,
             HistoryStatus.NOT_CONFIRMED.status,
+            reminder
         )
         executeTask(
             request = {iPillReminderRepos.insertReminderHistory(uid, history)},

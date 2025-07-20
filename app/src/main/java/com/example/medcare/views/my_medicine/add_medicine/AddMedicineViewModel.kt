@@ -51,10 +51,16 @@ class AddMedicineViewModel(private val iMedicineRepos: IMedicineRepos) : BaseVie
             val result = iMedicineRepos.insertMedicineRemote(uid, medicine)
             withContext(Dispatchers.Main) {
                 setIsLoading(false)
-                _setInsertStatus.value = when (result.statusCode) {
-                    200 -> result
-                    else -> Response(500, "Lỗi khi tạo dữ liệu, hãy thử lại", null)
+                when (result.statusCode) {
+                    200 -> {
+                        _setInsertStatus.value =  result
+                    }
+                    else -> {
+                        iMedicineRepos.insertMedicine(medicine)
+                        _setInsertStatus.value = Response(500, "Lỗi khi tạo dữ liệu, hãy thử lại", null)
+                    }
                 }
+
             }
         }
     }

@@ -22,7 +22,7 @@ val dataSourceModule = module {
     single<IMedicineDataSource> { MedicineDataSource(get()) }
     single<IPillReminderDataSource> { PillReminderDataSource(get()) }
     single<IAuthDatasource> { AuthDatasource() }
-    single<IRelativesDataSource> { RelativesDataSource() }
+    single<IRelativesDataSource> { RelativesDataSource(get()) }
     single<IReminderHistoryDatasource> { ReminderHistoryDatasource() }
     single<IDoctorDatasource> { DoctorDatasource() }
     single<IFeedbackDatasource> { FeedbackDatasource() }

@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentRelativeReminderDetailBinding
@@ -85,10 +86,16 @@ class RelativeReminderDetailFragment :
                     txtRelativeName.text = reminder.receiverName
                     txtDescription.text = reminder.receiverDescription
                     btnCancel.visibility = View.VISIBLE
+                    if(reminder.receiverAvatar != ""){
+                        Glide.with(requireContext()).load(reminder.receiverAvatar).into(imgAvatar)
+                    }
                 } else {
                     txtFromOrTo.text = "Tạo bởi: "
                     txtRelativeName.text = reminder.senderName
                     txtDescription.text = reminder.senderDescription
+                    if(reminder.senderAvatar != ""){
+                        Glide.with(requireContext()).load(reminder.senderAvatar).into(imgAvatar)
+                    }
                     if (reminder.statusRequest == ReminderRequestStatus.ACCEPTED.status) {
                         btnDelete.visibility = View.VISIBLE
                         btnDefuse.visibility = View.VISIBLE
@@ -97,6 +104,7 @@ class RelativeReminderDetailFragment :
                         btnDefuse.visibility = View.VISIBLE
                     }
                 }
+
                 bindStatus(reminder.statusRequest ?: "")
                 txtReminderLabel.text = "\uD83D\uDCCC ${reminder.label}"
                 txtReminderFrequency.text = "\uD83D\uDD04 Tần suất: ${reminder.frequency.label}"
@@ -112,6 +120,7 @@ class RelativeReminderDetailFragment :
         viewModel.getStatusUpdate.observe(viewLifecycleOwner) {
             bindStatus(it)
             if (it == ReminderRequestStatus.ACCEPTED.status) {
+                viewModel.insertReminder(viewModel.getRelativeReminder.value!!)
                 alarmHelper.registerAlarm(requireContext(), viewModel.getRelativeReminder.value!!)
             }
         }

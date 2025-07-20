@@ -20,12 +20,14 @@ class ReminderHistoryDetailFragment :
     BaseFragment<FragmentReminderHistoryDetailBinding>(FragmentReminderHistoryDetailBinding::inflate) {
     private val medicineAdapter by lazy { MedicineAdapter(true, ::onclickMedicineItem) }
     private lateinit var historyID: String
+    private lateinit var userID: String
     override val viewModel by viewModel<ReminderHistoryViewModel>()
 
 
     override fun initData() {
         historyID = arguments?.getString("history_id").toString()
-        viewModel.getHistoryDetail(uid, historyID)
+        userID = arguments?.getString("user_id") ?: ""
+        viewModel.getHistoryDetail(userID, historyID)
     }
 
     override fun handleEvent() {
@@ -36,10 +38,10 @@ class ReminderHistoryDetailFragment :
             dialog(requireContext()).changeStatusHistory() {
                 when (it) {
                     HistoryStatus.DRANK.status -> {
-                        viewModel.updateHistory(uid, viewModel.getHistoryDetail.value!!, HistoryStatus.DRANK.status )
+                        viewModel.updateHistory(userID, viewModel.getHistoryDetail.value!!, HistoryStatus.DRANK.status )
                     }
                     HistoryStatus.MISSED.status-> {
-                        viewModel.updateHistory(uid, viewModel.getHistoryDetail.value!!, HistoryStatus.DRANK.status )
+                        viewModel.updateHistory(userID, viewModel.getHistoryDetail.value!!, HistoryStatus.DRANK.status )
                     }
                 }
             }
@@ -79,7 +81,7 @@ class ReminderHistoryDetailFragment :
             }
         }
         viewModel.getHistoryUpdateStatus.observe(viewLifecycleOwner) {
-            viewModel.getHistoryDetail(uid, historyID)
+            viewModel.getHistoryDetail(userID, historyID)
         }
         viewModel.messageError.observe(viewLifecycleOwner) {
             binding.txtError.text = it
@@ -92,6 +94,9 @@ class ReminderHistoryDetailFragment :
             putString("medicine_id", medicine.id)
             putString("medicine_name", medicine.name)
             putString("previous_screen", "detail")
+            if (uid != userID) {
+                putString("ownerID", userID)
+            }
         }
         findNavController().navigate(R.id.action_reminderHistoryDetailFragment_to_medicineDetailFragment, bundle)
     }

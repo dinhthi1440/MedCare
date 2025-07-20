@@ -22,11 +22,13 @@ class SelectMedicineFragment :
         )
     }
     private var relativeID = ""
+    private var canCreateMedicine = ""
     private lateinit var listInitialSelected: MutableSet<Medicine>
 
     override fun initData() {
         val receivedList = arguments?.getParcelableArrayList<Medicine>("selected_medicine") ?: emptyList()
         relativeID = arguments?.getString("relative_id") ?: ""
+        canCreateMedicine = arguments?.getString("canCreateMedicine") ?: ""
         listInitialSelected = receivedList.toMutableSet()
         if (relativeID == "") {
             viewModel.getMedicineList(uid)
@@ -70,6 +72,9 @@ class SelectMedicineFragment :
     }
 
     override fun bindData() {
+        if (canCreateMedicine != ""){
+            binding.layoutAddNew.visibility = View.GONE
+        }
         viewModel.getMedicines.observe(viewLifecycleOwner) { it ->
             binding.txtEmptyList.visibility = View.GONE
             binding.rcvSelectMedicine.visibility = View.VISIBLE
