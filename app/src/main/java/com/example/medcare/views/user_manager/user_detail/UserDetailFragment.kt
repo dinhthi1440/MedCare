@@ -15,6 +15,7 @@ import com.example.medcare.extension.getData
 import com.example.medcare.extension.showImage
 import com.example.medcare.models.Account
 import com.example.medcare.utils.Constants
+import com.example.medcare.utils.TimeUtils
 import com.example.medcare.views.user_manager.user_list.UserListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,6 +53,7 @@ class UserDetailFragment :
                 ) {
                     val updates = mapOf(
                         "status" to if (viewModel.getAccountDetail.value?.status == "active") "locked" else "active",
+                        "updateAt" to TimeUtils.getCurrentCreatedAt()
                     )
                     viewModel.updateUser(accountID, updates)
                 }
@@ -60,6 +62,7 @@ class UserDetailFragment :
                 dialog(requireContext()).changeRule(initRule) {
                     val updates = mapOf(
                         "rule" to it,
+                        "updateAt" to TimeUtils.getCurrentCreatedAt()
                     )
                     viewModel.updateUser(accountID, updates)
                 }

@@ -16,6 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Region
@@ -32,6 +33,7 @@ import java.util.Locale
 import java.util.UUID
 import com.example.medcare.BuildConfig
 import com.example.medcare.utils.FileUtils
+import com.example.medcare.utils.TimeUtils
 
 class AddMedicineFragment :
     BaseFragment<FragmentAddMedicineBinding>(FragmentAddMedicineBinding::inflate) {
@@ -40,6 +42,7 @@ class AddMedicineFragment :
     private var medicine: Medicine? = null
     private lateinit var newMedicine : Medicine
     private var image = ""
+    private var relativeID = ""
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -89,6 +92,7 @@ class AddMedicineFragment :
 
     override fun initData() {
         medicine = arguments?.getSerializable("medicine") as? Medicine
+        relativeID = arguments?.getString("relativeID") ?: ""
     }
     override fun handleEvent() {
         binding.apply {
@@ -99,7 +103,7 @@ class AddMedicineFragment :
                 showImagePickerOptions()
             }
             btnBack.setOnClickListener {
-                findNavController().popBackStack()
+                backScreenReset()
             }
             btnAdd.setOnClickListener {
 
@@ -205,16 +209,34 @@ class AddMedicineFragment :
             image = image,
             expirationDate = expirationDate,
             quantity = quantity,
+            realQuantity = quantity,
             dosage = dosage,
             unit = unit,
-            note = note
+            note = note,
         )
         val file = if (image.isNotEmpty()) FileUtils.uriToFile(requireContext(), image.toUri()) else null
 
         if (isEdit) {
+            newMedicine.createAt = medicine?.createAt ?: ""
+            newMedicine.updateAt = TimeUtils.getCurrentCreatedAt()
             viewModel.updateMedicine(uid, newMedicine, file)
         } else {
-            viewModel.insertMedicine(uid, newMedicine, file)
+            if (relativeID == ""){
+                newMedicine.createAt = TimeUtils.getCurrentCreatedAt()
+                newMedicine.updateAt = ""
+                viewModel.insertMedicine(uid, newMedicine, file)
+            } else {
+                newMedicine.creatorID = uid
+                newMedicine.creatorName = fullName
+                val REQUEST_KEY_NEW_MEDICINE = "new_medicine_request"
+                val BUNDLE_KEY_MEDICINE = "new_medicine_object"
+                val resultBundle = Bundle().apply {
+                    putParcelable(BUNDLE_KEY_MEDICINE, newMedicine)
+                }
+                setFragmentResult(REQUEST_KEY_NEW_MEDICINE, resultBundle)
+                findNavController().popBackStack()
+            }
+
         }
 
     }
@@ -251,11 +273,8 @@ class AddMedicineFragment :
             when (it.statusCode) {
                 200 -> {
                     Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                    val result = Bundle().apply {
-                        putBoolean("key_boolean", true)
-                    }
-                    parentFragmentManager.setFragmentResult("boolean_result_key", result)
-                    findNavController().popBackStack()
+                    isBackReset = true
+                    backScreenReset()
                 }
                 500 -> {
                     Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()

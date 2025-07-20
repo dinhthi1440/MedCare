@@ -13,6 +13,13 @@ class RelativeRepos(private val dataSource: IRelativesDataSource): BaseRepositor
         return getResult { dataSource.getAllRelativesRemote(uid) }
     }
 
+    override suspend fun updateRelativesRemote(
+        uid: String,
+        relative: Relative
+    ): DataResult<Response<Any>> {
+        return getResult { dataSource.updateRelativesRemote(uid, relative) }
+    }
+
     override suspend fun getSearchRelativesRemote(searchString: String): DataResult<Response<Any>> {
         return getResult { dataSource.getSearchRelativesRemote(searchString) }
     }
@@ -48,6 +55,25 @@ class RelativeRepos(private val dataSource: IRelativesDataSource): BaseRepositor
         reminderID: String
     ): DataResult<Response<Any>> {
         return getResult { dataSource.getReminderRelativeFromToByID(uid, reminderID) }
+    }
+
+    override suspend fun getRelativeHistoryByRelativeID(
+        uid: String,
+        relativeID: String
+    ): DataResult<Response<Any>> {
+        return getResult { dataSource.getRelativeHistoryByRelativeID(uid, relativeID) }
+    }
+
+    override suspend fun deleteRelativeReminderRemote(
+        uid: String,
+        idRelative: String,
+        idReminder: String
+    ): DataResult<Response<Any>> {
+        return getResult {dataSource.deleteRelativeReminderRemote(uid, idRelative, idReminder)}
+    }
+
+    override suspend fun insertPillReminder(pillReminder: PillReminder): Long {
+        return dataSource.insertPillReminder(pillReminder)
     }
 
 }

@@ -88,9 +88,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:ellipsize="end"
                 android:fontFamily="@font/inter"
-                android:maxLines="1"
                 android:text="📌 Uống thuốc giảm đau"
                 android:textColor="@color/ccBlueText"
                 android:textFontWeight="500"
@@ -108,9 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:ellipsize="end"
                 android:fontFamily="@font/inter"
-                android:maxLines="1"
                 android:text="⏰ Thời gian: 08:00, 14:00, 20:00"
                 android:textColor="@color/ccBlueText"
                 android:textFontWeight="500"
@@ -136,9 +132,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:ellipsize="end"
                 android:fontFamily="@font/inter"
-                android:maxLines="1"
                 android:text="🔄 Tần suất: Mỗi ngày"
                 android:textColor="@color/ccBlueText"
                 android:textFontWeight="500"
@@ -156,9 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:ellipsize="end"
                 android:fontFamily="@font/inter"
-                android:maxLines="1"
                 android:text="💉 Bệnh điều trị"
                 android:textColor="@color/ccBlueText"
                 android:textFontWeight="500"
@@ -198,9 +190,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="8dp"
-                android:ellipsize="end"
                 android:fontFamily="@font/inter"
-                android:maxLines="1"
                 android:text="Uống sau khi ăn để tránh đau dạ dày"
                 android:textColor="@color/black"
                 android:textFontWeight="500"
@@ -262,52 +252,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_rectangular_gray"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout10"
-                app:layout_constraintVertical_bias="0.0">
-
-                <TextView
-                    android:id="@+id/txt_used_history_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/inter"
-                    android:maxLines="1"
-                    android:text="🔄 Lịch sử đã thông báo"
-                    android:textColor="@color/ccBlueText"
-                    android:textFontWeight="500"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:targetApi="p" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcv_used_history_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_used_history_label" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

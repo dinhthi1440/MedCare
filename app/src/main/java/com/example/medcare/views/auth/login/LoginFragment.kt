@@ -72,6 +72,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     val user = it.data as Account
                     val json = gson.toJson(user)
                     sharedPreferences.saveData(json, Constants.SHARED_USER)
+                    sharedPreferences.saveData(user.fullName, Constants.SHARED_FULL_NAME)
+                    sharedPreferences.saveData(user.id, Constants.SHARED_USER_ID)
                     findNavController().navigate(
                         R.id.action_loginFragment_to_homeFragment,
                         null,

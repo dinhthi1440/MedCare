@@ -10,11 +10,8 @@ import com.example.medcare.models.DoctorChat
 
 class ContactDoctorViewModel(private val iDoctorRepos: IDoctorRepos) : BaseViewModel(){
 
-
     val getDoctorChats: LiveData<MutableList<DoctorChat>> get() = _setDoctorChats
     private val _setDoctorChats = MutableLiveData<MutableList<DoctorChat>>()
-
-
 
     fun getChatList(uid: String) {
 

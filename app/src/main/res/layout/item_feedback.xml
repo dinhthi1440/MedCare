@@ -53,7 +53,7 @@
             android:textFontWeight="300"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/txt_account_rule"
+            app:layout_constraintEnd_toStartOf="@+id/txt_handle_status"
             app:layout_constraintStart_toStartOf="@+id/txt_full_name"
             app:layout_constraintTop_toBottomOf="@+id/txt_full_name"
             app:layout_constraintVertical_bias="0.0"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:fontFamily="@font/inter"
             android:maxLines="1"
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:fontFamily="@font/inter"
             android:maxLines="1"
@@ -113,6 +113,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/linearLayout9"
             app:layout_constraintTop_toBottomOf="@+id/txt_time">
+
             <TextView
                 android:id="@+id/txt_feedback_content"
                 android:layout_width="match_parent"

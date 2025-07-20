@@ -1,7 +1,5 @@
 package com.example.medcare.data.datasource.reminder_history
 
-import com.example.medcare.models.PillReminder
-import com.example.medcare.models.Relative
 import com.example.medcare.models.ReminderHistory
 import com.example.medcare.models.Response
 

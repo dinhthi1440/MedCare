@@ -58,6 +58,7 @@ class ReminderHistoryFragment : BaseFragment<FragmentReminderHistoryBinding>(Fra
     private fun onclickHistoryItem(reminderHistory: ReminderHistory) {
         val bundle = Bundle().apply {
             putString("history_id", reminderHistory.id)
+            putString("user_id", uid)
         }
         findNavController().navigate(R.id.action_reminderHistoryFragment_to_reminderHistoryDetailFragment, bundle)
 
@@ -70,7 +71,7 @@ class ReminderHistoryFragment : BaseFragment<FragmentReminderHistoryBinding>(Fra
                     viewModel.updateHistory(uid, reminderHistory, HistoryStatus.DRANK.status )
                 }
                 HistoryStatus.MISSED.status-> {
-                    viewModel.updateHistory(uid, reminderHistory, HistoryStatus.DRANK.status )
+                    viewModel.updateHistory(uid, reminderHistory, HistoryStatus.MISSED.status )
                 }
             }
         }

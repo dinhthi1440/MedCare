@@ -27,7 +27,9 @@ data class PillReminder(
     var receiverName: String = "",
     var receiverAvatar: String = "",
     var receiverDescription: String? = "",
-    var statusRequest: String? = ""
+    var statusRequest: String? = "",
+    var createAt: String = "",
+    var updateAt: String = "",
 ) : Serializable {
     companion object {
         val differUtil = object : DiffUtil.ItemCallback<PillReminder>() {
@@ -46,6 +48,8 @@ data class PillReminder(
         FrequencyModel(),
         emptyList(),
         false,
+        "",
+        "",
         "",
         "",
         "",

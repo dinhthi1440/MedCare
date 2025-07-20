@@ -12,6 +12,7 @@ import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentUserListManagerBinding
 import com.example.medcare.extension.confirmEvent
 import com.example.medcare.models.Account
+import com.example.medcare.utils.TimeUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -92,6 +93,7 @@ class UserListManagerFragment : BaseFragment<FragmentUserListManagerBinding>(Fra
         dialog(requireContext()).confirmEvent("Xác nhận khóa", "Bạn có chắc chắn muốn khóa tài khoản này?") {
             val updates = mapOf(
                 "status" to if (account.status=="active") "locked" else "active",
+                "updateAt" to TimeUtils.getCurrentCreatedAt()
             )
             viewModel.updateUser(account.id, updates)
         }

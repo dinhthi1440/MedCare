@@ -5,14 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.medcare.data.database.local.dao.HistoryDAO
 import com.example.medcare.data.database.local.dao.MedicineDAO
 import com.example.medcare.data.database.local.dao.PillReminderDAO
 import com.example.medcare.models.Converters
 import com.example.medcare.models.Medicine
 import com.example.medcare.models.PillReminder
+import com.example.medcare.models.ReminderHistory
 
 @Database(
-    entities = [Medicine::class, PillReminder::class],
+    entities = [Medicine::class, PillReminder::class, ReminderHistory::class],
     version = DataBaseLocal.VERSION
 )
 @TypeConverters(Converters::class)
@@ -20,11 +22,14 @@ abstract class DataBaseLocal : RoomDatabase() {
 
     abstract val medicineDao: MedicineDAO
     abstract val pillReminderDAO: PillReminderDAO
+    abstract val historyDAO: HistoryDAO
+
     companion object {
         const val NAME = "MedCare"
         const val VERSION = 1
         const val TABLE_MEDICINE = "Medicine"
         const val TABLE_PILL_REMINDER = "PillReminder"
+        const val TABLE_HISTORY_REMINDER = "HistoryReminder"
     }
 }
 

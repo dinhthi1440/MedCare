@@ -1,10 +1,12 @@
 package com.example.medcare.data.datasource.pillreminder
 
 import com.example.medcare.data.database.local.DataBaseLocal
+import com.example.medcare.models.Medicine
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.ReminderHistory
 import com.example.medcare.models.ReminderRequestStatus
 import com.example.medcare.models.Response
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.coroutines.resume
@@ -311,7 +313,7 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal) : IPillRe
                     }
                 }
                 .addOnFailureListener {
-                    continuation.resume( 
+                    continuation.resume(
                         Response(
                             500,
                             "Lỗi khi thêm nhắc thuốc: ${it.message}",
@@ -328,14 +330,52 @@ class PillReminderDataSource(private val dataBaseLocal: DataBaseLocal) : IPillRe
     ): Response<Any> {
         val db = FirebaseFirestore.getInstance()
         return suspendCoroutine { continuation ->
+
+            val listMedicine = mutableListOf<Medicine>()
+            val updateTasks = mutableListOf<Task<Void>>()
+
+            reminderHistory.reminder.medicines.forEach { medicine ->
+                val refMedicine = db.collection("users")
+                    .document(reminderHistory.reminder.receiverID)
+                    .collection("medicines")
+                    .document(medicine.id)
+
+                val quantityCal = medicine.quantity - medicine.dosage
+                updateTasks.add(refMedicine.update("quantity", quantityCal))
+
+                val updatedMedicine = medicine.copy(quantity = quantityCal)
+                listMedicine.add(updatedMedicine)
+            }
             db.collection("users")
-                .document(uid).collection("reminder_history").document(reminderHistory.id)
-                .set(reminderHistory)
+                .document(reminderHistory.reminder.receiverID)
+                .collection("pill_reminders")
+                .document(reminderHistory.reminder.id)
+                .update("medicines", listMedicine)
+            val raw = reminderHistory
+            raw.reminder.medicines = listMedicine
+            Tasks.whenAll(updateTasks)
                 .addOnSuccessListener {
-                    continuation.resume(Response(200, "Thêm lịch sử dùng thuốc thành công", true))
+                    val historyRef = db.collection("users")
+                        .document(uid)
+                        .collection("reminder_history")
+                        .document(reminderHistory.id)
+
+                    historyRef.set(raw)
+                        .addOnSuccessListener {
+                            continuation.resume(
+                                Response(200, "Thêm lịch sử dùng thuốc thành công", true)
+                            )
+                        }
+                        .addOnFailureListener {
+                            continuation.resume(
+                                Response(500, "Lỗi khi thêm lịch sử dùng thuốc", false)
+                            )
+                        }
                 }
                 .addOnFailureListener {
-                    continuation.resume(Response(500, "Lỗi khi thêm lịch sử dùng thuốc", false))
+                    continuation.resume(
+                        Response(500, "Lỗi khi cập nhật số lượng thuốc", false)
+                    )
                 }
         }
     }

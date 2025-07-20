@@ -6,9 +6,10 @@ import com.example.medcare.models.Response
 
 interface IFeedbackRepository {
     suspend fun insertFeedback(feedback: Feedback): DataResult<Response<Any>>
-    suspend fun updateUserByFiled(accountID: String, fields: Map<String, Any>): DataResult<Response<Any>>
+    suspend fun updateFeedbackByFiled(feedbackID: String, fields: Map<String, Any>): DataResult<Response<Any>>
     suspend fun getAllFeedback(): DataResult<Response<Any>>
     suspend fun deleteFeedbackByID(feedbackID: String): DataResult<Response<Any>>
     suspend fun searchFeedback(searchString: String): DataResult<Response<Any>>
     suspend fun getFeedbackByID(feedbackID: String): DataResult<Response<Any>>
+    suspend fun getFeedbackByUserID(uid: String): DataResult<Response<Any>>
 }

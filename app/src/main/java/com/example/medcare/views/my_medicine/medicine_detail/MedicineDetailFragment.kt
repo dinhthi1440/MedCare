@@ -11,6 +11,7 @@ import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentMedicineDetailBinding
 import com.example.medcare.extension.confirmEvent
+import com.example.medcare.models.Medicine
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -22,12 +23,30 @@ class MedicineDetailFragment :
     private var medicineId = ""
     private var medicineName = ""
     private var previousScreen = ""
+    private var creator = ""
+    private var ownerID = ""
+    private var medicineReminder: Medicine? = null
     override fun initData() {
 
         medicineId = arguments?.getString("medicine_id").toString()
         medicineName = arguments?.getString("medicine_name").toString()
         previousScreen = arguments?.getString("previous_screen").toString()
-        viewModel.getMedicineDetail(uid, medicineId)
+        ownerID = arguments?.getString("ownerID").toString()
+        creator = arguments?.getString("creator").toString()
+        arguments?.getSerializable("reminder")?.let {
+            medicineReminder = it as Medicine
+        }
+        if (previousScreen ==  "" || previousScreen == "null") {
+            viewModel.getMedicineDetail(uid, medicineId)
+        } else if (medicineReminder != null) {
+            viewModel.setMedicine(medicineReminder!!)
+        } else {
+            if (ownerID != "" && ownerID != "null") {
+                viewModel.getMedicineDetail(ownerID, medicineId)
+            } else {
+                viewModel.getMedicineDetail(uid, medicineId)
+            }
+        }
     }
 
     override fun handleEvent() {
@@ -62,6 +81,10 @@ class MedicineDetailFragment :
                 } else {
                     btnDelete.visibility = View.VISIBLE
                     btnEdit.visibility = View.VISIBLE
+                }
+                if(creator != "" && creator != "null"){
+                    txtCreator.text = creator
+                    txtCreator.setTextColor(ContextCompat.getColor(requireContext(), R.color.ccRedText))
                 }
                 nestedScrollView.visibility = View.VISIBLE
                 txtError.visibility = View.GONE
@@ -109,12 +132,13 @@ class MedicineDetailFragment :
         viewModel.getDeleteStatus.observe(viewLifecycleOwner) {
             if (it.statusCode == 200) {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                val result = Bundle().apply {
-                    putBoolean("key_boolean", true)
-                }
-                parentFragmentManager.setFragmentResult("boolean_result_key", result)
-                findNavController().popBackStack()
+                isBackReset = true
+                backScreenReset()
             }
+        }
+        listenBackScreen {
+            isBackReset = true
+            viewModel.getMedicineDetail(uid, medicineId)
         }
     }
 

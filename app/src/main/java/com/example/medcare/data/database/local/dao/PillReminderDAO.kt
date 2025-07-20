@@ -23,4 +23,10 @@ interface PillReminderDAO {
 
     @Update
     fun updatePillReminder(pillReminder: PillReminder): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAllReminder(pillReminders: List<PillReminder>): List<Long>
+
+    @Query("DELETE FROM ${DataBaseLocal.TABLE_PILL_REMINDER}")
+    fun deleteAllReminder(): Int
 }

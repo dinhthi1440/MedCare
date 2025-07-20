@@ -12,16 +12,16 @@ class FeedbackDatasource : IFeedbackDatasource {
 
     override suspend fun insertFeedback(feedback: Feedback): Response<Any> {
         return try {
-            db.collection("feed_backs").add(feedback).await()
+            db.collection("feed_backs").document(feedback.id).set(feedback).await()
             Response(200, "Gửi phản hồi thành công")
         } catch (e: Exception) {
             Response(500, "Lỗi khi gửi phản hồi: ${e.message}")
         }
     }
 
-    override suspend fun updateUserByFiled(accountID: String, fields: Map<String, Any>): Response<Any> {
+    override suspend fun updateFeedbackByFiled(feedbackID: String, fields: Map<String, Any>): Response<Any> {
         return try {
-            db.collection("users").document(accountID).update(fields).await()
+            db.collection("feed_backs").document(feedbackID).update(fields).await()
             Response(200, "Cập nhật người dùng thành công")
         } catch (e: Exception) {
             Response(500, "Lỗi khi cập nhật: ${e.message}")
@@ -66,6 +66,29 @@ class FeedbackDatasource : IFeedbackDatasource {
                 }
         }
     }
+
+    override suspend fun getFeedbackByUserID(uid: String): Response<Any> {
+        return suspendCoroutine { continuation ->
+            db.collection("feed_backs")
+                .whereEqualTo("senderID", uid)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    val feedbackList = querySnapshot.documents.mapNotNull { doc ->
+                        doc.toObject(Feedback::class.java)?.apply { id = doc.id }
+                    }
+
+                    if (feedbackList.isNotEmpty()) {
+                        continuation.resume(Response(200, "Lấy phản hồi thành công ${feedbackList}", feedbackList))
+                    } else {
+                        continuation.resume(Response(204, "Không tìm thấy phản hồi", null))
+                    }
+                }
+                .addOnFailureListener { e ->
+                    continuation.resume(Response(500, "Lỗi khi truy xuất phản hồi: ${e.message}", null))
+                }
+        }
+    }
+
 
     override suspend fun deleteFeedbackByID(feedbackID: String): Response<Any> {
         return try {

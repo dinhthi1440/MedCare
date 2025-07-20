@@ -1,9 +1,13 @@
 package com.example.medcare.data.datasource.relatives
 
+import android.util.Log
+import com.example.medcare.data.database.local.DataBaseLocal
 import com.example.medcare.models.Account
 import com.example.medcare.models.PillReminder
 import com.example.medcare.models.PillReminderResult
 import com.example.medcare.models.Relative
+import com.example.medcare.models.ReminderHistory
+import com.example.medcare.models.ReminderRequestStatus
 import com.example.medcare.models.Response
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
@@ -12,7 +16,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class RelativesDataSource: IRelativesDataSource {
+class RelativesDataSource(private val dataBaseLocal: DataBaseLocal) : IRelativesDataSource {
     val db = FirebaseFirestore.getInstance()
     override suspend fun insertRelativesRemote(uid: String, relative: Relative): Response<Any> {
         return suspendCoroutine { continuation ->
@@ -27,6 +31,70 @@ class RelativesDataSource: IRelativesDataSource {
                 }
         }
     }
+
+    override suspend fun updateRelativesRemote(uid: String, relative: Relative): Response<Any> {
+        return suspendCoroutine { continuation ->
+            val userToRelativeRef = db.collection("users")
+                .document(uid)
+                .collection("relatives")
+                .document(relative.id)
+
+            val relativeToUserRef = db.collection("users")
+                .document(relative.id)
+                .collection("relatives")
+                .document(uid)
+
+            userToRelativeRef.get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        // 1. Cập nhật relativeTitle trong document A
+                        userToRelativeRef.update("relativeTitle", relative.relativeTitle)
+                            .addOnSuccessListener {
+                                // 2. Cập nhật 3 quyền trong document B
+                                val updateMap = mapOf(
+                                    "myCanInsertMedicine" to relative.canInsertMedicine,
+                                    "myCanInsertReminder" to relative.canInsertReminder,
+                                    "myCanSeeReminderHistory" to relative.canSeeReminderHistory
+                                )
+                                relativeToUserRef.update(updateMap)
+                                    .addOnSuccessListener {
+                                        continuation.resume(
+                                            Response(
+                                                200,
+                                                "Cập nhật người thân thành công",
+                                                true
+                                            )
+                                        )
+                                    }
+                                    .addOnFailureListener {
+                                        continuation.resume(
+                                            Response(
+                                                500,
+                                                "Lỗi khi cập nhật quyền người thân",
+                                                false
+                                            )
+                                        )
+                                    }
+                            }
+                            .addOnFailureListener {
+                                continuation.resume(
+                                    Response(
+                                        500,
+                                        "Lỗi khi cập nhật chức danh người thân",
+                                        false
+                                    )
+                                )
+                            }
+                    } else {
+                        continuation.resume(Response(404, "Người thân không tồn tại", false))
+                    }
+                }
+                .addOnFailureListener {
+                    continuation.resume(Response(500, "Lỗi khi kiểm tra người thân", false))
+                }
+        }
+    }
+
 
     override suspend fun getAllRelativesRemote(uid: String): Response<Any> {
         return suspendCoroutine { continuation ->
@@ -43,9 +111,21 @@ class RelativesDataSource: IRelativesDataSource {
                             }
 
                             if (list.isNotEmpty()) {
-                                continuation.resume(Response(200, "Lấy danh sách người thân thành công", list))
+                                continuation.resume(
+                                    Response(
+                                        200,
+                                        "Lấy danh sách người thân thành công",
+                                        list
+                                    )
+                                )
                             } else {
-                                continuation.resume(Response(204, "Không có người thân nào", emptyList<Relative>()))
+                                continuation.resume(
+                                    Response(
+                                        204,
+                                        "Không có người thân nào",
+                                        emptyList<Relative>()
+                                    )
+                                )
                             }
                         } catch (e: Exception) {
                             continuation.resume(Response(500, "Lỗi xử lý dữ liệu người thân", null))
@@ -72,13 +152,25 @@ class RelativesDataSource: IRelativesDataSource {
                     if (document.exists()) {
                         docRef.delete()
                             .addOnSuccessListener {
-                                continuation.resume(Response(200, "Huỷ kết nối với người thân thành công", true))
+                                continuation.resume(
+                                    Response(
+                                        200,
+                                        "Huỷ kết nối với người thân thành công",
+                                        true
+                                    )
+                                )
                             }
                             .addOnFailureListener {
                                 continuation.resume(Response(500, "Lỗi khi xoá", false))
                             }
                     } else {
-                        continuation.resume(Response(404, "Không tìm thấy người thân để xoá", false))
+                        continuation.resume(
+                            Response(
+                                404,
+                                "Không tìm thấy người thân để xoá",
+                                false
+                            )
+                        )
                     }
                 }
                 .addOnFailureListener {
@@ -87,35 +179,36 @@ class RelativesDataSource: IRelativesDataSource {
         }
     }
 
-    override suspend fun getSearchRelativesRemote(searchString: String): Response<Any> = suspendCoroutine { continuation ->
-        val db = FirebaseFirestore.getInstance()
-        db.collectionGroup("users") // tìm trong tất cả collection con tên "relatives"
-            .get()
-            .addOnSuccessListener { result ->
-                val matchedRelatives = result.documents
-                    .mapNotNull { it.toObject(Relative::class.java) }
-                    .filter { relative ->
-                        relative.fullName.contains(searchString)
-                    }
+    override suspend fun getSearchRelativesRemote(searchString: String): Response<Any> =
+        suspendCoroutine { continuation ->
+            val db = FirebaseFirestore.getInstance()
+            db.collectionGroup("users") // tìm trong tất cả collection con tên "relatives"
+                .get()
+                .addOnSuccessListener { result ->
+                    val matchedRelatives = result.documents
+                        .mapNotNull { it.toObject(Relative::class.java) }
+                        .filter { relative ->
+                            relative.fullName.contains(searchString)
+                        }
 
-                continuation.resume(
-                    Response(
-                         200,
-                        "Tìm thấy ${matchedRelatives.size} người thân",
-                        matchedRelatives
+                    continuation.resume(
+                        Response(
+                            200,
+                            "Tìm thấy ${matchedRelatives.size} người thân",
+                            matchedRelatives
+                        )
                     )
-                )
-            }
-            .addOnFailureListener { e ->
-                continuation.resume(
-                    Response(
-                        500,
-                        "Lỗi khi tìm kiếm người thân: ${e.localizedMessage}",
-                        false
+                }
+                .addOnFailureListener { e ->
+                    continuation.resume(
+                        Response(
+                            500,
+                            "Lỗi khi tìm kiếm người thân: ${e.localizedMessage}",
+                            false
+                        )
                     )
-                )
-            }
-    }
+                }
+        }
 
     override suspend fun insertRelativesRequestRemote(
         uid: String,
@@ -206,28 +299,23 @@ class RelativesDataSource: IRelativesDataSource {
 
         val userToAddRef = db.collection("users").document(relative.id)
 
-        // Kiểm tra người dùng có tồn tại không
         userToAddRef.get()
             .addOnSuccessListener { snapshot ->
                 if (!snapshot.exists()) {
                     requestRef.delete()
                     continuation.resume(Response(404, "Người dùng không còn tồn tại", false))
                 } else {
-                    // Tạo bản sao Relative cho chiều ngược lại (uid là người được thêm)
                     val reverseRelative = Relative(
                         user.id,
                         user.fullName,
                         "Bạn bè",
                         user.avatar
                     )
-
-                    // Thêm vào cả hai phía trong relatives
                     val write1 = target1Ref.set(relative)
                     val write2 = target2Ref.set(reverseRelative)
 
                     Tasks.whenAll(write1, write2)
                         .addOnSuccessListener {
-                            // Nếu thành công → xoá request
                             requestRef.delete()
                                 .addOnSuccessListener {
                                     continuation.resume(
@@ -271,13 +359,27 @@ class RelativesDataSource: IRelativesDataSource {
                             val list = result.documents.mapNotNull { doc ->
                                 doc.toObject(PillReminder::class.java)?.apply { id = doc.id }
                             }
-                            val listSendTo = list.filter { it.senderID == uid && it.receiverID != uid }
-                            val listSendFrom = list.filter { it.senderID != uid && it.receiverID == uid }
+                            val listSendTo =
+                                list.filter { it.senderID == uid && it.receiverID != uid }
+                            val listSendFrom =
+                                list.filter { it.senderID != uid && it.receiverID == uid }
                             if (listSendTo.isNotEmpty() || listSendFrom.isNotEmpty()) {
                                 val data = PillReminderResult(listSendTo, listSendFrom)
-                                continuation.resume(Response(200, "Lấy danh sách nhắc thuốc thành công", data))
+                                continuation.resume(
+                                    Response(
+                                        200,
+                                        "Lấy danh sách nhắc thuốc thành công",
+                                        data
+                                    )
+                                )
                             } else {
-                                continuation.resume(Response(204, "Không có lời nhắc thuốc nào", PillReminderResult(emptyList(), emptyList())))
+                                continuation.resume(
+                                    Response(
+                                        204,
+                                        "Không có lời nhắc thuốc nào",
+                                        PillReminderResult(emptyList(), emptyList())
+                                    )
+                                )
                             }
                         } catch (e: Exception) {
                             continuation.resume(Response(500, "Lỗi xử lý dữ liệu nhắc thuốc", null))
@@ -297,6 +399,7 @@ class RelativesDataSource: IRelativesDataSource {
     ): Response<Any> {
         return suspendCoroutine { continuation ->
             val db = FirebaseFirestore.getInstance()
+
             val toRef = db.collection("users")
                 .document(reminderRelative.receiverID)
                 .collection("pill_reminders")
@@ -311,7 +414,25 @@ class RelativesDataSource: IRelativesDataSource {
             val reminderCopy = reminderRelative
             val task2 = fromRef.set(reminderCopy, SetOptions.merge())
 
-            Tasks.whenAllComplete(task1, task2)
+            val allTasks = mutableListOf(task1, task2)
+
+            if (reminderRelative.statusRequest == ReminderRequestStatus.ACCEPTED.status) {
+                reminderRelative.medicines.forEach { medicine ->
+                    if (medicine.creatorID.isNotEmpty()) {
+                        val medicineRef = db.collection("users")
+                            .document(reminderRelative.receiverID)
+                            .collection("medicines")
+                            .document(medicine.id)
+
+                        medicineRef.set(medicine, SetOptions.merge()).addOnSuccessListener {
+                            Log.e("TAG", "updateReminderRelativeFromToRemote: success", )
+                        }.addOnFailureListener {
+                            Log.e("TAG", "updateReminderRelativeFromToRemote: success", )
+                        }
+                    }
+                }
+            }
+            Tasks.whenAllComplete(allTasks)
                 .addOnSuccessListener { tasks ->
                     val failedTasks = tasks.filter { !it.isSuccessful }
                     if (failedTasks.isEmpty()) {
@@ -341,7 +462,10 @@ class RelativesDataSource: IRelativesDataSource {
         }
     }
 
-    override suspend fun getReminderRelativeFromToByID(uid: String, reminderID: String): Response<Any> {
+    override suspend fun getReminderRelativeFromToByID(
+        uid: String,
+        reminderID: String
+    ): Response<Any> {
         return suspendCoroutine { continuation ->
             val db = FirebaseFirestore.getInstance()
             db.collection("users")
@@ -364,5 +488,123 @@ class RelativesDataSource: IRelativesDataSource {
         }
     }
 
+    override suspend fun getRelativeHistoryByRelativeID(
+        uid: String,
+        relativeID: String
+    ): Response<Any> = suspendCoroutine { continuation ->
+        val relativeDocRef = db.collection("users")
+            .document(uid)
+            .collection("relatives")
+            .document(relativeID)
+        val historyDocRef = db.collection("users")
+            .document(relativeID)
+            .collection("reminder_history")
 
+        relativeDocRef.get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val canSee = document.getBoolean("myCanSeeReminderHistory") ?: false
+                    if (canSee) {
+                        historyDocRef.get()
+                            .addOnSuccessListener { result ->
+                                val list = result.documents.mapNotNull { doc ->
+                                    doc.toObject(ReminderHistory::class.java)?.apply { id = doc.id }
+                                }
+
+                                if (list.isNotEmpty()) {
+                                    continuation.resume(
+                                        Response(
+                                            200,
+                                            "Lấy dữ liệu thành công",
+                                            list
+                                        )
+                                    )
+                                } else {
+                                    continuation.resume(
+                                        Response(
+                                            204,
+                                            "Không có lịch sử nhắc nhở",
+                                            true
+                                        )
+                                    )
+                                }
+                            }
+                            .addOnFailureListener {
+                                continuation.resume(
+                                    Response(
+                                        500,
+                                        "Lỗi khi lấy lịch sử nhắc nhở",
+                                        false
+                                    )
+                                )
+                            }
+                    } else {
+                        continuation.resume(
+                            Response(
+                                403,
+                                "Không có quyền xem lịch sử nhắc nhở",
+                                false
+                            )
+                        )
+                    }
+                } else {
+                    continuation.resume(Response(404, "Người thân không tồn tại", false))
+                }
+            }
+            .addOnFailureListener {
+                continuation.resume(Response(500, "Lỗi khi kiểm tra thông tin người thân", false))
+            }
+    }
+
+    override suspend fun deleteRelativeReminderRemote(
+        uid: String,
+        idRelative: String,
+        idReminder: String
+    ): Response<Any> = suspendCoroutine { continuation ->
+        val db = FirebaseFirestore.getInstance()
+        val toRef = db.collection("users")
+            .document(idRelative)
+            .collection("pill_reminders")
+            .document(idReminder)
+
+        val fromRef = db.collection("users")
+            .document(uid)
+            .collection("pill_reminders")
+            .document(idReminder)
+
+        val task1 = toRef.delete()
+        val task2 = fromRef.delete()
+
+        Tasks.whenAllComplete(task1, task2)
+            .addOnSuccessListener { tasks ->
+                val failedTasks = tasks.filter { !it.isSuccessful }
+                if (failedTasks.isEmpty()) {
+                    continuation.resume(Response(200, "Xóa nhắc thuốc thành công", true))
+                } else {
+                    val errorMsg = failedTasks.joinToString("\n") {
+                        it.exception?.message ?: "Lỗi không xác định"
+                    }
+                    continuation.resume(
+                        Response(
+                            500,
+                            "Một hoặc nhiều thao tác xóa thất bại: $errorMsg",
+                            false
+                        )
+                    )
+                }
+            }
+            .addOnFailureListener {
+                continuation.resume(
+                    Response(
+                        500,
+                        "Lỗi khi xóa nhắc thuốc: ${it.message}",
+                        false
+                    )
+                )
+            }
+    }
+
+    override suspend fun insertPillReminder(pillReminder: PillReminder): Long {
+        return dataBaseLocal.pillReminderDAO.insertPillReminder(pillReminder)
+    }
 }

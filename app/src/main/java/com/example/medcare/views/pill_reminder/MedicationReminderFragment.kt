@@ -9,6 +9,7 @@ import com.example.medcare.R
 import com.example.medcare.base.BaseFragment
 import com.example.medcare.databinding.FragmentMedicationReminderBinding
 import com.example.medcare.models.PillReminder
+import com.example.medcare.utils.TimeUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MedicationReminderFragment :
@@ -51,7 +52,6 @@ class MedicationReminderFragment :
         }
         viewModel.messageError.observe(viewLifecycleOwner) {
             binding.txtEmptyList.text = it
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
         listenBackScreen{
             viewModel.getReminderList(uid)
@@ -69,6 +69,7 @@ class MedicationReminderFragment :
         pillReminder.isOn = isOn
         val updateData = hashMapOf<String, Any>(
             "on" to isOn,
+            "updateAt" to TimeUtils.getCurrentCreatedAt()
         )
         viewModel.updateFieldsReminder(uid, pillReminder.id, updateData)
     }

@@ -1,0 +1,70 @@
+package com.example.medcare.views.setting.feedback
+
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.example.medcare.R
+import com.example.medcare.base.BaseAdapter
+import com.example.medcare.base.BaseViewHolder
+import com.example.medcare.databinding.ItemFeedbackBinding
+import com.example.medcare.models.Feedback
+
+class FeedbackAdapter(private val onClick: (Feedback) -> Unit) : BaseAdapter<Feedback, BaseViewHolder<Feedback>>(
+    Feedback.differUtil) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Feedback> {
+        val inflate = LayoutInflater.from(parent.context)
+        val binding = ItemFeedbackBinding.inflate(inflate, parent, false)
+        return ViewHolder(binding)
+    }
+    inner class ViewHolder(private val binding: ItemFeedbackBinding): BaseViewHolder<Feedback>(binding) {
+        @SuppressLint("SetTextI18n")
+        override fun bindView(item: Feedback, isItemSelected: Boolean) {
+            super.bindView(item, isItemSelected)
+            binding.apply {
+                if (item.senderAvatar.isNotBlank()) {
+                    Glide.with(root.context).load(item.senderAvatar).into(imgUser)
+                }
+                txtFullName.text = item.senderName
+                txtTime.text = "${item.date} ${item.time}"
+                txtFeedbackContent.text = "-> ${item.content}"
+                when (item.status) {
+                    "processing" -> {
+                        txtHandleStatus.text = "Đang xử lý"
+                        txtHandleStatus.setTextColor(
+                            ContextCompat.getColor(
+                                root.context,
+                                R.color.ccOrangeText
+                            )
+                        )
+                    }
+
+                    "pending" -> {
+                        txtHandleStatus.text = "Chưa xử lý"
+                        txtHandleStatus.setTextColor(
+                            ContextCompat.getColor(
+                                root.context,
+                                R.color.ccRedText
+                            )
+                        )
+                    }
+
+                    else -> {
+                        txtHandleStatus.text = "Đã xử lý"
+                        txtHandleStatus.setTextColor(
+                            ContextCompat.getColor(
+                                root.context,
+                                R.color.ccGreen
+                            )
+                        )
+                    }
+                }
+                root.setOnClickListener {
+                    onClick(item)
+                }
+            }
+        }
+    }
+}

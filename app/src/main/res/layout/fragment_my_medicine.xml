@@ -37,33 +37,20 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="48dp"
             android:layout_marginBottom="8dp"
+            android:fontFamily="@font/inter"
             android:text="@string/my_medicine"
             android:textAlignment="center"
-            android:fontFamily="@font/inter"
             android:textColor="@color/ccBlueText"
             android:textFontWeight="600"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_setting"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_back"
             app:layout_constraintTop_toTopOf="parent"
             tools:targetApi="p" />
 
-        <ImageView
-            android:id="@+id/btn_setting"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_circle_btn"
-            android:padding="4dp"
-            android:src="@drawable/ic_setting_notification"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

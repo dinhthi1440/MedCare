@@ -1,5 +1,7 @@
 package com.example.medcare.views.setting.setting_list
 
+import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -47,7 +49,10 @@ class SettingListFragment : BaseFragment<FragmentSettingListBinding>(FragmentSet
                 findNavController().navigate(R.id.action_settingListFragment_to_settingInformationFragment)
             }
             layoutNotificationSetting.setOnClickListener {
-                findNavController().navigate(R.id.action_settingListFragment_to_settingNotificationFragment)
+                val bundle = Bundle().apply {
+                    putString("rule", account?.rule)
+                }
+                findNavController().navigate(R.id.action_settingListFragment_to_settingNotificationFragment, bundle)
             }
             layoutChangePassword.setOnClickListener {
                 findNavController().navigate(R.id.action_settingListFragment_to_changePassFragment)
@@ -57,11 +62,17 @@ class SettingListFragment : BaseFragment<FragmentSettingListBinding>(FragmentSet
                     dialog(requireContext()).showImage(account?.avatar ?:"")
                 }
             }
+            layoutFeedback.setOnClickListener {
+                findNavController().navigate(R.id.action_settingListFragment_to_settingFeedbackFragment)
+            }
         }
 
     }
     private fun bindUserData() {
         binding.apply {
+            if (account?.rule == "admin") {
+                layoutFeedback.visibility = View.GONE
+            }
             txtvUsername.text = account?.fullName ?: ""
             if (account?.avatar != "") {
                 Glide.with(requireContext())

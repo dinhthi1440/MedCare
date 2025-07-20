@@ -125,7 +125,11 @@
         android:id="@+id/selectMedicineFragment"
         android:name="com.example.medcare.views.pill_reminder.add_new_reminder.select_medicines.SelectMedicineFragment"
         android:label="fragment_select_medicine"
-        tools:layout="@layout/fragment_select_medicine" />
+        tools:layout="@layout/fragment_select_medicine" >
+        <action
+            android:id="@+id/action_selectMedicineFragment_to_addMedicineFragment"
+            app:destination="@id/addMedicineFragment" />
+    </fragment>
     <fragment
         android:id="@+id/reminderDetailFragment"
         android:name="com.example.medcare.views.pill_reminder.reminder_detail.ReminderDetailFragment"
@@ -175,7 +179,11 @@
         android:id="@+id/relativeReminderHistoryFragment"
         android:name="com.example.medcare.views.connect_relatives.relative_reminder_history.RelativeReminderHistoryFragment"
         android:label="fragment_relative_reminder_history"
-        tools:layout="@layout/fragment_relative_reminder_history" />
+        tools:layout="@layout/fragment_relative_reminder_history" >
+        <action
+            android:id="@+id/action_relativeReminderHistoryFragment_to_reminderHistoryDetailFragment"
+            app:destination="@id/reminderHistoryDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/relativeRequestAddFragment"
         android:name="com.example.medcare.views.connect_relatives.relative_request_add.RelativeRequestAddFragment"
@@ -237,6 +245,9 @@
         <action
             android:id="@+id/action_settingListFragment_to_changePassFragment"
             app:destination="@id/changePassFragment" />
+        <action
+            android:id="@+id/action_settingListFragment_to_settingFeedbackFragment"
+            app:destination="@id/settingFeedbackFragment" />
     </fragment>
     <fragment
         android:id="@+id/userListManagerFragment"
@@ -294,4 +305,13 @@
         android:name="com.example.medcare.views.setting.setting_notification.SettingNotificationFragment"
         android:label="fragment_setting_notification"
         tools:layout="@layout/fragment_setting_notification" />
+    <fragment
+        android:id="@+id/settingFeedbackFragment"
+        android:name="com.example.medcare.views.setting.feedback.SettingFeedbackFragment"
+        android:label="fragment_setting_feeback"
+        tools:layout="@layout/fragment_setting_feeback" >
+        <action
+            android:id="@+id/action_settingFeedbackFragment_to_feedbackDetailFragment"
+            app:destination="@id/feedbackDetailFragment" />
+    </fragment>
 </navigation>

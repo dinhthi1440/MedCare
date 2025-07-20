@@ -9,6 +9,7 @@ val databaseModule = module {
     single { provideLocalDatabase(get()) }
     single { provideMedicineDao(get()) }
     single { providePillReminderDao(get()) }
+    single { provideHistoryDao(get()) }
 }
 private fun provideLocalDatabase(context: Context): DataBaseLocal {
     return Room.databaseBuilder(
@@ -20,3 +21,4 @@ private fun provideLocalDatabase(context: Context): DataBaseLocal {
 
 private fun provideMedicineDao(local: DataBaseLocal) = local.medicineDao
 private fun providePillReminderDao(local: DataBaseLocal) = local.pillReminderDAO
+private fun provideHistoryDao(local: DataBaseLocal) = local.historyDAO

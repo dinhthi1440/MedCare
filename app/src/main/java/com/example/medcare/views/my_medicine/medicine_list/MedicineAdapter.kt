@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.medcare.R
@@ -36,8 +37,9 @@ class MedicineAdapter(private val isSelectMedicine: Boolean, private val onClick
                 binding.imageViewNoImage.visibility = View.VISIBLE
                 binding.imageView.visibility = View.INVISIBLE
             }
-
-
+            if (item.creatorID != "") {
+                binding.txtMedicineName.setTextColor(ContextCompat.getColor(binding.root.context, R.color.ccRedText))
+            }
             if (!isSelectMedicine) {
                 binding.apply {
                     txtExpirationDate.visibility = View.GONE
@@ -51,7 +53,7 @@ class MedicineAdapter(private val isSelectMedicine: Boolean, private val onClick
                 binding.apply {
                     txtMedicineName.text = item.name
                     txtExpirationDate.text = "⏳ HSD: ${item.expirationDate}"
-                    txtQuantity.text = "\uD83D\uDD22 Sl còn: ${item.quantity} ${item.unit}"
+                    txtQuantity.text = "\uD83D\uDD22 SL còn: ${item.quantity} ${item.unit}"
                     root.setOnClickListener {
                         onClick?.invoke(item)
                     }

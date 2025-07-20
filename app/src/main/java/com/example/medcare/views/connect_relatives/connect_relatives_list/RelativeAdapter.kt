@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
+import com.example.medcare.R
 import com.example.medcare.base.BaseAdapter
 import com.example.medcare.base.BaseViewHolder
 import com.example.medcare.databinding.ItemRelativeBinding
@@ -30,6 +32,12 @@ class RelativeAdapter(
         override fun bindView(item: Relative, isItemSelected: Boolean) {
             super.bindView(item, isItemSelected)
             binding.apply {
+                if (item.avatar != "") {
+                    Glide.with(binding.root.context)
+                        .load(item.avatar)
+                        .error(R.drawable.error_image)
+                        .into(binding.imgUser)
+                }
                 txtRelativeName.text = item.fullName
                 txtTitleRelative.text = item.relativeTitle
                 btnView.setOnClickListener {

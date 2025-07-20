@@ -11,6 +11,7 @@ import com.example.medcare.models.Medicine
 import com.example.medcare.models.Response
 import com.example.medcare.utils.FolderS3
 import com.example.medcare.utils.S3UploaderUtils
+import com.example.medcare.utils.TimeUtils
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,7 @@ class SettingViewModel(private val iAuthRepository: IAuthRepository) : BaseViewM
                     val imageUrl = S3UploaderUtils.uploadFileToS3(FolderS3.USERS.folderName, file)
                     if (imageUrl != null) {
                         account.avatar = imageUrl
+                        account.updateAt = TimeUtils.getCurrentCreatedAt()
                     } else {
                         setIsLoading(false)
                         withContext(Dispatchers.Main) {

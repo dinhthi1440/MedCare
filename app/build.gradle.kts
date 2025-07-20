@@ -64,6 +64,8 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.3")
     implementation("com.google.firebase:firebase-firestore-ktx:25.1.4")
     implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha13")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.1.1")
+    implementation("com.google.firebase:firebase-messaging:24.1.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -95,6 +97,7 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("com.firebaseui:firebase-ui-auth:9.0.0")
 
     implementation("com.amazonaws:aws-android-sdk-s3:2.79.0")

@@ -1,5 +1,6 @@
 package com.example.medcare.data.datasource.reminder_history
 
+import com.example.medcare.models.HistoryStatus
 import com.example.medcare.models.ReminderHistory
 import com.example.medcare.models.Response
 import com.google.firebase.firestore.FirebaseFirestore
@@ -87,19 +88,44 @@ class ReminderHistoryDatasource : IReminderHistoryDatasource {
         status: String
     ): Response<Any> {
         return suspendCoroutine { continuation ->
+
+
+            // Cập nhật realQuantity và ghi nhận medicines sau khi trừ liều
+            val updatedMedicines = if (status == HistoryStatus.DRANK.status) {
+                history.reminder.medicines.map { medicine ->
+                    val refMedicine = db.collection("users")
+                        .document(history.reminder.receiverID)
+                        .collection("medicines")
+                        .document(medicine.id)
+
+                    val quantityCal = medicine.realQuantity - medicine.dosage
+                    refMedicine.update("realQuantity", quantityCal)
+
+                    medicine.copy(realQuantity = quantityCal)
+                }
+            } else {
+                history.reminder.medicines // Không thay đổi
+            }
+
             val docRef = db.collection("users")
                 .document(uid)
                 .collection(collectionInUser)
                 .document(history.id)
+
             docRef.get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        docRef.update("status", status)
+                        val updates = mapOf(
+                            "status" to status,
+                            "medicines" to updatedMedicines
+                        )
+
+                        docRef.update(updates)
                             .addOnSuccessListener {
                                 continuation.resume(
                                     Response(
                                         200,
-                                        "Xác nhận trạng thái mới thành công",
+                                        "Cập nhật trạng thái và liều lượng thành công",
                                         true
                                     )
                                 )
@@ -108,7 +134,7 @@ class ReminderHistoryDatasource : IReminderHistoryDatasource {
                                 continuation.resume(
                                     Response(
                                         500,
-                                        "Lỗi khi cập nhật trạng thái mới",
+                                        "Lỗi khi cập nhật lịch sử dùng thuốc",
                                         false
                                     )
                                 )
@@ -188,6 +214,4 @@ class ReminderHistoryDatasource : IReminderHistoryDatasource {
             }
         }
     }
-
-
 }

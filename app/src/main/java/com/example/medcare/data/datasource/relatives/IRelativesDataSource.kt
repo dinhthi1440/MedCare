@@ -7,6 +7,7 @@ import com.example.medcare.models.Response
 
 interface IRelativesDataSource {
     suspend fun insertRelativesRemote(uid: String, relative: Relative): Response<Any>
+    suspend fun updateRelativesRemote(uid: String, relative: Relative): Response<Any>
     suspend fun getAllRelativesRemote(uid: String): Response<Any>
     suspend fun deleteRelativesRemote(uid: String, idRelative: String): Response<Any>
     //suspend fun getHistoryRelativeByIdRemote(uid: String, idRelative: String): Response<Any>
@@ -22,5 +23,9 @@ interface IRelativesDataSource {
     suspend fun getAllReminderRelativeFromRemote(uid: String): Response<Any>
     suspend fun updateReminderRelativeFromToRemote(pillReminder: PillReminder): Response<Any>
     suspend fun getReminderRelativeFromToByID(uid: String, reminderID: String): Response<Any>
+    suspend fun getRelativeHistoryByRelativeID(uid: String, relativeID: String): Response<Any>
+    suspend fun deleteRelativeReminderRemote(uid: String, idRelative: String, idReminder: String): Response<Any>
+
+    suspend fun insertPillReminder(pillReminder: PillReminder): Long
 
 }

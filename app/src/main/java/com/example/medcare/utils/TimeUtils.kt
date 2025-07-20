@@ -43,5 +43,20 @@ class TimeUtils {
             val date = Date(timestampMillis)
             return sdf.format(date)
         }
+        fun getCurrentCreatedAt(): String {
+            val format = SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault())
+            format.timeZone = TimeZone.getDefault()
+            return format.format(Date())
+        }
+        fun getCurrentTime(): String {
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+            format.timeZone = TimeZone.getDefault()
+            return format.format(Date())
+        }
+        fun getCurrentDate(): String {
+            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            format.timeZone = TimeZone.getDefault()
+            return format.format(Date())
+        }
     }
 }

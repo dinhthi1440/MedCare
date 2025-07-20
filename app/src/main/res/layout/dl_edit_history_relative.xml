@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:background="@drawable/bg_dl_white"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/inter"
+            android:text="Sửa đổi"
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="600"
+            android:textSize="20sp"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:textAlignment="center"
+            android:text="Hãy thiết lập tên và quyền hạn của người thân"
+            android:fontFamily="@font/inter"
+            android:textColor="@color/ccBlueText"
+            android:textFontWeight="500"
+            android:textSize="16sp"
+            tools:targetApi="p"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="15"
+            android:maxEms="15"
+            android:hint="Mối quan hệ"
+            app:startIconScaleType="center">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textip_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="beforeDescendants"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout12"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter"
+                android:text="Sửa quyền tương tác"
+                android:textAlignment="viewStart"
+                android:textColor="@color/ccBlueText"
+                android:textFontWeight="700"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:targetApi="p" />
+
+            <LinearLayout
+                android:id="@+id/checkboxGroupRole1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+                <CheckBox
+                    android:id="@+id/checkCreateMedicine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tạo thuốc mới"
+                    android:textColor="@color/ccGreenText"
+                    android:textFontWeight="500"
+                    android:textSize="14sp"
+                    tools:targetApi="p" />
+
+                <CheckBox
+                    android:id="@+id/checkCreateReminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tạo nhắc nhở mới"
+                    android:textColor="@color/ccGreenText"
+                    android:textFontWeight="500"
+                    android:textSize="14sp"
+                    tools:targetApi="p" />
+                <CheckBox
+                    android:id="@+id/checkViewHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem lịch sử dùng thuốc"
+                    android:textColor="@color/ccGreenText"
+                    android:textFontWeight="500"
+                    android:textSize="14sp"
+                    tools:targetApi="p" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_circle_blue"
+                android:backgroundTint="@color/ccGrayBlackBtn"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:text="Hủy"
+                android:textColor="@color/black"
+                android:textFontWeight="600"
+                android:textSize="16sp"
+                tools:targetApi="p" />
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_circle_blue"
+                android:backgroundTint="@color/ccBlue"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:text="Xác nhận"
+                android:textColor="#FFFFFF"
+                android:textFontWeight="600"
+                android:textSize="16sp"
+                tools:targetApi="p" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

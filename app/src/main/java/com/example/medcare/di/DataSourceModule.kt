@@ -6,6 +6,8 @@ import com.example.medcare.data.datasource.doctor.DoctorDatasource
 import com.example.medcare.data.datasource.doctor.IDoctorDatasource
 import com.example.medcare.data.datasource.feedback.FeedbackDatasource
 import com.example.medcare.data.datasource.feedback.IFeedbackDatasource
+import com.example.medcare.data.datasource.home.HomeDatasource
+import com.example.medcare.data.datasource.home.IHomeDatasource
 import com.example.medcare.data.datasource.medicine.IMedicineDataSource
 import com.example.medcare.data.datasource.medicine.MedicineDataSource
 import com.example.medcare.data.datasource.pillreminder.IPillReminderDataSource
@@ -20,8 +22,9 @@ val dataSourceModule = module {
     single<IMedicineDataSource> { MedicineDataSource(get()) }
     single<IPillReminderDataSource> { PillReminderDataSource(get()) }
     single<IAuthDatasource> { AuthDatasource() }
-    single<IRelativesDataSource> { RelativesDataSource() }
+    single<IRelativesDataSource> { RelativesDataSource(get()) }
     single<IReminderHistoryDatasource> { ReminderHistoryDatasource() }
     single<IDoctorDatasource> { DoctorDatasource() }
     single<IFeedbackDatasource> { FeedbackDatasource() }
+    single<IHomeDatasource> { HomeDatasource(get()) }
 }

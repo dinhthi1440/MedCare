@@ -6,6 +6,8 @@ import com.example.medcare.data.repository.doctor.DoctorRepos
 import com.example.medcare.data.repository.doctor.IDoctorRepos
 import com.example.medcare.data.repository.feedback.FeedbackRepository
 import com.example.medcare.data.repository.feedback.IFeedbackRepository
+import com.example.medcare.data.repository.home.HomeRepository
+import com.example.medcare.data.repository.home.IHomeRepository
 import com.example.medcare.data.repository.medicine.IMedicineRepos
 import com.example.medcare.data.repository.medicine.MedicineRepos
 import com.example.medcare.data.repository.pillreminder.IPillReminderRepos
@@ -24,4 +26,5 @@ val repositoryModule = module {
     single<IReminderHistoryRepos> { ReminderHistoryRepos(get()) }
     single<IDoctorRepos> { DoctorRepos(get()) }
     single<IFeedbackRepository> { FeedbackRepository(get()) }
+    single<IHomeRepository> { HomeRepository(get()) }
 }

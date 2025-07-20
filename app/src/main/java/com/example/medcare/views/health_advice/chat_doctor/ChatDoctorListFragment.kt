@@ -30,31 +30,8 @@ class ChatDoctorListFragment : BaseFragment<FragmentChatDoctorListBinding>(Fragm
     override fun handleEvent() {
         binding.apply {
             binding.btnBack.setOnClickListener {
-                findNavController().popBackStack()
+                backScreenReset()
             }
-            binding.edtSearch.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-                override fun afterTextChanged(s: Editable?) {
-                    // Sau khi text đã thay đổi
-//                    val text = s.toString()
-//                    if (text == "") {
-//                        nestedScrollView3.visibility = View.VISIBLE
-//                        rcvSearchList.visibility = View.GONE
-//                    } else {
-//                        nestedScrollView3.visibility = View.GONE
-//                        rcvSearchList.visibility = View.VISIBLE
-//                        if (isInputting){
-//
-//                        } else {
-//                            viewModel.getSearchRelatives(text)
-//                            isInputting = true
-//                        }
-//                    }
-                }
-            })
             tilSearch.setEndIconOnClickListener {
                 val searchText = edtSearch.text.toString()
                 if (searchText != "") {
@@ -80,6 +57,9 @@ class ChatDoctorListFragment : BaseFragment<FragmentChatDoctorListBinding>(Fragm
         viewModel.messageError.observe(viewLifecycleOwner) {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             binding.txtLabelDoctorChatEmpty.text = it
+        }
+        listenBackScreen {
+            isBackReset = true
         }
     }
 
